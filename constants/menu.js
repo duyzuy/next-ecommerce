@@ -9,7 +9,7 @@ export const MENUS = [
   },
   {
     name: 'products',
-    path: '/product',
+    path: 'product',
     icon: '',
     hasChildren: true,
     childrens: []
@@ -39,6 +39,6 @@ export const ROUTES = [
   },
   {
     name: 'Page Detail',
-    path: '/page/[pageId]'
+    path: 'page/[pageId]'
   }
 ];
