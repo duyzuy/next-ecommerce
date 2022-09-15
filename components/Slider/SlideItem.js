@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-const Item = ({ name, path, thumbnail }) => {
+const SlideItem = ({ name, path, thumbnail }) => {
   return (
     <li className="ec__slide--item">
       <Link href={path}>
@@ -21,4 +21,4 @@ const Item = ({ name, path, thumbnail }) => {
   );
 };
 
-export default Item;
+export default SlideItem;

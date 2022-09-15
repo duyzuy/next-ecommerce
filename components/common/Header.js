@@ -7,7 +7,7 @@ import { MENUS, MENUS_BOTTOM } from '../../constants/menu';
 import { isActive } from '../../utils/acrtiveMenu';
 import styles from '../../styles/header.module.scss';
 import Link from 'next/link';
-import Item from '../Item';
+import Slider from '../Slider';
 const Header = () => {
   return (
     <header id="ec__header" className={styles.ec_header}>
@@ -16,7 +16,7 @@ const Header = () => {
           <div className={styles.flex_row}>
             <div className={styles.ec_header_logo}>
               <Image
-                src="/assets/images/logo-sgsv.png"
+                src="/assets/images/logo.png"
                 alt="logo"
                 width={340}
                 height={90}
@@ -90,27 +90,16 @@ const Header = () => {
       </div>
       <div id="ec_header_bottom" className={styles.ec_header_bottom}>
         <Container>
-          <div className="ec__slide">
-            <ul className="ec__slide--list">
-              {MENUS_BOTTOM.map((item) => {
-                return (
-                  <Item
-                    name={item.name}
-                    path={item.path}
-                    thumbnail={item.thumbnail}
-                  />
-                );
-              })}
-            </ul>
-            <div className="ec__slide--nav">
-              <span className="ec__slide--prev" onClick={handlePrev}>
-                <Icon.ArrowLeft width={16} />
-              </span>
-              <span className="ec__slide--next" onClick={handleNext}>
-                <Icon.ArrowRight width={16} />
-              </span>
-            </div>
-          </div>
+          <Slider itemView={6}>
+            {MENUS_BOTTOM.map((item, index) => (
+              <Slider.Item
+                key={index}
+                name={item.name}
+                path={item.path}
+                thumbnail={item.thumbnail}
+              />
+            ))}
+          </Slider>
         </Container>
       </div>
     </header>
