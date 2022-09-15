@@ -1,5 +1,5 @@
 import 'semantic-ui-css/semantic.min.css';
-import '../styles/globals.css';
+import '../styles/global.scss';
 
 import Layout from '../components/Layout';
 

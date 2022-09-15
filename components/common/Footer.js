@@ -1,12 +1,10 @@
-import { Container } from "semantic-ui-react";
-
+import { Container } from 'semantic-ui-react';
+import styles from '../../styles/footer.module.scss';
 const Footer = () => {
   return (
-    <>
-      <header id="ec__header">
-        <Container text></Container>
-      </header>
-    </>
+    <div className={styles.ec_footer}>
+      <Container>this is footer content</Container>
+    </div>
   );
 };
 

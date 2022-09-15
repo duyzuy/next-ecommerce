@@ -1,0 +1,59 @@
+.ec__slide {
+    position: relative;
+    width: 100%;
+
+    &--list{
+        list-style-type: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-wrap: nowrap;
+        width: calc(100% - 100px);
+        overflow: hidden;
+    }
+    &--item{
+       margin-right: 15px;
+       white-space: nowrap;
+  
+    }
+    &--link{
+        display: flex;
+        align-items: center;
+        color: #3c3c3c;
+        font-weight: bold;
+        padding: 10px 15px;
+        &:after{
+            content: '';
+            display: table;
+            clear: both;
+        }
+        & > span{
+            width: 30px !important;
+            margin-right: 10px !important;
+        }
+    }
+    &--nav{
+        display: flex;
+        position: absolute;
+        right: 0;
+        top: calc(50% - 20px);
+        z-index: 2;
+    }
+    &--next{
+        margin-left: 15px;
+    }
+    &--next, 
+    &--prev{
+        width: 36px;
+        height: 36px;
+        border-radius: 36px;
+        display: flex;
+        border: 1px solid #f1f1f1;
+        text-align: center;
+        align-items: center;
+        justify-content: center;
+        background-color: #ffff;
+        cursor: pointer;
+        
+    }
+}
