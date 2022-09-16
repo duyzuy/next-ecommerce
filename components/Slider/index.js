@@ -1,36 +1,102 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import SlideItem from './SlideItem';
 import * as Icon from 'react-feather';
 
-const Slider = ({ children, itemView }) => {
+const createArray = (length) => {
+  if (typeof length !== 'number') return;
+  return Array.from({ length }, (_, i) => {
+    return i;
+  });
+};
+
+const Slider = ({
+  children,
+  itemView = 6,
+  itemSpacing = 10,
+  itemScroll = 3
+}) => {
   const sliderRef = useRef();
-  const listRef = useRef();
+  const itemsRef = useRef();
+
+  const [scrollAbleWidth, setScrollAbleWidth] = useState(0);
+  const [itemsArr, setItemArr] = useState(() => createArray(itemScroll));
   let subComponentList = Object.keys(Slider);
 
-  const handleNext = () => {};
-
-  const handlePrev = () => {};
-
   useEffect(() => {
-    const sliderWidth = sliderRef.current.offsetWidth;
-    const slideItems = listRef.current.childNodes;
+    setScrollAbleWidth(
+      () => itemsRef.current.scrollWidth - itemsRef.current.offsetWidth
+    );
+  }, [scrollAbleWidth]);
 
-    let sliderWrapWidth = 0;
-    for (let item of slideItems) {
-      sliderWrapWidth += item.offsetWidth;
+  let itemScrollArr = createArray(itemScroll);
+  let moveWidth = 0;
+  let endNext = false;
+  let endprev = true;
+  const handleNext = () => {
+    if (moveWidth > scrollAbleWidth) {
+      moveWidth = scrollAbleWidth;
+      endNext = true;
+    } else {
+      const slideItems = itemsRef.current.childNodes;
+      itemScrollArr = itemScrollArr.map((item) => item + itemScroll);
+      for (let i = 0; i < itemScrollArr.length; i++) {
+        moveWidth +=
+          slideItems[itemScrollArr[i]].offsetWidth +
+          itemSpacing * (itemScroll - 1);
+      }
     }
 
-    console.log(listRef);
-  }, []);
+    // update next array of items
+
+    //calculator total width from item in array scroll
+
+    itemsRef.current.style.transform = `translateX(-${moveWidth}px)`;
+    console.log(itemScrollArr);
+  };
+  // setItemArr(itemScrollArr);
+  const handlePrev = () => {
+    console.log(itemScrollArr);
+    console.log(moveWidth, scrollAbleWidth);
+    // if (moveWidth > scrollAbleWidth) return;
+
+    // const slideItems = itemsRef.current.childNodes;
+
+    // const lastItem = slideItems.length - 1;
+
+    // // update next array of items
+    // itemScrollArr = itemScrollArr.map((item) => item - itemScroll);
+
+    // //calculator total width from item in array scroll
+
+    // for (let i = 0; i < itemScrollArr.length; i++) {
+    //   moveWidth +=
+    //     slideItems[itemScrollArr[i]].offsetWidth +
+    //     itemSpacing * (itemScroll - 1);
+    // }
+    // itemsRef.current.style.transform = `translateX(+${moveWidth}px)`;
+  };
+
   return (
     <div className="ec__slide" ref={sliderRef}>
-      <ul className="ec__slide--list" ref={listRef}>
-        {subComponentList.map((key) => {
-          return React.Children.map(children, (child) => {
-            return child.type.name === key ? child : null;
-          });
-        })}
-      </ul>
+      <div className="ec__slide--list">
+        <ul className="ec__slide--items" ref={itemsRef}>
+          {subComponentList.map((key) =>
+            React.Children.map(children, (child) => {
+              if (child.type.name === key) {
+                const newChild = {
+                  ...child,
+                  props: {
+                    ...child.props,
+                    spacing: itemSpacing
+                  }
+                };
+                return newChild;
+              }
+              return null;
+            })
+          )}
+        </ul>
+      </div>
       <div className="ec__slide--nav">
         <span className="ec__slide--prev" onClick={handlePrev}>
           <Icon.ArrowLeft width={16} />
@@ -46,6 +112,7 @@ const Slider = ({ children, itemView }) => {
 const Item = (props) => {
   return (
     <SlideItem
+      spacing={props.spacing}
       name={props.name}
       path={props.path}
       thumbnail={props.thumbnail}

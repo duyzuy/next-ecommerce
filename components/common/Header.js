@@ -16,14 +16,16 @@ const Header = () => {
           <div className={styles.flex_row}>
             <div className={styles.ec_header_logo}>
               <Image
-                src="/assets/images/logo.png"
+                src="/assets/images/logo-saigonhome-original.svg"
                 alt="logo"
                 width={340}
                 height={90}
               />
             </div>
             <div className={styles.ec_header_category}>
-              <Icon.Menu color="red" size={24} />
+              <span className="ec_icon">
+                <Icon.Menu size={20} />
+              </span>
               <span>Danh mục</span>
             </div>
             <div className={styles.ec_header_promo}>
@@ -32,23 +34,38 @@ const Header = () => {
               </Link>
             </div>
             <div className={styles.ec_header_search}>
-              <Input loading icon="user" placeholder="Search..." />
+              <Input icon="search" placeholder="Nhập sản phẩm cần tìm..." />
             </div>
-            <div className={styles.ec_header_cart}>
-              <Icon.ShoppingCart color="red" size={24} />
-              <span className={styles.cart_count}>10</span>
-            </div>
-            <div className={styles.ec_header_ship}>
-              <Icon.Truck color="red" size={24} />
-              <span className={styles.cart_count}>10</span>
-            </div>
-            <div className={styles.ec_header_notify}>
-              <Icon.Bell color="red" size={24} />
-              <span className={styles.cart_count}>10</span>
-            </div>
-            <div className={styles.ec_header_acount}>
-              <Icon.User color="red" size={24} />
-              <span className={styles.cart_count}>10</span>
+            <div className={styles.ec_header_actions}>
+              <div className={styles.ec_header_cart}>
+                <Link href="/">
+                  <a className="item">
+                    <Icon.ShoppingCart size={20} />
+                    <span className="cart_count">10</span>
+                  </a>
+                </Link>
+              </div>
+              <div className={styles.ec_header_ship}>
+                <Link href="/">
+                  <a className="item">
+                    <Icon.Truck size={20} />
+                  </a>
+                </Link>
+              </div>
+              <div className={styles.ec_header_notify}>
+                <Link href="/">
+                  <a className="item">
+                    <Icon.Bell size={20} />
+                  </a>
+                </Link>
+              </div>
+              <div className={styles.ec_header_acount}>
+                <Link href="/">
+                  <a className="item">
+                    <Icon.User size={20} />
+                  </a>
+                </Link>
+              </div>
             </div>
           </div>
         </Container>
@@ -90,7 +107,7 @@ const Header = () => {
       </div>
       <div id="ec_header_bottom" className={styles.ec_header_bottom}>
         <Container>
-          <Slider itemView={6}>
+          <Slider itemView={6} itemSpacing={15} itemScroll={2}>
             {MENUS_BOTTOM.map((item, index) => (
               <Slider.Item
                 key={index}

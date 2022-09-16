@@ -1,8 +1,8 @@
 import Link from 'next/link';
 import Image from 'next/image';
-const SlideItem = ({ name, path, thumbnail }) => {
+const SlideItem = ({ name, path, thumbnail, spacing }) => {
   return (
-    <li className="ec__slide--item">
+    <li className="ec__slide--item" style={{ marginRight: `${spacing}px` }}>
       <Link href={path}>
         <a className="ec__slide--link">
           {thumbnail !== '' && (

@@ -5,7 +5,8 @@
     background-color: $bg-white;
 }
 .ec_header_top{
-    background:linear-gradient(90deg, #bf1e2e 20%, #af1b2a 60%, #bf1e2e 100%)
+    background: linear-gradient(to right, #fec400 40%, #ffd800);
+    padding: 10px 0
 }
 .flex_row{
     display: flex;
@@ -17,7 +18,13 @@
 }
 .ec_header_logo{
     width: 180px;
+    margin-right: 60px;
+    line-height: 0;
+}
 
+.ec_header_promo, 
+.ec_header_category{
+    margin-right: 15px;
 }
 .ec_header_search{
     flex: 1;
@@ -41,6 +48,99 @@
 
 .ec_header_bottom{
     box-shadow: 0px 10px 15px -6px rgb(0 0 0 / 15%);
-    padding-top: 10px;
-    padding-bottom: 10px
+    padding-top: 5px;
+    padding-bottom: 5px
+}
+
+.ec_header_category{
+    color: $grey-color;
+    display: flex;
+    align-items: center;
+    font-weight: bold;
+    margin-right: 30px;
+    :global .ec_icon{
+        background-color: #ffa800;
+        padding: 8px;
+        margin-right: 5px;
+        line-height: 0;
+        border-radius: 30px;
+    }
+
+
+}
+.ec_header_promo{
+    margin-right: 15px;
+
+    :global a{
+        color: $grey-color;
+        font-weight: bold;
+    }
+}
+.ec_header_search{
+    flex: 1;
+    text-align: center;
+    :global .input{
+        max-width: 350px;
+        input {
+            border-width: 0px;
+            height: 40px;
+            border-radius: 5px;
+        }
+    }
+  
+}
+.ec_header_actions{
+    display: flex;
+    align-items: center;
+    :global div + div{
+        margin-left: 15px;
+    }
+  
+
+}
+.ec_header_cart, 
+.ec_header_ship, 
+.ec_header_notify, 
+.ec_header_acount{
+    min-width: 40px;
+    height: 40px;
+    border-radius: 40px;
+    position: relative;
+    background-color: #ffa800;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    :global a{
+        color: $grey-color;
+        display: inline-flex;
+        position: relative;
+        padding: 10px
+    }
+}
+.ec_header_cart{
+
+    :global .cart_count{
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        line-height: 20px;
+        text-align: center;
+        background-color: #ffffff;
+        font-size: 10px;
+        margin-left: 5px;
+    }
+
+}
+
+.ec_header_ship{
+
+}
+
+.ec_header_notify{
+
+}
+.ec_header_acount{
+
 }
