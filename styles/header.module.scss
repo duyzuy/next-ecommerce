@@ -58,8 +58,9 @@
     align-items: center;
     font-weight: bold;
     margin-right: 30px;
+    cursor: pointer;
     :global .ec_icon{
-        background-color: #ffa800;
+        background-color: $bg-white;
         padding: 8px;
         margin-right: 5px;
         line-height: 0;
@@ -106,7 +107,7 @@
     height: 40px;
     border-radius: 40px;
     position: relative;
-    background-color: #ffa800;
+    background-color: $bg-white;
     text-align: center;
     display: flex;
     align-items: center;
@@ -127,7 +128,7 @@
         border-radius: 50%;
         line-height: 20px;
         text-align: center;
-        background-color: #ffffff;
+        background-color: $bg-primary;
         font-size: 10px;
         margin-left: 5px;
     }

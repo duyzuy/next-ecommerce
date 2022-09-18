@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useMemo } from 'react';
 import SlideItem from './SlideItem';
 import * as Icon from 'react-feather';
 
@@ -9,75 +9,105 @@ const createArray = (length) => {
   });
 };
 
+const slider = {
+  NEXT: 'next',
+  PREV: 'prev',
+  MAIN: 'main',
+  SUB: 'sub'
+};
 const Slider = ({
   children,
-  itemView = 6,
+  itemView = 1,
   itemSpacing = 10,
-  itemScroll = 3
+  itemScroll = 3,
+  autoPlay = false,
+  mode = 'main'
 }) => {
   const sliderRef = useRef();
   const itemsRef = useRef();
 
   const [scrollAbleWidth, setScrollAbleWidth] = useState(0);
-  const [itemsArr, setItemArr] = useState(() => createArray(itemScroll));
+  const [slideItems, setSlideItems] = useState([]);
+  const [itemWidth, setItemWidth] = useState(0);
   let subComponentList = Object.keys(Slider);
-
-  useEffect(() => {
-    setScrollAbleWidth(
-      () => itemsRef.current.scrollWidth - itemsRef.current.offsetWidth
-    );
-  }, [scrollAbleWidth]);
-
-  let itemScrollArr = createArray(itemScroll);
+  // let itemScrollArr = createArray(itemScroll);
   let moveWidth = 0;
   let endNext = false;
   let endprev = true;
-  const handleNext = () => {
+  let indexSlide = 1;
+
+  let itemScrollArr = useMemo(() => {
+    return createArray(itemScroll);
+  }, []);
+
+  useEffect(() => {
+    setScrollAbleWidth(
+      () => itemsRef.current.scrollWidth - itemsRef.current.clientWidth
+    );
+
+    setItemWidth(Math.round((100 * 100) / itemView) / 100);
+
+    setSlideItems(itemsRef.current.childNodes);
+
+    let timeInterval;
+    autoPlay === true
+      ? (timeInterval = setInterval(() => {
+          moveSlide({ slideType: mode, action: slider.NEXT });
+        }, 300000))
+      : null;
+    return () => {
+      clearInterval(timeInterval);
+    };
+  }, [slideItems, itemView]);
+
+  const moveSlide = ({ slideType, action }) => {
+    let widthOfItems = 0;
+    for (let i = 0; i < itemScrollArr.length; i++) {
+      widthOfItems += Math.round(
+        slideItems[itemScrollArr[i]].clientWidth +
+          itemSpacing * (itemScroll - 1)
+      );
+    }
+    // update next array of items
+    itemScrollArr =
+      action === slider.NEXT
+        ? itemScrollArr.map((item) => item + itemScroll)
+        : itemScrollArr.map((item) => item - itemScroll);
+    action === slider.NEXT
+      ? (moveWidth += widthOfItems)
+      : (moveWidth -= widthOfItems);
+
     if (moveWidth > scrollAbleWidth) {
       moveWidth = scrollAbleWidth;
-      endNext = true;
-    } else {
-      const slideItems = itemsRef.current.childNodes;
-      itemScrollArr = itemScrollArr.map((item) => item + itemScroll);
-      for (let i = 0; i < itemScrollArr.length; i++) {
-        moveWidth +=
-          slideItems[itemScrollArr[i]].offsetWidth +
-          itemSpacing * (itemScroll - 1);
-      }
     }
 
-    // update next array of items
-
-    //calculator total width from item in array scroll
-
-    itemsRef.current.style.transform = `translateX(-${moveWidth}px)`;
-    console.log(itemScrollArr);
+    if (moveWidth < 0) {
+      moveWidth = 0;
+    }
+    action === slider.NEXT ? indexSlide++ : indexSlide--;
+    if (itemView === 1) {
+    }
+    itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
   };
-  // setItemArr(itemScrollArr);
+
+  const handleNext = () => {
+    moveSlide({ slideType: mode, action: slider.NEXT });
+  };
+
   const handlePrev = () => {
-    console.log(itemScrollArr);
-    console.log(moveWidth, scrollAbleWidth);
-    // if (moveWidth > scrollAbleWidth) return;
-
-    // const slideItems = itemsRef.current.childNodes;
-
-    // const lastItem = slideItems.length - 1;
-
-    // // update next array of items
-    // itemScrollArr = itemScrollArr.map((item) => item - itemScroll);
-
-    // //calculator total width from item in array scroll
-
-    // for (let i = 0; i < itemScrollArr.length; i++) {
-    //   moveWidth +=
-    //     slideItems[itemScrollArr[i]].offsetWidth +
-    //     itemSpacing * (itemScroll - 1);
-    // }
-    // itemsRef.current.style.transform = `translateX(+${moveWidth}px)`;
+    if (indexSlide === 1) return;
+    moveSlide({ slideType: mode, action: slider.PREV });
   };
-
+  const Paginations = () => {
+    return <>paginations</>;
+  };
   return (
-    <div className="ec__slide" ref={sliderRef}>
+    <div
+      className={`ec__slide ${
+        mode === 'main' ? 'ec__slide--main' : 'ec__slide--sub'
+      }`}
+      ref={sliderRef}
+    >
       <div className="ec__slide--list">
         <ul className="ec__slide--items" ref={itemsRef}>
           {subComponentList.map((key) =>
@@ -87,7 +117,10 @@ const Slider = ({
                   ...child,
                   props: {
                     ...child.props,
-                    spacing: itemSpacing
+                    spacing: itemSpacing,
+                    mode,
+                    itemView: itemView,
+                    itemWidth: itemWidth
                   }
                 };
                 return newChild;
@@ -97,6 +130,7 @@ const Slider = ({
           )}
         </ul>
       </div>
+      {mode === 'main' && <Paginations />}
       <div className="ec__slide--nav">
         <span className="ec__slide--prev" onClick={handlePrev}>
           <Icon.ArrowLeft width={16} />
@@ -110,14 +144,7 @@ const Slider = ({
 };
 
 const Item = (props) => {
-  return (
-    <SlideItem
-      spacing={props.spacing}
-      name={props.name}
-      path={props.path}
-      thumbnail={props.thumbnail}
-    />
-  );
+  return <SlideItem {...props} />;
 };
 
 Slider.Item = Item;

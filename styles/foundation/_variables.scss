@@ -10,9 +10,10 @@ $grey-color: #3c3c3c;
 /*========background color ==============*/
 $bg-white: #fff;
 $bg-grey: #3c3c3c;
+$bg-primary: #f4be2c;
 
 $shadow-one: 1px 2px 4px 0px rgb(0 0 0 / 20%);
-$shadow-two: 2px 2px 6px -2px rgb(0 0 0 / 20%);
+$shadow-two: 1px 1px 4px -2px rgb(0 0 0 / 20%), 4px 4px 16px -6px rgb(0 0 0 / 20%);
 
 $text-nomal: 400;
 $text-bold: 600;

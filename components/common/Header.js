@@ -107,7 +107,13 @@ const Header = () => {
       </div>
       <div id="ec_header_bottom" className={styles.ec_header_bottom}>
         <Container>
-          <Slider itemView={6} itemSpacing={15} itemScroll={2}>
+          <Slider
+            itemView={6}
+            autoplay={true}
+            mode="sub"
+            itemSpacing={15}
+            itemScroll={2}
+          >
             {MENUS_BOTTOM.map((item, index) => (
               <Slider.Item
                 key={index}
