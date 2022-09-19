@@ -22,8 +22,60 @@
             height: auto;
             object-fit: cover;
         }
+        .ec__slide--text{
+            position: absolute;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 20px;
+            bottom: 10px;
+            left: 10px;
+            width: 100%;
+            max-width: 320px;
+            display: flex;
+            align-items: center;
+            white-space: pre-wrap;
+            overflow: hidden;
+            backdrop-filter: blur(3px);
+            border-radius: 10px;
+            .sub--text{
+                font-size: 15px;
+                text-transform: uppercase;
+                color: #fff;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                position: relative;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                height: 42px;
+                line-height: 22px;
+                -webkit-line-clamp: 2;
+            }
+        }
+        .ec__slide--pagination{
+            position: absolute;
 
-   
+            .pagination--item{
+                background-color: #f1f1f1;
+                border-radius: 5px;
+            }
+            .sub--text{
+                font-size: 13px;
+                display: -webkit-box;
+                -webkit-box-orient: vertical;
+                position: relative;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                height: 32px;
+                line-height: 16px;
+                -webkit-line-clamp: 2;
+            }
+        }
+        .ec__slide--nav{
+            left: 10px;
+            right: inherit;
+            top: inherit;
+            bottom: 100px
+        }
     }
     &--sub{
         .ec__slide--thumbnail{
@@ -39,7 +91,13 @@
         margin-right: 15px;
     }
     &--pagination{
-        display: flex;
+        
+        .pagination--items{
+            display: flex;
+            list-style-type: none;
+            padding: 0;
+            margin: 0
+        }
         .pagination--item{
             padding: 5px 10px;
             margin-bottom: 0;
@@ -68,6 +126,7 @@
        margin-right: 15px;
        white-space: nowrap;
         width: 100%;
+        position: relative;
     }
     &--link{
         display: flex;

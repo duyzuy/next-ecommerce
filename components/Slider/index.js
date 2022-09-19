@@ -153,14 +153,15 @@ const Slider = ({
   };
 
   const Paginations = ({ titles }) => {
-    console.log();
     return (
       <div className="ec__slide--pagination">
-        {titles.map((title, index) => (
-          <p key={index} className="pagination--item">
-            {title}
-          </p>
-        ))}
+        <ul className="pagination--items">
+          {titles.map((title, index) => (
+            <li key={index} className="pagination--item">
+              <p className="sub--text">{title}</p>
+            </li>
+          ))}
+        </ul>
       </div>
     );
   };
