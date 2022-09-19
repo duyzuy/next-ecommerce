@@ -11,7 +11,7 @@ const Home = () => {
         <Container>
           <Grid>
             <Grid.Column width={10}>
-              <Slider main autoPlay itemView={1} itemSpacing={15}>
+              {/* <Slider main autoPlay itemView={1} itemSpacing={15}>
                 {TOP_PROMOTIONS.map((item, index) => (
                   <Slider.Item
                     key={index}
@@ -20,7 +20,7 @@ const Home = () => {
                     thumbnail={item.thumbnail}
                   />
                 ))}
-              </Slider>
+              </Slider> */}
             </Grid.Column>
             <Grid.Column width={6}>
               <div className="ec__box">

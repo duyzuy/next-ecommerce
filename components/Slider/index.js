@@ -3,7 +3,8 @@ import React, {
   useEffect,
   useState,
   useMemo,
-  useLayoutEffect
+  useLayoutEffect,
+  useCallback
 } from 'react';
 import SlideItem from './SlideItem';
 
@@ -37,13 +38,13 @@ const Slider = ({
   const [title, setTitle] = useState([{ name: '', current: false }]);
   const [maxIndexSlide, setMaxIndexSlide] = useState();
   let subComponentList = Object.keys(Slider);
+  const [indexSlide, setIndexSlide] = useState(0);
+  const [moveWidth, setMoveWidth] = useState(0);
+  const [sliding, setSliding] = useState(false);
 
-  let moveWidth = 0;
-  let indexSlide = 0;
-  let sliding = false;
-  let itemScrollArr = useMemo(() => {
+  const [itemScrollArr, setItemScrollArr] = useState(() => {
     return createArray(itemScroll);
-  }, []);
+  });
 
   const getDimensions = (myRef) => {
     return {
@@ -54,37 +55,31 @@ const Slider = ({
 
   useEffect(() => {
     setDimensions(getDimensions(itemsRef));
-  }, [itemsRef]);
-
-  let timeInterval;
-  useEffect(() => {
-    setItemWidth(Math.round((100 * 100) / itemView) / 100);
-
     setSlideItems(itemsRef.current.childNodes);
-
     setMaxIndexSlide(() => {
       return Math.round(
         (itemsRef.current.childNodes.length - itemView) / itemScroll
       );
     });
+    setItemWidth(Math.round((100 * 100) / itemView) / 100);
+  }, [itemView]);
 
+  useEffect(() => {
     //auto slider
-
+    let timeInterval;
     autoPlay === true
-      ? (timeInterval = setInterval(() => {
+      ? (timeInterval = setTimeout(() => {
           moveSlide({ action: slider.NEXT });
-        }, 5000))
+        }, 1000))
       : null;
     return () => {
-      clearInterval(timeInterval);
+      clearTimeout(timeInterval);
     };
-  }, [slideItems, itemView]);
+  }, [slideItems, indexSlide]);
 
   const moveSlide = ({ action }) => {
-    if (sliding === true) {
-      return;
-    }
-
+    if (sliding === true) return;
+    setSliding(true);
     if (main !== undefined && itemScroll > itemView)
       throw new Error('itemScroll must less than itemView');
 
@@ -101,16 +96,21 @@ const Slider = ({
         moveWidth === dimension.scrollWidth - dimension.width &&
         action === slider.NEXT
       ) {
-        moveWidth = -moveWidth;
-        itemScrollArr = createArray(itemScroll);
+        console.log('reset');
+        setMoveWidth(0);
+        setItemScrollArr(() => {
+          return [0, 1];
+        });
       }
 
       if (moveWidth === 0 && action === slider.PREV) {
         return;
       }
     }
+    console.log(itemScrollArr);
     sliding = true;
     let widthOfItems = 0;
+
     for (let i = 0; i < itemScrollArr.length; i++) {
       widthOfItems +=
         Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
@@ -118,38 +118,44 @@ const Slider = ({
     widthOfItems = widthOfItems + itemSpacing * (itemScroll - 1);
 
     // update next array of items
-    itemScrollArr =
-      action === slider.NEXT
-        ? itemScrollArr.map((item) => item + itemScroll)
-        : itemScrollArr.map((item) => item - itemScroll);
-    action === slider.NEXT
-      ? (moveWidth += widthOfItems)
-      : (moveWidth -= widthOfItems);
 
+    setItemScrollArr((prevArr) => {
+      return action === slider.NEXT
+        ? prevArr.map((item) => item + itemScroll)
+        : prevArr.map((item) => item - itemScroll);
+    });
+
+    action === slider.NEXT
+      ? setMoveWidth((prevWidth) => prevWidth + widthOfItems)
+      : setMoveWidth((prevWidth) => prevWidth - widthOfItems);
     if (main === undefined) {
       if (moveWidth > dimension.scrollWidth - dimension.width) {
-        moveWidth = dimension.scrollWidth - dimension.width;
+        // moveWidth = dimension.scrollWidth - dimension.width;
+        setMoveWidth(dimension.scrollWidth - dimension.width);
       }
       if (moveWidth < 0) {
-        moveWidth = 0;
+        // moveWidth = 0;
+        setMoveWidth(0);
       }
     }
 
-    action === slider.NEXT ? indexSlide++ : indexSlide--;
+    // action === slider.NEXT ? indexSlide++ : indexSlide--;
+
+    action === slider.NEXT
+      ? setIndexSlide((prevIndex) => prevIndex + 1)
+      : setIndexSlide((prevIndex) => prevIndex - 1);
 
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
 
-    sliding = false;
+    setSliding(false);
   };
 
   const handleNext = () => {
     moveSlide({ action: slider.NEXT });
-    clearInterval(timeInterval);
   };
 
   const handlePrev = () => {
     moveSlide({ action: slider.PREV });
-    clearInterval(timeInterval);
   };
 
   const Paginations = ({ titles }) => {
@@ -166,6 +172,7 @@ const Slider = ({
     );
   };
   let arrayTitle = [];
+
   return (
     <div
       className={`ec__slide ${
@@ -176,7 +183,7 @@ const Slider = ({
       <div className="ec__slide--list">
         <ul className="ec__slide--items" ref={itemsRef}>
           {subComponentList.map((key) =>
-            React.Children.map(children, (child) => {
+            React.Children.map(children, (child, index) => {
               if (child.type.name === key) {
                 const newChild = {
                   ...child,
@@ -185,7 +192,8 @@ const Slider = ({
                     spacing: itemSpacing,
                     main,
                     itemView: itemView,
-                    itemWidth: itemWidth
+                    itemWidth: itemWidth,
+                    active: index === indexSlide ? true : false
                   }
                 };
                 arrayTitle.push(child.props.name);
