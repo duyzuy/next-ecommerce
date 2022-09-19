@@ -91,7 +91,7 @@ export const MENUS_BOTTOM = [
   },
   {
     name: 'Lò vi sóng',
-    path: 'product/9',
+    path: 'product/10',
     thumbnail: '/assets/images/cat/visong.png'
   }
 ];

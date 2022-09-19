@@ -1,5 +1,12 @@
-import React, { useRef, useEffect, useState, useMemo } from 'react';
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useMemo,
+  useLayoutEffect
+} from 'react';
 import SlideItem from './SlideItem';
+
 import * as Icon from 'react-feather';
 
 const createArray = (length) => {
@@ -11,63 +18,105 @@ const createArray = (length) => {
 
 const slider = {
   NEXT: 'next',
-  PREV: 'prev',
-  MAIN: 'main',
-  SUB: 'sub'
+  PREV: 'prev'
 };
 const Slider = ({
   children,
   itemView = 1,
   itemSpacing = 10,
-  itemScroll = 3,
-  autoPlay = false,
-  mode = 'main'
+  itemScroll = 1,
+  autoPlay,
+  main
 }) => {
   const sliderRef = useRef();
   const itemsRef = useRef();
 
-  const [scrollAbleWidth, setScrollAbleWidth] = useState(0);
+  const [dimension, setDimensions] = useState({ width: 0, scrollWidth: 0 });
   const [slideItems, setSlideItems] = useState([]);
   const [itemWidth, setItemWidth] = useState(0);
+  const [title, setTitle] = useState([{ name: '', current: false }]);
+  const [maxIndexSlide, setMaxIndexSlide] = useState();
   let subComponentList = Object.keys(Slider);
-  // let itemScrollArr = createArray(itemScroll);
-  let moveWidth = 0;
-  let endNext = false;
-  let endprev = true;
-  let indexSlide = 1;
 
+  let moveWidth = 0;
+  let indexSlide = 0;
+  let sliding = false;
   let itemScrollArr = useMemo(() => {
     return createArray(itemScroll);
   }, []);
 
-  useEffect(() => {
-    setScrollAbleWidth(
-      () => itemsRef.current.scrollWidth - itemsRef.current.clientWidth
-    );
+  const getDimensions = (myRef) => {
+    return {
+      width: myRef.current.offsetWidth,
+      scrollWidth: myRef.current.scrollWidth
+    };
+  };
 
+  useEffect(() => {
+    setDimensions(getDimensions(itemsRef));
+  }, [itemsRef]);
+
+  let timeInterval;
+  useEffect(() => {
     setItemWidth(Math.round((100 * 100) / itemView) / 100);
 
     setSlideItems(itemsRef.current.childNodes);
 
-    let timeInterval;
+    setMaxIndexSlide(() => {
+      return Math.round(
+        (itemsRef.current.childNodes.length - itemView) / itemScroll
+      );
+    });
+
+    //auto slider
+
     autoPlay === true
       ? (timeInterval = setInterval(() => {
-          moveSlide({ slideType: mode, action: slider.NEXT });
-        }, 300000))
+          moveSlide({ action: slider.NEXT });
+        }, 5000))
       : null;
     return () => {
       clearInterval(timeInterval);
     };
   }, [slideItems, itemView]);
 
-  const moveSlide = ({ slideType, action }) => {
+  const moveSlide = ({ action }) => {
+    if (sliding === true) {
+      return;
+    }
+
+    if (main !== undefined && itemScroll > itemView)
+      throw new Error('itemScroll must less than itemView');
+
+    if (main !== undefined) {
+      if (
+        (action === slider.NEXT && indexSlide === maxIndexSlide) ||
+        (action === slider.PREV && indexSlide === 0)
+      )
+        return;
+    }
+
+    if (main === undefined) {
+      if (
+        moveWidth === dimension.scrollWidth - dimension.width &&
+        action === slider.NEXT
+      ) {
+        moveWidth = -moveWidth;
+        itemScrollArr = createArray(itemScroll);
+      }
+
+      if (moveWidth === 0 && action === slider.PREV) {
+        return;
+      }
+    }
+    sliding = true;
     let widthOfItems = 0;
     for (let i = 0; i < itemScrollArr.length; i++) {
-      widthOfItems += Math.round(
-        slideItems[itemScrollArr[i]].clientWidth +
-          itemSpacing * (itemScroll - 1)
-      );
+      widthOfItems +=
+        Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
     }
+    widthOfItems = widthOfItems + itemSpacing * (itemScroll - 1);
+
     // update next array of items
     itemScrollArr =
       action === slider.NEXT
@@ -77,34 +126,49 @@ const Slider = ({
       ? (moveWidth += widthOfItems)
       : (moveWidth -= widthOfItems);
 
-    if (moveWidth > scrollAbleWidth) {
-      moveWidth = scrollAbleWidth;
+    if (main === undefined) {
+      if (moveWidth > dimension.scrollWidth - dimension.width) {
+        moveWidth = dimension.scrollWidth - dimension.width;
+      }
+      if (moveWidth < 0) {
+        moveWidth = 0;
+      }
     }
 
-    if (moveWidth < 0) {
-      moveWidth = 0;
-    }
     action === slider.NEXT ? indexSlide++ : indexSlide--;
-    if (itemView === 1) {
-    }
+
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
+
+    sliding = false;
   };
 
   const handleNext = () => {
-    moveSlide({ slideType: mode, action: slider.NEXT });
+    moveSlide({ action: slider.NEXT });
+    clearInterval(timeInterval);
   };
 
   const handlePrev = () => {
-    if (indexSlide === 1) return;
-    moveSlide({ slideType: mode, action: slider.PREV });
+    moveSlide({ action: slider.PREV });
+    clearInterval(timeInterval);
   };
-  const Paginations = () => {
-    return <>paginations</>;
+
+  const Paginations = ({ titles }) => {
+    console.log();
+    return (
+      <div className="ec__slide--pagination">
+        {titles.map((title, index) => (
+          <p key={index} className="pagination--item">
+            {title}
+          </p>
+        ))}
+      </div>
+    );
   };
+  let arrayTitle = [];
   return (
     <div
       className={`ec__slide ${
-        mode === 'main' ? 'ec__slide--main' : 'ec__slide--sub'
+        main !== undefined ? 'ec__slide--main' : 'ec__slide--sub'
       }`}
       ref={sliderRef}
     >
@@ -118,11 +182,12 @@ const Slider = ({
                   props: {
                     ...child.props,
                     spacing: itemSpacing,
-                    mode,
+                    main,
                     itemView: itemView,
                     itemWidth: itemWidth
                   }
                 };
+                arrayTitle.push(child.props.name);
                 return newChild;
               }
               return null;
@@ -130,7 +195,7 @@ const Slider = ({
           )}
         </ul>
       </div>
-      {mode === 'main' && <Paginations />}
+      {main && <Paginations titles={arrayTitle} />}
       <div className="ec__slide--nav">
         <span className="ec__slide--prev" onClick={handlePrev}>
           <Icon.ArrowLeft width={16} />

@@ -6,13 +6,14 @@ const SlideItem = ({
   thumbnail,
   spacing,
   itemView,
-  mode,
+  main,
   itemWidth
 }) => {
   let itemStyles = {
-    marginRight: itemView > 1 ? `${spacing}px` : 0
+    marginRight: itemView > 1 || main === undefined ? `${spacing}px` : 0
   };
-  if (mode === 'main') {
+
+  if (main !== undefined) {
     itemStyles = Object.assign(
       {
         minWidth: `${itemWidth}%`

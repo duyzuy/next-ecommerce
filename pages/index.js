@@ -11,13 +11,7 @@ const Home = () => {
         <Container>
           <Grid>
             <Grid.Column width={10}>
-              <Slider
-                mode="main"
-                itemView={1}
-                autoPlay={true}
-                itemSpacing={15}
-                itemScroll={1}
-              >
+              <Slider main autoPlay itemView={1} itemSpacing={15}>
                 {TOP_PROMOTIONS.map((item, index) => (
                   <Slider.Item
                     key={index}
