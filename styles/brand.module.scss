@@ -1,0 +1,14 @@
+.ec_brand_item{
+    background-color: red;
+
+    :global .sub--text{
+
+    }
+    :global .ec__brand--thumbnail{
+        width: 100%;
+
+        img{
+            width: 100%;
+        }
+    }
+}

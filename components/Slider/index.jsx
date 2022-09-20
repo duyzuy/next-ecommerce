@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useState } from 'react';
 import SlideItem from './SlideItem';
 import Paginations from './Paginations';
+import SliderNav from './SliderNav';
 import * as Icon from 'react-feather';
 
 const createArray = (length) => {
@@ -24,7 +25,8 @@ const Slider = ({
   main,
   duration = 5000,
   breakPoint,
-  pageViewItem = 5
+  pagination,
+  pageViewItem = 4
 }) => {
   const sliderRef = useRef();
   const itemsRef = useRef();
@@ -80,7 +82,9 @@ const Slider = ({
 
   useEffect(() => {
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-    main !== undefined && paginationRef.current.onMove(indexSlide);
+    main !== undefined &&
+      pagination !== undefined &&
+      paginationRef.current.onMove(indexSlide);
   }, [indexSlide]);
 
   const moveSlide = ({ action, indexGoto }) => {
@@ -220,12 +224,12 @@ const Slider = ({
     }
   };
 
-  const handleNext = () => {
+  const onClickNext = () => {
     moveSlide({ action: slider.NEXT });
     clearTimeout(timmerId);
   };
 
-  const handlePrev = () => {
+  const onCLickPrev = () => {
     moveSlide({ action: slider.PREV });
     clearTimeout(timmerId);
   };
@@ -269,24 +273,25 @@ const Slider = ({
           )}
         </ul>
       </div>
-      {main && (
+      {main && pagination && (
         <Paginations
           titles={arrayTitle}
-          width={dimension.width / 4}
           onMoveSlide={onMoveSlide}
-          ref={paginationRef}
           pageViewItem={pageViewItem}
+          ref={paginationRef}
           spacing={10}
         />
       )}
-      <div className="ec__slide--nav">
-        <span className="ec__slide--prev" onClick={handlePrev}>
-          <Icon.ArrowLeft width={16} />
-        </span>
-        <span className="ec__slide--next" onClick={handleNext}>
-          <Icon.ArrowRight width={16} />
-        </span>
-      </div>
+      <SliderNav
+        onCLickPrev={onCLickPrev}
+        onClickNext={onClickNext}
+        iconPrev={() => {
+          return <Icon.ArrowLeft width={16} />;
+        }}
+        iconNext={() => {
+          return <Icon.ArrowRight width={16} />;
+        }}
+      />
     </div>
   );
 };

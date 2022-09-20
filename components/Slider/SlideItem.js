@@ -7,7 +7,10 @@ const SlideItem = ({
   spacing,
   itemView,
   main,
-  itemWidth, active
+  itemWidth,
+  active,
+  children,
+  asChild
 }) => {
   let itemStyles = {
     marginRight: itemView > 1 || main === undefined ? `${spacing}px` : 0
@@ -24,8 +27,25 @@ const SlideItem = ({
   if (thumbnail === '') {
     thumbnail = 'assets/images/image.svg';
   }
+  if (asChild) {
+    return (
+      <>
+        <li
+          className={
+            active === true ? 'ec__slide--item active' : 'ec__slide--item'
+          }
+          style={{ ...itemStyles }}
+        >
+          {children}
+        </li>
+      </>
+    );
+  }
   return (
-    <li className={active === true ? "ec__slide--item active": "ec__slide--item"} style={{ ...itemStyles }}>
+    <li
+      className={active === true ? 'ec__slide--item active' : 'ec__slide--item'}
+      style={{ ...itemStyles }}
+    >
       <Link href={path}>
         <a className="ec__slide--link">
           <div className="ec__slide--thumbnail">

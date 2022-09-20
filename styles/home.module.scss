@@ -15,3 +15,8 @@
 .ec__box--item{
     margin-bottom: 10px;
 }
+.ec__brand-item {
+    :global .ec__brand--thumbnail{
+        position: relative;
+    }
+}

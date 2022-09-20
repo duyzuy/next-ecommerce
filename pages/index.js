@@ -23,6 +23,7 @@ const Home = (props) => {
                 itemView={1}
                 itemSpacing={15}
                 duration={5000}
+                pagination={4}
               >
                 {TOP_PROMOTIONS.map((item, index) => (
                   <Slider.Item
