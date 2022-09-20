@@ -16,6 +16,27 @@ const createArray = (length) => {
     return i;
   });
 };
+const Paginations = ({ titles, width }) => {
+  return (
+    <div className="ec__slide--pagination">
+      <ul className="pagination--items">
+        {titles.map((title, index) => (
+          <li
+            key={index}
+            className={
+              title.active === true
+                ? 'pagination--item active'
+                : 'pagination--item'
+            }
+            style={{ minWidth: `${width}px` }}
+          >
+            <p className="sub--text">{title.name}</p>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+};
 
 const slider = {
   NEXT: 'next',
@@ -27,7 +48,8 @@ const Slider = ({
   itemSpacing = 10,
   itemScroll = 1,
   autoPlay,
-  main
+  main,
+  duration = 5000
 }) => {
   const sliderRef = useRef();
   const itemsRef = useRef();
@@ -64,16 +86,22 @@ const Slider = ({
     setItemWidth(Math.round((100 * 100) / itemView) / 100);
   }, [itemView]);
 
+  /**
+   *
+   * @params indexSlide, slideItems
+   *
+   * Set Auto Slider
+   *
+   */
+  let timmerId;
   useEffect(() => {
-    //auto slider
-    let timeInterval;
     autoPlay === true
-      ? (timeInterval = setTimeout(() => {
+      ? (timmerId = setTimeout(() => {
           moveSlide({ action: slider.NEXT });
-        }, 1000))
+        }, duration))
       : null;
     return () => {
-      clearTimeout(timeInterval);
+      clearTimeout(timmerId);
     };
   }, [slideItems, indexSlide]);
 
@@ -83,32 +111,6 @@ const Slider = ({
     if (main !== undefined && itemScroll > itemView)
       throw new Error('itemScroll must less than itemView');
 
-    if (main !== undefined) {
-      if (
-        (action === slider.NEXT && indexSlide === maxIndexSlide) ||
-        (action === slider.PREV && indexSlide === 0)
-      )
-        return;
-    }
-
-    if (main === undefined) {
-      if (
-        moveWidth === dimension.scrollWidth - dimension.width &&
-        action === slider.NEXT
-      ) {
-        console.log('reset');
-        setMoveWidth(0);
-        setItemScrollArr(() => {
-          return [0, 1];
-        });
-      }
-
-      if (moveWidth === 0 && action === slider.PREV) {
-        return;
-      }
-    }
-    console.log(itemScrollArr);
-    sliding = true;
     let widthOfItems = 0;
 
     for (let i = 0; i < itemScrollArr.length; i++) {
@@ -119,31 +121,96 @@ const Slider = ({
 
     // update next array of items
 
-    setItemScrollArr((prevArr) => {
-      return action === slider.NEXT
-        ? prevArr.map((item) => item + itemScroll)
-        : prevArr.map((item) => item - itemScroll);
+    setItemScrollArr((prevState) =>
+      prevState.map((item) =>
+        action === slider.NEXT ? item + itemScroll : item - itemScroll
+      )
+    );
+
+    setMoveWidth((prevState) => {
+      let moveWidth = 0;
+      if (main === undefined) {
+        switch (action) {
+          case slider.NEXT:
+            {
+              if (
+                prevState + widthOfItems >
+                dimension.scrollWidth - dimension.width
+              ) {
+                moveWidth = dimension.scrollWidth - dimension.width;
+              } else {
+                moveWidth = prevState + widthOfItems;
+              }
+            }
+            break;
+          case slider.PREV:
+            {
+              if (prevState + widthOfItems < 0) {
+                moveWidth = 0;
+              } else {
+                moveWidth = prevState + widthOfItems;
+              }
+            }
+            break;
+          default:
+            moveWidth = 0;
+        }
+      } else {
+        if (action === slider.NEXT) {
+          moveWidth = prevState + dimension.width;
+        } else {
+          if (prevState >= dimension.width) {
+            moveWidth = prevState - dimension.width;
+          } else {
+            moveWidth = 0;
+          }
+        }
+      }
+
+      return moveWidth;
     });
 
-    action === slider.NEXT
-      ? setMoveWidth((prevWidth) => prevWidth + widthOfItems)
-      : setMoveWidth((prevWidth) => prevWidth - widthOfItems);
-    if (main === undefined) {
-      if (moveWidth > dimension.scrollWidth - dimension.width) {
-        // moveWidth = dimension.scrollWidth - dimension.width;
-        setMoveWidth(dimension.scrollWidth - dimension.width);
-      }
-      if (moveWidth < 0) {
-        // moveWidth = 0;
+    setIndexSlide((prevState) => {
+      return action === slider.NEXT ? prevState + 1 : prevState - 1;
+    });
+    console.log(indexSlide, moveWidth, dimension);
+    /**
+     *
+     * reset slider main
+     *
+     */
+    if (main !== undefined) {
+      if (
+        (action === slider.NEXT && indexSlide === maxIndexSlide) ||
+        (action === slider.PREV && indexSlide === 0)
+      ) {
+        setIndexSlide(0);
         setMoveWidth(0);
+        setItemScrollArr(createArray(itemScroll));
       }
     }
+    /**
+     *
+     * reset slider
+     *
+     */
+    if (main === undefined) {
+      if (
+        (moveWidth === dimension.scrollWidth - dimension.width &&
+          action === slider.NEXT) ||
+        (moveWidth === 0 && action === slider.PREV)
+      ) {
+        setMoveWidth(0);
+        setItemScrollArr(createArray(itemScroll));
+      }
 
-    // action === slider.NEXT ? indexSlide++ : indexSlide--;
-
-    action === slider.NEXT
-      ? setIndexSlide((prevIndex) => prevIndex + 1)
-      : setIndexSlide((prevIndex) => prevIndex - 1);
+      if (
+        (action === slider.NEXT && indexSlide === maxIndexSlide) ||
+        (indexSlide <= 0 && action === slider.PREV)
+      ) {
+        setIndexSlide(0);
+      }
+    }
 
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
 
@@ -152,25 +219,14 @@ const Slider = ({
 
   const handleNext = () => {
     moveSlide({ action: slider.NEXT });
+    clearTimeout(timmerId);
   };
 
   const handlePrev = () => {
     moveSlide({ action: slider.PREV });
+    clearTimeout(timmerId);
   };
 
-  const Paginations = ({ titles }) => {
-    return (
-      <div className="ec__slide--pagination">
-        <ul className="pagination--items">
-          {titles.map((title, index) => (
-            <li key={index} className="pagination--item">
-              <p className="sub--text">{title}</p>
-            </li>
-          ))}
-        </ul>
-      </div>
-    );
-  };
   let arrayTitle = [];
 
   return (
@@ -196,7 +252,10 @@ const Slider = ({
                     active: index === indexSlide ? true : false
                   }
                 };
-                arrayTitle.push(child.props.name);
+                arrayTitle.push({
+                  name: child.props.name,
+                  active: index === indexSlide ? true : false
+                });
                 return newChild;
               }
               return null;
@@ -204,7 +263,7 @@ const Slider = ({
           )}
         </ul>
       </div>
-      {main && <Paginations titles={arrayTitle} />}
+      {main && <Paginations titles={arrayTitle} width={dimension.width / 4} />}
       <div className="ec__slide--nav">
         <span className="ec__slide--prev" onClick={handlePrev}>
           <Icon.ArrowLeft width={16} />
