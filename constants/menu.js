@@ -121,5 +121,20 @@ export const TOP_PROMOTIONS = [
     name: 'Không gian nhà bếp tại Thành phố Hcm',
     path: 'product/5',
     thumbnail: '/assets/images/slider/slide-5.png'
+  },
+  {
+    name: 'Sinh nhật Sai gon homekitchen, giảm giá đến 50% các sản phẩm',
+    path: 'product/3',
+    thumbnail: '/assets/images/slider/slide-3.png'
+  },
+  {
+    name: 'Khuyến mại cực tốt trong tháng 10 với các sản phẩm Bếp từ',
+    path: 'product/4',
+    thumbnail: '/assets/images/slider/slide-4.png'
+  },
+  {
+    name: 'Không gian nhà bếp tại Thành phố Hcm',
+    path: 'product/5',
+    thumbnail: '/assets/images/slider/slide-5.png'
   }
 ];

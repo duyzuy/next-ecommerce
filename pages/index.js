@@ -1,9 +1,15 @@
+import { useState, useEffect } from 'react';
 import { Container } from 'semantic-ui-react';
 import SEO from '../components/common/Seo';
 import { Grid, Image } from 'semantic-ui-react';
 import { TOP_PROMOTIONS } from '../constants/menu';
 import Slider from '../components/Slider';
-const Home = () => {
+import styles from '../styles/home.module.scss';
+import Brands from '../container/Brands';
+
+import { data } from '../constants/brandsData.js';
+const Home = (props) => {
+  const { brand } = props;
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
@@ -29,7 +35,7 @@ const Home = () => {
               </Slider>
             </Grid.Column>
             <Grid.Column width={6}>
-              <div className="ec__box">
+              <div className={styles.ec__box}>
                 <div className="ec__box--item">
                   <div className="ec__box--content">
                     <h4>Miễn phí vận chuyển</h4>
@@ -61,9 +67,15 @@ const Home = () => {
             </Grid.Column>
           </Grid>
         </Container>
+        <Brands data={brand}></Brands>
       </div>
     </>
   );
 };
 
+export async function getServerSideProps(context) {
+  return {
+    props: { brand: data } // will be passed to the page component as props
+  };
+}
 export default Home;

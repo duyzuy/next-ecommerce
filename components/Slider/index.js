@@ -1,13 +1,6 @@
-import React, {
-  useRef,
-  useEffect,
-  useState,
-  useMemo,
-  useLayoutEffect,
-  useCallback
-} from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import SlideItem from './SlideItem';
-
+import Paginations from './Paginations';
 import * as Icon from 'react-feather';
 
 const createArray = (length) => {
@@ -16,31 +9,11 @@ const createArray = (length) => {
     return i;
   });
 };
-const Paginations = ({ titles, width }) => {
-  return (
-    <div className="ec__slide--pagination">
-      <ul className="pagination--items">
-        {titles.map((title, index) => (
-          <li
-            key={index}
-            className={
-              title.active === true
-                ? 'pagination--item active'
-                : 'pagination--item'
-            }
-            style={{ minWidth: `${width}px` }}
-          >
-            <p className="sub--text">{title.name}</p>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
-};
 
 const slider = {
   NEXT: 'next',
-  PREV: 'prev'
+  PREV: 'prev',
+  GOTO: 'goto'
 };
 const Slider = ({
   children,
@@ -49,20 +22,20 @@ const Slider = ({
   itemScroll = 1,
   autoPlay,
   main,
-  duration = 5000
+  duration = 5000,
+  breakPoint,
+  pageViewItem = 5
 }) => {
   const sliderRef = useRef();
   const itemsRef = useRef();
-
+  const paginationRef = useRef();
   const [dimension, setDimensions] = useState({ width: 0, scrollWidth: 0 });
   const [slideItems, setSlideItems] = useState([]);
   const [itemWidth, setItemWidth] = useState(0);
-  const [title, setTitle] = useState([{ name: '', current: false }]);
   const [maxIndexSlide, setMaxIndexSlide] = useState();
   let subComponentList = Object.keys(Slider);
   const [indexSlide, setIndexSlide] = useState(0);
   const [moveWidth, setMoveWidth] = useState(0);
-  const [sliding, setSliding] = useState(false);
 
   const [itemScrollArr, setItemScrollArr] = useState(() => {
     return createArray(itemScroll);
@@ -96,35 +69,46 @@ const Slider = ({
   let timmerId;
   useEffect(() => {
     autoPlay === true
-      ? (timmerId = setTimeout(() => {
+      ? (timmerId = setInterval(() => {
           moveSlide({ action: slider.NEXT });
         }, duration))
       : null;
     return () => {
-      clearTimeout(timmerId);
+      clearInterval(timmerId);
     };
   }, [slideItems, indexSlide]);
 
-  const moveSlide = ({ action }) => {
-    if (sliding === true) return;
-    setSliding(true);
+  useEffect(() => {
+    itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
+    main !== undefined && paginationRef.current.onMove(indexSlide);
+  }, [indexSlide]);
+
+  const moveSlide = ({ action, indexGoto }) => {
     if (main !== undefined && itemScroll > itemView)
       throw new Error('itemScroll must less than itemView');
-
     let widthOfItems = 0;
 
     for (let i = 0; i < itemScrollArr.length; i++) {
       widthOfItems +=
         Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
     }
-    widthOfItems = widthOfItems + itemSpacing * (itemScroll - 1);
+    widthOfItems = widthOfItems + itemSpacing * (itemScroll - 1) * indexSlide;
 
     // update next array of items
 
     setItemScrollArr((prevState) =>
-      prevState.map((item) =>
-        action === slider.NEXT ? item + itemScroll : item - itemScroll
-      )
+      prevState.map((item) => {
+        if (action === slider.NEXT) {
+          return item + itemScroll;
+        }
+
+        if (action === slider.PREV) {
+          return item - itemScroll;
+        }
+        if (action === slider.GOTO) {
+          return indexGoto;
+        }
+      })
     );
 
     setMoveWidth((prevState) => {
@@ -158,12 +142,16 @@ const Slider = ({
       } else {
         if (action === slider.NEXT) {
           moveWidth = prevState + dimension.width;
-        } else {
+        }
+        if (action === slider.PREV) {
           if (prevState >= dimension.width) {
             moveWidth = prevState - dimension.width;
           } else {
             moveWidth = 0;
           }
+        }
+        if (action === slider.GOTO) {
+          moveWidth = indexGoto * dimension.width;
         }
       }
 
@@ -171,9 +159,28 @@ const Slider = ({
     });
 
     setIndexSlide((prevState) => {
-      return action === slider.NEXT ? prevState + 1 : prevState - 1;
+      let newIndex = 0;
+
+      switch (action) {
+        case slider.NEXT: {
+          newIndex = prevState + 1;
+          break;
+        }
+        case slider.PREV: {
+          newIndex = prevState - 1;
+          break;
+        }
+        case slider.GOTO: {
+          newIndex = indexGoto;
+          break;
+        }
+        default:
+          newIndex = 0;
+      }
+
+      return newIndex;
     });
-    console.log(indexSlide, moveWidth, dimension);
+
     /**
      *
      * reset slider main
@@ -211,10 +218,6 @@ const Slider = ({
         setIndexSlide(0);
       }
     }
-
-    itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-
-    setSliding(false);
   };
 
   const handleNext = () => {
@@ -226,7 +229,10 @@ const Slider = ({
     moveSlide({ action: slider.PREV });
     clearTimeout(timmerId);
   };
-
+  const onMoveSlide = (index) => {
+    moveSlide({ action: slider.GOTO, indexGoto: index });
+    clearTimeout(timmerId);
+  };
   let arrayTitle = [];
 
   return (
@@ -263,7 +269,16 @@ const Slider = ({
           )}
         </ul>
       </div>
-      {main && <Paginations titles={arrayTitle} width={dimension.width / 4} />}
+      {main && (
+        <Paginations
+          titles={arrayTitle}
+          width={dimension.width / 4}
+          onMoveSlide={onMoveSlide}
+          ref={paginationRef}
+          pageViewItem={pageViewItem}
+          spacing={10}
+        />
+      )}
       <div className="ec__slide--nav">
         <span className="ec__slide--prev" onClick={handlePrev}>
           <Icon.ArrowLeft width={16} />

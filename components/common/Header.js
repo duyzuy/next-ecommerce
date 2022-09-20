@@ -5,9 +5,9 @@ import * as Icon from 'react-feather';
 import MenuItem from '../MenuItem';
 import { MENUS, MENUS_BOTTOM } from '../../constants/menu';
 import { isActive } from '../../utils/acrtiveMenu';
-import styles from '../../styles/header.module.scss';
 import Link from 'next/link';
 import Slider from '../Slider';
+import styles from '../../styles/header.module.scss';
 const Header = () => {
   return (
     <header id="ec__header" className={styles.ec_header}>
@@ -107,7 +107,7 @@ const Header = () => {
       </div>
       <div id="ec_header_bottom" className={styles.ec_header_bottom}>
         <Container>
-          {/* <Slider autoPlay itemSpacing={15} itemScroll={2} duration={8000}>
+          <Slider autoPlay itemSpacing={15} itemScroll={2} duration={8000}>
             {MENUS_BOTTOM.map((item, index) => (
               <Slider.Item
                 key={index}
@@ -116,7 +116,7 @@ const Header = () => {
                 thumbnail={item.thumbnail}
               />
             ))}
-          </Slider> */}
+          </Slider>
         </Container>
       </div>
     </header>

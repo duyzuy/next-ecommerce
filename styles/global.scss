@@ -1,27 +1,32 @@
 @use 'foundation/slide';
-// // @font-face {
-// //     font-family: productSans;
-// //     src: url('./assets/fonts/googleSans/ProductSans-Medium.ttf');
-// //   }
-// // @font-face {
-// //     font-family: productSans;
-// //     src: url('./assets/fonts/googleSans/ProductSans-Bold.ttf');
-// //     font-weight: bold;
-// //   }
-// //   @font-face {
-// //     font-family: productSans;
-// //     src: url('./assets/fonts/googleSans/ProductSans-Regular.ttf');
-// //     font-weight: 400;
-// //   }
-// //   @font-face {
-// //     font-family: productSans;
-// //     src: url('./assets/fonts/googleSans/ProductSans-Light.ttf');
-// //     font-weight: 300;
-// //   }
-// *{
-//     font-family: productSans;
-// }
+@font-face {
+    font-family: productSans;
+    src: url('/assets/fonts/googleSans/ProductSans-Medium.ttf');
+  }
+@font-face {
+    font-family: productSans;
+    src: url('/assets/fonts/googleSans/ProductSans-Bold.ttf');
+    font-weight: bold;
+  }
+  @font-face {
+    font-family: productSans;
+    src: url('/assets/fonts/googleSans/ProductSans-Regular.ttf');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: productSans;
+    src: url('/assets/fonts/googleSans/ProductSans-Light.ttf');
+    font-weight: 300;
+  }
+
+body{
+   
+
+}
 .ec_main{
     min-height: 50vh;
     padding-top: 30px;
+}
+.ec__section{
+  margin-bottom: 30px;
 }
