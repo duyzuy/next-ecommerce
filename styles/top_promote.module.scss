@@ -1,0 +1,26 @@
+
+.ec__promote{
+    
+}
+.ec__box{
+
+    :global .ec__box--item{
+        background-color: #f1f1f1;
+        margin-bottom: 15px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        .ec__box--content h4{
+            margin-bottom: 5px;
+            text-transform: uppercase;
+        }
+    }
+}
+
+.ec__box--item{
+    margin-bottom: 10px;
+}
+.ec__brand-item {
+    :global .ec__brand--thumbnail{
+        position: relative;
+    }
+}

@@ -2,13 +2,11 @@ import { useState, useEffect } from 'react';
 export const useDimensions = (myRef) => {
   const getDimensions = () => ({
     width: myRef.current.offsetWidth,
-    height: myRef.current.offsetHeight,
     scrollWidth: myRef.current.scrollWidth
   });
 
   const [dimensions, setDimensions] = useState({
     width: 0,
-    height: 0,
     scrollWidth: 0
   });
 

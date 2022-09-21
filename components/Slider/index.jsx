@@ -1,9 +1,9 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState, useCallback } from 'react';
 import SlideItem from './SlideItem';
 import Paginations from './Paginations';
 import SliderNav from './SliderNav';
 import * as Icon from 'react-feather';
-
+import { useDimensions } from '../../hooks/useDimensions';
 const createArray = (length) => {
   if (typeof length !== 'number') return;
   return Array.from({ length }, (_, i) => {
@@ -28,38 +28,48 @@ const Slider = ({
   pagination,
   pageViewItem = 4
 }) => {
+  let subComponentList = Object.keys(Slider);
   const sliderRef = useRef();
   const itemsRef = useRef();
   const paginationRef = useRef();
-  const [dimension, setDimensions] = useState({ width: 0, scrollWidth: 0 });
   const [slideItems, setSlideItems] = useState([]);
   const [itemWidth, setItemWidth] = useState(0);
   const [maxIndexSlide, setMaxIndexSlide] = useState();
-  let subComponentList = Object.keys(Slider);
   const [indexSlide, setIndexSlide] = useState(0);
   const [moveWidth, setMoveWidth] = useState(0);
 
   const [itemScrollArr, setItemScrollArr] = useState(() => {
     return createArray(itemScroll);
   });
-
-  const getDimensions = (myRef) => {
-    return {
-      width: myRef.current.offsetWidth,
-      scrollWidth: myRef.current.scrollWidth
-    };
-  };
+  const sliderDimensions = useDimensions(itemsRef);
 
   useEffect(() => {
-    setDimensions(getDimensions(itemsRef));
     setSlideItems(itemsRef.current.childNodes);
     setMaxIndexSlide(() => {
       return Math.round(
         (itemsRef.current.childNodes.length - itemView) / itemScroll
       );
     });
-    setItemWidth(Math.round((100 * 100) / itemView) / 100);
-  }, [itemView]);
+    setItemWidth(() => {
+      let itemWidth = 0;
+      if (main !== undefined) {
+        itemWidth =
+          Math.round(
+            (100 *
+              (itemsRef.current.offsetWidth - (itemView - 1) * itemSpacing)) /
+              itemView
+          ) / 100;
+      } else {
+        itemWidth =
+          Math.round(
+            (100 *
+              (itemsRef.current.offsetWidth - (itemView - 1) * itemSpacing)) /
+              itemView
+          ) / 100;
+      }
+      return itemWidth;
+    });
+  }, [itemView, sliderDimensions]);
 
   /**
    *
@@ -69,6 +79,7 @@ const Slider = ({
    *
    */
   let timmerId;
+
   useEffect(() => {
     autoPlay === true
       ? (timmerId = setInterval(() => {
@@ -85,18 +96,26 @@ const Slider = ({
     main !== undefined &&
       pagination !== undefined &&
       paginationRef.current.onMove(indexSlide);
-  }, [indexSlide]);
+  }, [indexSlide, sliderDimensions]);
 
   const moveSlide = ({ action, indexGoto }) => {
     if (main !== undefined && itemScroll > itemView)
       throw new Error('itemScroll must less than itemView');
     let widthOfItems = 0;
 
-    for (let i = 0; i < itemScrollArr.length; i++) {
-      widthOfItems +=
-        Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
+    if (main === undefined) {
+      for (let i = 0; i < itemScrollArr.length; i++) {
+        widthOfItems +=
+          Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
+      }
+      widthOfItems = widthOfItems + itemSpacing * itemScroll;
+    } else {
+      if (itemView > itemScroll) {
+        widthOfItems = itemWidth * itemScroll + itemSpacing * itemScroll;
+      } else {
+        widthOfItems = itemWidth * itemScroll + itemSpacing * (itemScroll - 1);
+      }
     }
-    widthOfItems = widthOfItems + itemSpacing * (itemScroll - 1) * indexSlide;
 
     // update next array of items
 
@@ -123,20 +142,22 @@ const Slider = ({
             {
               if (
                 prevState + widthOfItems >
-                dimension.scrollWidth - dimension.width
+                sliderDimensions.scrollWidth - sliderDimensions.width
               ) {
-                moveWidth = dimension.scrollWidth - dimension.width;
+                moveWidth =
+                  sliderDimensions.scrollWidth - sliderDimensions.width;
               } else {
                 moveWidth = prevState + widthOfItems;
               }
             }
+            console.log(moveWidth);
             break;
           case slider.PREV:
             {
-              if (prevState + widthOfItems < 0) {
+              if (prevState - widthOfItems < 0) {
                 moveWidth = 0;
               } else {
-                moveWidth = prevState + widthOfItems;
+                moveWidth = prevState - widthOfItems;
               }
             }
             break;
@@ -145,17 +166,17 @@ const Slider = ({
         }
       } else {
         if (action === slider.NEXT) {
-          moveWidth = prevState + dimension.width;
+          moveWidth = prevState + widthOfItems;
         }
         if (action === slider.PREV) {
-          if (prevState >= dimension.width) {
-            moveWidth = prevState - dimension.width;
+          if (prevState >= sliderDimensions.width) {
+            moveWidth = prevState - widthOfItems;
           } else {
             moveWidth = 0;
           }
         }
         if (action === slider.GOTO) {
-          moveWidth = indexGoto * dimension.width;
+          moveWidth = indexGoto * widthOfItems;
         }
       }
 
@@ -207,7 +228,7 @@ const Slider = ({
      */
     if (main === undefined) {
       if (
-        (moveWidth === dimension.scrollWidth - dimension.width &&
+        (moveWidth === sliderDimensions.scrollWidth - sliderDimensions.width &&
           action === slider.NEXT) ||
         (moveWidth === 0 && action === slider.PREV)
       ) {
@@ -229,7 +250,7 @@ const Slider = ({
     clearTimeout(timmerId);
   };
 
-  const onCLickPrev = () => {
+  const onClickPrev = () => {
     moveSlide({ action: slider.PREV });
     clearTimeout(timmerId);
   };
@@ -283,7 +304,7 @@ const Slider = ({
         />
       )}
       <SliderNav
-        onCLickPrev={onCLickPrev}
+        onClickPrev={onClickPrev}
         onClickNext={onClickNext}
         iconPrev={() => {
           return <Icon.ArrowLeft width={16} />;

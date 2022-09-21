@@ -19,7 +19,7 @@ const SlideItem = ({
   if (main !== undefined) {
     itemStyles = Object.assign(
       {
-        minWidth: `${itemWidth}%`
+        minWidth: `${itemWidth}px`
       },
       itemStyles
     );

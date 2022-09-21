@@ -1,38 +1,50 @@
 import React from 'react';
+import { useDimensions } from '../../hooks/useDimensions';
 
 const Paginations = (props, ref) => {
   const { titles, onMoveSlide, spacing, pageViewItem } = props;
   const [slideIndex, setSlideIndex] = React.useState(0);
   const [itemWidth, setItemWidth] = React.useState(0);
-  const [dimension, setDimensions] = React.useState({
-    width: 0,
-    scrollWidth: 0
-  });
+  // const [dimension, setDimension] = React.useState({
+  //   width: 0,
+  //   scrollWidth: 0
+  // });
   const pagiItemRef = React.useRef();
 
-  const getDimensions = (myRef) => {
+  const pagiDimension = useDimensions(pagiItemRef);
+  const getDimension = (myRef) => {
     return {
       width: myRef.current.offsetWidth,
       scrollWidth: myRef.current.scrollWidth
     };
   };
+  // React.useEffect(() => {
+  //   const handleResize = () => {
+  //     setDimension(getDimension(pagiItemRef));
+  //   };
+  //   if (pagiItemRef) {
+  //     setDimension(getDimension(pagiItemRef));
+  //   }
+  //   window.addEventListener('resize', handleResize);
+  //   return () => {
+  //     window.removeEventListener('resize', handleResize);
+  //   };
+  // }, [pagiItemRef]);
 
   React.useEffect(() => {
     setItemWidth(
-      (pagiItemRef.current.offsetWidth - spacing * (pageViewItem - 1)) /
-        pageViewItem
+      (pagiDimension.width - spacing * (pageViewItem - 1)) / pageViewItem
     );
-    setDimensions(getDimensions(pagiItemRef));
-  }, [pagiItemRef, slideIndex]);
+  }, [pagiItemRef, slideIndex, pagiDimension]);
 
   React.useEffect(() => {
     let moveWidth = Math.round(itemWidth * slideIndex + spacing * slideIndex);
 
-    if (moveWidth > dimension.scrollWidth - dimension.width) {
-      moveWidth = dimension.scrollWidth - dimension.width;
+    if (moveWidth > pagiDimension.scrollWidth - pagiDimension.width) {
+      moveWidth = pagiDimension.scrollWidth - pagiDimension.width;
     }
     pagiItemRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-  }, [slideIndex]);
+  }, [slideIndex, pagiDimension]);
 
   React.useImperativeHandle(ref, () => ({
     onMove: (indexItem) => {
