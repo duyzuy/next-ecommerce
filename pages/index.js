@@ -67,7 +67,7 @@ const Home = (props) => {
             </Grid.Column>
           </Grid>
         </Container>
-        <Brands data={brands}></Brands>
+        <Brands data={brand}></Brands>
       </div>
     </>
   );
