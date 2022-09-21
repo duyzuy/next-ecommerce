@@ -1,20 +1,18 @@
 import { useState, useEffect } from 'react';
 export const useDimensions = (myRef) => {
-  const getDimensions = () => ({
-    width: myRef.current.offsetWidth,
-    scrollWidth: myRef.current.scrollWidth
-  });
-
   const [dimensions, setDimensions] = useState({
     width: 0,
     scrollWidth: 0
   });
 
+  const getDimensions = () => ({
+    width: myRef.current.offsetWidth,
+    scrollWidth: myRef.current.scrollWidth
+  });
+  const handleResize = () => {
+    setDimensions(getDimensions());
+  };
   useEffect(() => {
-    const handleResize = () => {
-      setDimensions(getDimensions());
-    };
-
     if (myRef.current) {
       setDimensions(getDimensions());
     }

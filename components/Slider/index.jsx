@@ -69,7 +69,7 @@ const Slider = ({
       }
       return itemWidth;
     });
-  }, [itemView, sliderDimensions]);
+  }, [itemView, itemScroll, itemSpacing]);
 
   /**
    *
@@ -93,10 +93,7 @@ const Slider = ({
 
   useEffect(() => {
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-    main !== undefined &&
-      pagination !== undefined &&
-      paginationRef.current.onMove(indexSlide);
-  }, [indexSlide, sliderDimensions]);
+  }, [indexSlide]);
 
   const moveSlide = ({ action, indexGoto }) => {
     if (main !== undefined && itemScroll > itemView)
@@ -258,7 +255,7 @@ const Slider = ({
     moveSlide({ action: slider.GOTO, indexGoto: index });
     clearTimeout(timmerId);
   };
-  let arrayTitle = [];
+  let titles = [];
 
   return (
     <div
@@ -283,7 +280,7 @@ const Slider = ({
                     active: index === indexSlide ? true : false
                   }
                 };
-                arrayTitle.push({
+                titles.push({
                   name: child.props.name,
                   active: index === indexSlide ? true : false
                 });
@@ -296,11 +293,16 @@ const Slider = ({
       </div>
       {main && pagination && (
         <Paginations
-          titles={arrayTitle}
+          titles={titles}
           onMoveSlide={onMoveSlide}
-          pageViewItem={pageViewItem}
           ref={paginationRef}
-          spacing={10}
+          itemWidth={
+            Math.round(
+              (100 * (sliderDimensions.width - 10 * (pageViewItem - 1))) /
+                pageViewItem
+            ) / 100
+          }
+          indexSlide={indexSlide}
         />
       )}
       <SliderNav

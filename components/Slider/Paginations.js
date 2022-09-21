@@ -1,56 +1,30 @@
 import React from 'react';
-import { useDimensions } from '../../hooks/useDimensions';
 
-const Paginations = (props, ref) => {
-  const { titles, onMoveSlide, spacing, pageViewItem } = props;
-  const [slideIndex, setSlideIndex] = React.useState(0);
-  const [itemWidth, setItemWidth] = React.useState(0);
-  // const [dimension, setDimension] = React.useState({
-  //   width: 0,
-  //   scrollWidth: 0
-  // });
+const Paginations = (props) => {
+  const { titles, onMoveSlide, indexSlide, itemWidth } = props;
+
+  console.log(itemWidth);
+  const [dimension, setDimension] = React.useState({
+    width: 0,
+    scrollWidth: 0
+  });
   const pagiItemRef = React.useRef();
 
-  const pagiDimension = useDimensions(pagiItemRef);
-  const getDimension = (myRef) => {
-    return {
-      width: myRef.current.offsetWidth,
-      scrollWidth: myRef.current.scrollWidth
-    };
-  };
-  // React.useEffect(() => {
-  //   const handleResize = () => {
-  //     setDimension(getDimension(pagiItemRef));
-  //   };
-  //   if (pagiItemRef) {
-  //     setDimension(getDimension(pagiItemRef));
-  //   }
-  //   window.addEventListener('resize', handleResize);
-  //   return () => {
-  //     window.removeEventListener('resize', handleResize);
-  //   };
-  // }, [pagiItemRef]);
+  React.useEffect(() => {
+    setDimension({
+      width: pagiItemRef.current.offsetWidth,
+      scrollWidth: pagiItemRef.current.scrollWidth
+    });
+  }, [pagiItemRef, indexSlide]);
 
   React.useEffect(() => {
-    setItemWidth(
-      (pagiDimension.width - spacing * (pageViewItem - 1)) / pageViewItem
-    );
-  }, [pagiItemRef, slideIndex, pagiDimension]);
+    let moveWidth = Math.round((itemWidth + 10) * indexSlide);
 
-  React.useEffect(() => {
-    let moveWidth = Math.round(itemWidth * slideIndex + spacing * slideIndex);
-
-    if (moveWidth > pagiDimension.scrollWidth - pagiDimension.width) {
-      moveWidth = pagiDimension.scrollWidth - pagiDimension.width;
+    if (moveWidth > dimension.scrollWidth - dimension.width) {
+      moveWidth = dimension.scrollWidth - dimension.width;
     }
     pagiItemRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-  }, [slideIndex, pagiDimension]);
-
-  React.useImperativeHandle(ref, () => ({
-    onMove: (indexItem) => {
-      setSlideIndex(indexItem);
-    }
-  }));
+  }, [indexSlide]);
 
   return (
     <div className="ec__slide--pagination">
