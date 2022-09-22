@@ -4,6 +4,24 @@ import { Container, Header } from 'semantic-ui-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import styles from '../../styles/brand.module.scss';
+
+const breakPoint = {
+  mobile: {
+    width: 320,
+    itemView: 3,
+    itemScroll: 1
+  },
+  tablet: {
+    width: 768,
+    itemView: 5,
+    itemScroll: 2
+  },
+  desktop: {
+    width: 992,
+    itemView: 6,
+    itemScroll: 2
+  }
+};
 const Brands = (props) => {
   const { data } = props;
   return (
@@ -13,7 +31,13 @@ const Brands = (props) => {
           Thương hiệu nổi bật
         </Header>
         <div className="ec__brand--list">
-          <Slider itemScroll={2} itemView={6} main itemSpacing={15}>
+          <Slider
+            itemScroll={2}
+            itemView={6}
+            main
+            itemSpacing={15}
+            breakPoint={breakPoint}
+          >
             {data &&
               data.map((brand, index) => (
                 <Slider.Item key={index} asChild>

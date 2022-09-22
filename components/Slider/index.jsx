@@ -4,6 +4,7 @@ import Paginations from './Paginations';
 import SliderNav from './SliderNav';
 import * as Icon from 'react-feather';
 import { useDimensions } from '../../hooks/useDimensions';
+
 const createArray = (length) => {
   if (typeof length !== 'number') return;
   return Array.from({ length }, (_, i) => {
@@ -37,39 +38,100 @@ const Slider = ({
   const [maxIndexSlide, setMaxIndexSlide] = useState();
   const [indexSlide, setIndexSlide] = useState(0);
   const [moveWidth, setMoveWidth] = useState(0);
-
+  const [itemScrollSlider, setItemScrollSlider] = useState(itemScroll);
+  const [itemViewSlider, setItemViewSlider] = useState(itemView);
   const [itemScrollArr, setItemScrollArr] = useState(() => {
     return createArray(itemScroll);
   });
+  const [breakPointSlider] = useState(breakPoint);
   const sliderDimensions = useDimensions(itemsRef);
 
   useEffect(() => {
     setSlideItems(itemsRef.current.childNodes);
+
+    if (
+      breakPoint !== undefined &&
+      sliderDimensions.width >= breakPoint.desktop.width
+    ) {
+      setItemViewSlider(breakPoint.desktop.itemView);
+      setItemScrollSlider(breakPoint.desktop.itemScroll);
+      setItemScrollArr(() => {
+        return createArray(breakPoint.desktop.itemScroll);
+      });
+    }
+
+    if (
+      breakPoint !== undefined &&
+      breakPoint.tablet.width <= sliderDimensions.width &&
+      breakPoint.desktop.width >= sliderDimensions.width
+    ) {
+      setItemViewSlider(() => {
+        return breakPoint?.tablet?.itemView;
+      });
+      setItemScrollSlider(breakPoint?.tablet?.itemScroll);
+      setItemScrollArr(() => {
+        return createArray(breakPoint?.tablet?.itemScroll);
+      });
+    }
+
+    if (
+      breakPoint !== undefined &&
+      breakPoint.mobile.width <= sliderDimensions.width &&
+      breakPoint.tablet.width >= sliderDimensions.width
+    ) {
+      setItemViewSlider(breakPoint?.mobile?.itemView);
+      setItemScrollSlider(breakPoint?.mobile?.itemScroll);
+      setItemScrollArr(() => {
+        return createArray(breakPoint?.mobile?.itemScroll);
+      });
+    }
+    if (
+      breakPoint !== undefined &&
+      sliderDimensions.width <= breakPoint.mobile.width
+    ) {
+      setItemViewSlider(breakPoint?.mobile?.itemView);
+      setItemScrollSlider(breakPoint?.mobile?.itemScroll);
+      setItemScrollArr(() => {
+        return createArray(breakPoint?.mobile?.itemScroll);
+      });
+    }
     setMaxIndexSlide(() => {
       return Math.round(
-        (itemsRef.current.childNodes.length - itemView) / itemScroll
+        (itemsRef.current.childNodes.length - itemViewSlider) / itemScrollSlider
       );
     });
     setItemWidth(() => {
-      let itemWidth = 0;
-      if (main !== undefined) {
-        itemWidth =
-          Math.round(
-            (100 *
-              (itemsRef.current.offsetWidth - (itemView - 1) * itemSpacing)) /
-              itemView
-          ) / 100;
-      } else {
-        itemWidth =
-          Math.round(
-            (100 *
-              (itemsRef.current.offsetWidth - (itemView - 1) * itemSpacing)) /
-              itemView
-          ) / 100;
-      }
-      return itemWidth;
+      return (
+        Math.round(
+          (100 *
+            (itemsRef.current.offsetWidth -
+              (itemViewSlider - 1) * itemSpacing)) /
+            itemViewSlider
+        ) / 100
+      );
     });
-  }, [itemView, itemScroll, itemSpacing]);
+
+    // setMoveWidth(() => {
+    //   let widthOfItems = 0;
+
+    //   if (main === undefined) {
+    //     for (let i = 0; i < itemScrollArr.length; i++) {
+    //       widthOfItems +=
+    //         Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
+    //     }
+    //     widthOfItems = widthOfItems + itemSpacing * itemScrollSlider;
+    //   } else {
+    //     if (itemView > itemScrollSlider) {
+    //       widthOfItems =
+    //         itemWidth * itemScrollSlider + itemSpacing * itemScrollSlider;
+    //     } else {
+    //       widthOfItems =
+    //         itemWidth * itemScrollSlider + itemSpacing * (itemScrollSlider - 1);
+    //     }
+    //   }
+    //   return widthOfItems;
+    // });
+  }, [itemView, itemScroll, sliderDimensions]);
 
   /**
    *
@@ -93,10 +155,10 @@ const Slider = ({
 
   useEffect(() => {
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-  }, [indexSlide]);
+  }, [indexSlide, moveWidth]);
 
   const moveSlide = ({ action, indexGoto }) => {
-    if (main !== undefined && itemScroll > itemView)
+    if (main !== undefined && itemScrollSlider > itemView)
       throw new Error('itemScroll must less than itemView');
     let widthOfItems = 0;
 
@@ -105,12 +167,14 @@ const Slider = ({
         widthOfItems +=
           Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
       }
-      widthOfItems = widthOfItems + itemSpacing * itemScroll;
+      widthOfItems = widthOfItems + itemSpacing * itemScrollSlider;
     } else {
-      if (itemView > itemScroll) {
-        widthOfItems = itemWidth * itemScroll + itemSpacing * itemScroll;
+      if (itemView > itemScrollSlider) {
+        widthOfItems =
+          itemWidth * itemScrollSlider + itemSpacing * itemScrollSlider;
       } else {
-        widthOfItems = itemWidth * itemScroll + itemSpacing * (itemScroll - 1);
+        widthOfItems =
+          itemWidth * itemScrollSlider + itemSpacing * (itemScrollSlider - 1);
       }
     }
 
@@ -119,11 +183,11 @@ const Slider = ({
     setItemScrollArr((prevState) =>
       prevState.map((item) => {
         if (action === slider.NEXT) {
-          return item + itemScroll;
+          return item + itemScrollSlider;
         }
 
         if (action === slider.PREV) {
-          return item - itemScroll;
+          return item - itemScrollSlider;
         }
         if (action === slider.GOTO) {
           return indexGoto;
@@ -147,7 +211,6 @@ const Slider = ({
                 moveWidth = prevState + widthOfItems;
               }
             }
-            console.log(moveWidth);
             break;
           case slider.PREV:
             {
