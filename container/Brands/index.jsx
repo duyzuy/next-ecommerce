@@ -34,7 +34,7 @@ const Brands = (props) => {
           <Slider
             itemScroll={2}
             itemView={6}
-            main
+            asMain
             itemSpacing={15}
             breakPoint={breakPoint}
           >

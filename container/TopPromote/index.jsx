@@ -15,7 +15,7 @@ const TopPromote = (props) => {
             className="ec__promote--slide"
           >
             <Slider
-              main
+              asMain
               autoPlay
               itemView={1}
               itemSpacing={15}

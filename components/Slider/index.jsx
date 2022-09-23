@@ -23,7 +23,7 @@ const Slider = ({
   itemSpacing = 10,
   itemScroll = 1,
   autoPlay,
-  main,
+  asMain,
   duration = 5000,
   breakPoint,
   pagination,
@@ -43,7 +43,7 @@ const Slider = ({
   const [itemScrollArr, setItemScrollArr] = useState(() => {
     return createArray(itemScroll);
   });
-  const [breakPointSlider] = useState(breakPoint);
+
   const sliderDimensions = useDimensions(itemsRef);
 
   useEffect(() => {
@@ -111,26 +111,26 @@ const Slider = ({
       );
     });
 
-    // setMoveWidth(() => {
-    //   let widthOfItems = 0;
+    setMoveWidth(() => {
+      let widthOfItems = 0;
 
-    //   if (main === undefined) {
-    //     for (let i = 0; i < itemScrollArr.length; i++) {
-    //       widthOfItems +=
-    //         Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
-    //     }
-    //     widthOfItems = widthOfItems + itemSpacing * itemScrollSlider;
-    //   } else {
-    //     if (itemView > itemScrollSlider) {
-    //       widthOfItems =
-    //         itemWidth * itemScrollSlider + itemSpacing * itemScrollSlider;
-    //     } else {
-    //       widthOfItems =
-    //         itemWidth * itemScrollSlider + itemSpacing * (itemScrollSlider - 1);
-    //     }
-    //   }
-    //   return widthOfItems;
-    // });
+      if (main === undefined) {
+        for (let i = 0; i < itemScrollArr.length; i++) {
+          widthOfItems +=
+            Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
+        }
+        widthOfItems = widthOfItems + itemSpacing * itemScrollSlider;
+      } else {
+        if (itemView > itemScrollSlider) {
+          widthOfItems =
+            itemWidth * itemScrollSlider + itemSpacing * itemScrollSlider;
+        } else {
+          widthOfItems =
+            itemWidth * itemScrollSlider + itemSpacing * (itemScrollSlider - 1);
+        }
+      }
+      return widthOfItems;
+    });
   }, [itemView, itemScroll, sliderDimensions]);
 
   /**
@@ -158,11 +158,11 @@ const Slider = ({
   }, [indexSlide, moveWidth]);
 
   const moveSlide = ({ action, indexGoto }) => {
-    if (main !== undefined && itemScrollSlider > itemView)
+    if (asMain !== undefined && itemScrollSlider > itemView)
       throw new Error('itemScroll must less than itemView');
     let widthOfItems = 0;
 
-    if (main === undefined) {
+    if (asMain === undefined) {
       for (let i = 0; i < itemScrollArr.length; i++) {
         widthOfItems +=
           Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
@@ -197,7 +197,7 @@ const Slider = ({
 
     setMoveWidth((prevState) => {
       let moveWidth = 0;
-      if (main === undefined) {
+      if (asMain === undefined) {
         switch (action) {
           case slider.NEXT:
             {
@@ -271,7 +271,7 @@ const Slider = ({
      * reset slider main
      *
      */
-    if (main !== undefined) {
+    if (asMain !== undefined) {
       if (
         (action === slider.NEXT && indexSlide === maxIndexSlide) ||
         (action === slider.PREV && indexSlide === 0)
@@ -286,7 +286,7 @@ const Slider = ({
      * reset slider
      *
      */
-    if (main === undefined) {
+    if (asMain === undefined) {
       if (
         (moveWidth === sliderDimensions.scrollWidth - sliderDimensions.width &&
           action === slider.NEXT) ||
@@ -323,7 +323,7 @@ const Slider = ({
   return (
     <div
       className={`ec__slide ${
-        main !== undefined ? 'ec__slide--main' : 'ec__slide--sub'
+        asMain !== undefined ? 'ec__slide--main' : 'ec__slide--sub'
       }`}
       ref={sliderRef}
     >
@@ -337,7 +337,7 @@ const Slider = ({
                   props: {
                     ...child.props,
                     spacing: itemSpacing,
-                    main,
+                    main: asMain,
                     itemView: itemView,
                     itemWidth: itemWidth,
                     active: index === indexSlide ? true : false
@@ -354,11 +354,10 @@ const Slider = ({
           )}
         </ul>
       </div>
-      {main && pagination && (
+      {asMain && pagination && (
         <Paginations
           titles={titles}
           onMoveSlide={onMoveSlide}
-          ref={paginationRef}
           itemWidth={
             Math.round(
               (100 * (sliderDimensions.width - 10 * (pageViewItem - 1))) /
