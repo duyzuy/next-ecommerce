@@ -95,11 +95,32 @@ const Slider = ({
         return createArray(breakPoint?.mobile?.itemScroll);
       });
     }
-    setMaxIndexSlide(() => {
-      return Math.round(
-        (itemsRef.current.childNodes.length - itemViewSlider) / itemScrollSlider
-      );
+
+    setMoveWidth(() => {
+      let widthOfItems = 0;
+
+      if (asMain === undefined) {
+        for (let i = 0; i < itemScrollArr.length; i++) {
+          widthOfItems +=
+            Math.round(
+              100 * itemsRef.current.childNodes[itemScrollArr[i]].offsetWidth
+            ) / 100;
+        }
+        widthOfItems = widthOfItems + itemSpacing * itemScrollSlider;
+      } else {
+        if (itemView > itemScrollSlider) {
+          widthOfItems =
+            itemWidth * itemScrollSlider + itemSpacing * itemScrollSlider;
+        } else {
+          widthOfItems =
+            itemWidth * itemScrollSlider + itemSpacing * (itemScrollSlider - 1);
+        }
+      }
+      return widthOfItems;
     });
+  }, [itemView, itemScroll, sliderDimensions]);
+
+  useEffect(() => {
     setItemWidth(() => {
       return (
         Math.round(
@@ -110,6 +131,7 @@ const Slider = ({
         ) / 100
       );
     });
+<<<<<<< HEAD
 
     setMoveWidth(() => {
       let widthOfItems = 0;
@@ -133,6 +155,14 @@ const Slider = ({
     });
   }, [itemView, itemScroll, sliderDimensions]);
 
+=======
+    setMaxIndexSlide(() => {
+      return Math.round(
+        (itemsRef.current.childNodes.length - itemViewSlider) / itemScrollSlider
+      );
+    });
+  }, [itemViewSlider, sliderDimensions]);
+>>>>>>> 57a9d4fe7625823aad18a572a7c21c229274b9f8
   /**
    *
    * @params indexSlide, slideItems
@@ -155,7 +185,7 @@ const Slider = ({
 
   useEffect(() => {
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-  }, [indexSlide, moveWidth]);
+  }, [indexSlide, moveWidth, sliderDimensions]);
 
   const moveSlide = ({ action, indexGoto }) => {
     if (asMain !== undefined && itemScrollSlider > itemView)

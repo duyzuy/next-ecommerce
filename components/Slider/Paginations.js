@@ -1,5 +1,5 @@
 import React from 'react';
-
+import { useDimensions } from '../../hooks/useDimensions';
 const Paginations = (props) => {
   const { titles, onMoveSlide, indexSlide, itemWidth } = props;
 
@@ -8,13 +8,13 @@ const Paginations = (props) => {
     scrollWidth: 0
   });
   const pagiItemRef = React.useRef();
+  const pagiDimension = useDimensions(pagiItemRef);
 
   React.useEffect(() => {
     setDimension({
-      width: pagiItemRef.current.offsetWidth,
-      scrollWidth: pagiItemRef.current.scrollWidth
+      ...pagiDimension
     });
-  }, [pagiItemRef, indexSlide]);
+  }, [pagiItemRef, pagiDimension]);
 
   React.useEffect(() => {
     let moveWidth = Math.round((itemWidth + 10) * indexSlide);
@@ -23,7 +23,7 @@ const Paginations = (props) => {
       moveWidth = dimension.scrollWidth - dimension.width;
     }
     pagiItemRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-  }, [indexSlide, itemWidth]);
+  }, [indexSlide, pagiDimension]);
 
   return (
     <div className="ec__slide--pagination">

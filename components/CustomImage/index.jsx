@@ -4,8 +4,8 @@ const myLoader = ({ src, width, quality }) => {
   return `https://example.com/${src}?w=${width}&q=${quality || 75}`;
 };
 
-const Image = () => {
-  return {};
+const CustomImage = (props) => {
+  return <img src="" {...props} />;
 };
 
-export default Image;
+export default CustomImage;
