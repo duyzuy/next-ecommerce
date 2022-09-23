@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Container } from 'semantic-ui-react';
+
 import SEO from '../components/common/Seo';
 
 import { TOP_PROMOTIONS } from '../constants/menu';
@@ -12,6 +13,7 @@ import TopPromote from '../container/TopPromote';
 import styles from '../styles/home.module.scss';
 const Home = (props) => {
   const { brand } = props;
+
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />

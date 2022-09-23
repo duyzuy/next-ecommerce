@@ -1,0 +1,19 @@
+.ec__product{
+
+ :global .ec__product--container{
+    display: flex;
+    padding-top: 30px;
+    
+    .ec__product--sidebar{
+        width: 280px;
+        margin-right: 30px;
+    }
+    .ec__product--list{
+     flex: 1;
+     width: calc(100% - 310px);   
+    }
+    .ec__product--items .row .column{
+        margin-bottom: 2rem;
+    }
+ }
+}
