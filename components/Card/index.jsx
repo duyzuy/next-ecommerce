@@ -1,6 +1,5 @@
 import { useMemo } from 'react';
 import Image from 'next/image';
-import { Header } from 'semantic-ui-react';
 import CustomImage from '../CustomImage';
 
 const Card = (props) => {
@@ -13,7 +12,14 @@ const Card = (props) => {
       return images[0].src;
     }
   }, []);
-
+  const Price = (hasSale) => {
+    return (
+      <>
+        <p className="price regular">{data.regular_price}</p>
+        <p className="price sale">{data.price}</p>
+      </>
+    );
+  };
   return (
     <div className={`ec__card ${type}`}>
       <div className="ec__card--inner">
