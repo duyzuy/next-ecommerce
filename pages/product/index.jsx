@@ -72,7 +72,11 @@ const Product = (props) => {
                     ) : (
                       products.data.map((prd) => (
                         <Grid.Column key={prd.id}>
-                          <Card type="product" data={prd} />
+                          <Card
+                            type={contentType.PRODUCT}
+                            data={prd}
+                            loading={loading}
+                          />
                         </Grid.Column>
                       ))
                     )}
@@ -97,8 +101,12 @@ const Product = (props) => {
 export default Product;
 
 export async function getServerSideProps(context) {
-  const { req, res, query } = context;
+  const { query, res } = context;
   let page = 1;
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=10, stale-while-revalidate=59'
+  );
 
   if (!isEmpty(query) && isExists(query, 'page')) {
     page = query['page'];

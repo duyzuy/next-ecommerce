@@ -6,8 +6,8 @@ const singleProductHandler = (req, res) => {
     .get(`products/${pId}`)
     .then((response) => {
       res.status(200).json({
-        data: response.data,
-        headers: response.headers
+        data: response.data
+        // headers: response.headers
       });
     })
     .catch((error) => {

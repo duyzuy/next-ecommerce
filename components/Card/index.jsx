@@ -3,10 +3,11 @@ import Image from 'next/image';
 import CustomImage from '../CustomImage';
 import { formatPrice, getPercent } from '../../helpers/product';
 import * as Icon from 'react-feather';
+import { useRouter } from 'next/router';
 const Card = (props) => {
   const { type, data } = props;
   const { images } = data;
-  // console.log(data);
+  const router = useRouter();
 
   const thumbnailUrl = useMemo(() => {
     if (images.length > 0) {
@@ -54,7 +55,10 @@ const Card = (props) => {
     );
   };
   return (
-    <div className={`ec__card ${type}`}>
+    <div
+      className={`ec__card ${type}`}
+      onClick={() => router.push(`/${type}/${data.id}`)}
+    >
       <div className="ec__card--inner">
         <div className="ec__card--image">
           <div className="image">
