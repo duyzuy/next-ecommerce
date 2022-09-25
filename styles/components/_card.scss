@@ -15,7 +15,7 @@
 
     &--image{
         padding: 10px;
-        
+        margin-bottom: 10px;
         img{
             position: absolute;
             left: 0;
@@ -26,22 +26,44 @@
     }
     &--title{
         font-weight: 400;
-        font-size: 1rem;
+        font-size: 16px;
         color: #000;
         display: -webkit-box;
         -webkit-box-orient: vertical;
         position: relative;
         overflow: hidden;
         text-overflow: ellipsis;
-        height: 2.8rem;
-        line-height: 1.4rem;
+        height: 44px;
+        line-height: 22px;
         -webkit-line-clamp: 2;
-        font-weight: bold;
+        margin-bottom: 10px;
+       
     }
     &--price{
+     
         .price{
-            
+            margin-bottom: 0;
+            font-size: 16px;
+            color: #c93939;
+            font-weight: bold;
+            ins{
+                text-decoration: none;
+            }
         }
+        &.has-sale{
+            .price{
+                &.regular{
+                    color: #3c3c3c;
+                    opacity: 0.8;
+                    font-size: 13px;
+                    font-weight: normal;
+                }
+                .percent{
+                    margin-left: 15px;
+                }
+            }
+        }
+ 
     }
 
 }

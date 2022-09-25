@@ -4,13 +4,7 @@ import Paginations from './Paginations';
 import SliderNav from './SliderNav';
 import * as Icon from 'react-feather';
 import { useDimensions } from '../../hooks/useDimensions';
-
-const createArray = (length) => {
-  if (typeof length !== 'number') return;
-  return Array.from({ length }, (_, i) => {
-    return i;
-  });
-};
+import { createArray } from '../../utils/helper';
 
 const slider = {
   NEXT: 'next',
@@ -131,38 +125,12 @@ const Slider = ({
         ) / 100
       );
     });
-<<<<<<< HEAD
-
-    setMoveWidth(() => {
-      let widthOfItems = 0;
-
-      if (main === undefined) {
-        for (let i = 0; i < itemScrollArr.length; i++) {
-          widthOfItems +=
-            Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
-        }
-        widthOfItems = widthOfItems + itemSpacing * itemScrollSlider;
-      } else {
-        if (itemView > itemScrollSlider) {
-          widthOfItems =
-            itemWidth * itemScrollSlider + itemSpacing * itemScrollSlider;
-        } else {
-          widthOfItems =
-            itemWidth * itemScrollSlider + itemSpacing * (itemScrollSlider - 1);
-        }
-      }
-      return widthOfItems;
-    });
-  }, [itemView, itemScroll, sliderDimensions]);
-
-=======
     setMaxIndexSlide(() => {
       return Math.round(
         (itemsRef.current.childNodes.length - itemViewSlider) / itemScrollSlider
       );
     });
   }, [itemViewSlider, sliderDimensions]);
->>>>>>> 57a9d4fe7625823aad18a572a7c21c229274b9f8
   /**
    *
    * @params indexSlide, slideItems

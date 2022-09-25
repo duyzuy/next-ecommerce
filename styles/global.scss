@@ -1,5 +1,6 @@
 @use 'foundation/slide';
-@use 'foundation/card';
+@use 'components/card';
+@use 'components/pagination';
 
 @font-face {
     font-family: productSans;
@@ -23,7 +24,7 @@
 
 body{
    
-
+  background-color: #f4f8ff;
 }
 .ec_main{
     min-height: 50vh;
@@ -31,4 +32,16 @@ body{
 }
 .ec__section{
   margin-bottom: 30px;
+}
+.ec__breadcrumb{
+  margin-bottom: 20px;
+  .bread-item{
+    padding-top: 10px;
+    padding-bottom: 10px;
+    display: inline-block;
+  }
+  .bread-space{
+    margin-left: 5px;
+    margin-right: 5px;
+  }
 }

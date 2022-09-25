@@ -1,7 +1,8 @@
 import { useMemo } from 'react';
 import Image from 'next/image';
 import CustomImage from '../CustomImage';
-
+import { formatPrice, getPercent } from '../../helpers/product';
+import * as Icon from 'react-feather';
 const Card = (props) => {
   const { type, data } = props;
   const { images } = data;
@@ -12,11 +13,43 @@ const Card = (props) => {
       return images[0].src;
     }
   }, []);
-  const Price = (hasSale) => {
+
+  const Price = ({ price, salePrice, regularPrice }) => {
+    return (
+      <div
+        className={
+          salePrice !== '' ? `ec__card--price has-sale` : `ec__card--price`
+        }
+      >
+        {salePrice !== '' ? (
+          <>
+            <p className="price sale">
+              <ins>{formatPrice(salePrice)}</ins>
+            </p>
+            <p className="price regular">
+              <del>{formatPrice(regularPrice)}</del>
+              <span className="percent">
+                {`-${getPercent(regularPrice, salePrice)}`}
+              </span>
+            </p>
+          </>
+        ) : (
+          <p className="price">
+            <ins>{formatPrice(price)}</ins>
+          </p>
+        )}
+      </div>
+    );
+  };
+  const Rating = ({ averageRating, ratingCount }) => {
     return (
       <>
-        <p className="price regular">{data.regular_price}</p>
-        <p className="price sale">{data.price}</p>
+        {ratingCount !== 0 && (
+          <>
+            {averageRating}
+            <Icon.Star size={14} />
+          </>
+        )}
       </>
     );
   };
@@ -29,11 +62,17 @@ const Card = (props) => {
           </div>
         </div>
         <div className="ec__card--bottom">
-          <h3 className="ec__card--title"> {data.name}</h3>
-          <div className="ec__card--price">
-            <p className="price regular">{data.regular_price}</p>
-            <p className="price sale">{data.price}</p>
-          </div>
+          <h3 className="ec__card--title">{data.name}</h3>
+
+          <Price
+            price={data.price}
+            regularPrice={data.regular_price}
+            salePrice={data.sale_price}
+          />
+          <Rating
+            averageRating={data.average_rating}
+            ratingCount={data.rating_count}
+          />
         </div>
       </div>
     </div>
