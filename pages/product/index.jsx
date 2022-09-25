@@ -24,13 +24,15 @@ const Product = (props) => {
     }
     return 1;
   }, [query.page]);
-  console.log('render');
+
   const onChangePage = (page) => {
     const newPath = `/product?page=${page}`;
-    // router.asPath !== newPath && setLoading(true);
+    router.asPath !== newPath && setLoading(true);
     router.push(newPath);
   };
-  useEffect(() => {}, []);
+  useEffect(() => {
+    loading && setLoading(false);
+  }, [router.asPath]);
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
