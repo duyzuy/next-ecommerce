@@ -1,6 +1,7 @@
 @use 'foundation/slide';
 @use 'components/card';
 @use 'components/pagination';
+@use 'components/formControl';
 
 @font-face {
     font-family: productSans;
@@ -44,4 +45,8 @@ body{
     margin-left: 5px;
     margin-right: 5px;
   }
+}
+.ec__icon{
+  line-height: 0;
+  margin-right: 5px;
 }

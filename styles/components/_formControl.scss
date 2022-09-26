@@ -1,0 +1,21 @@
+.ec__form{
+    &--control{
+        display: flex;
+        align-items: center;
+        label{
+            cursor: pointer;
+            font-weight: bold;
+        }
+        input[type='radio'], 
+        input[type='checkbox']{
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            margin-right: 5px;
+        }
+    }
+    &--icon{
+        margin-right: 3px;
+    }
+   
+}

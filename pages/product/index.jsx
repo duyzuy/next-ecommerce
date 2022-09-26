@@ -11,12 +11,15 @@ import * as Icon from 'react-feather';
 import { contentType } from '../../constants/constants';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
+import Input from '../../components/Input';
+import { useLoading } from '../../hooks/useLoading';
 const Product = (props) => {
-  const [loading, setLoading] = useState(false);
+  const [firstLoad, setFirstLoad] = useState(true);
   const { products } = props;
   const router = useRouter();
-  console.log(router);
+
   const { query } = router;
+  const isLoading = useLoading(router);
 
   const currentPage = useMemo(() => {
     if (!isEmpty(query) && isExists(query, 'page')) {
@@ -25,14 +28,18 @@ const Product = (props) => {
     return 1;
   }, [query.page]);
 
-  const onChangePage = (page) => {
-    const newPath = `/product?page=${page}`;
-    router.asPath !== newPath && setLoading(true);
-    router.push(newPath);
+  const onChangePage = (page, action) => {
+    let path = '/product';
+    if (page !== 1) {
+      path = path + `?page=${page}`;
+    }
+    if (page === 1 && action === 'paginateClick') {
+      path = path + `?page=1`;
+    }
+    setFirstLoad(false);
+    router.push(path);
   };
-  useEffect(() => {
-    loading && setLoading(false);
-  }, [router.asPath]);
+  useEffect(() => {}, []);
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
@@ -53,33 +60,48 @@ const Product = (props) => {
               <div className="ec__product--tools">
                 <div className="tool-inner">
                   <div className="tool-filter">
-                    <Icon.Filter size={24} />
+                    <span className="ec__icon">
+                      <Icon.Filter size={16} />
+                    </span>
                     Lọc Sản phẩm
                   </div>
                   <div className="tool-sort desc">
-                    Giá cao <Icon.ArrowRight size={10} /> thấp
+                    <Input
+                      asRadio
+                      content="Giá từ cao - thấp"
+                      icon={() => <Icon.ArrowDown size={10} />}
+                      name="productPrice"
+                      value="desc"
+                      id="priceDesc"
+                      onChange={() => {
+                        console.log('change');
+                      }}
+                    />
                   </div>
                   <div className="tool-sort asc">
-                    Giá thấp <Icon.ArrowRight size={10} /> cao
+                    <Input
+                      asRadio
+                      content="Giá từ thấp - cao"
+                      icon={() => <Icon.ArrowUp size={10} />}
+                      id="priceAsc"
+                      value="asc"
+                      name="productPrice"
+                    />
                   </div>
                 </div>
               </div>
               <div className="ec__product--items">
                 <Grid columns={3}>
                   <Grid.Row>
-                    {loading === true ? (
-                      <>loading....</>
-                    ) : (
-                      products.data.map((prd) => (
-                        <Grid.Column key={prd.id}>
-                          <Card
-                            type={contentType.PRODUCT}
-                            data={prd}
-                            loading={loading}
-                          />
-                        </Grid.Column>
-                      ))
-                    )}
+                    {products.data.map((prd) => (
+                      <Grid.Column key={prd.id}>
+                        <Card
+                          type={contentType.PRODUCT}
+                          data={prd}
+                          isLoading={isLoading}
+                        />
+                      </Grid.Column>
+                    ))}
                   </Grid.Row>
                 </Grid>
               </div>
@@ -89,6 +111,8 @@ const Product = (props) => {
                 totalItem={products.totalItem}
                 current={currentPage}
                 onChangePage={onChangePage}
+                isLoading={isLoading}
+                firstLoad={firstLoad}
               />
             </div>
           </div>
@@ -112,7 +136,7 @@ export async function getServerSideProps(context) {
     page = query['page'];
   }
 
-  const response = await client(`${process.env.BASE_API_URL}/product`, {
+  const response = await client(`/product`, {
     perPage: 24,
     page
   })

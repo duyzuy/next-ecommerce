@@ -34,3 +34,16 @@ export const isEmpty = (obj) => {
     return true;
   }
 };
+
+export const objectToQueryString = (obj) => {
+  if (typeof obj !== 'object' || isEmpty(obj))
+    throw new Error(`${obj} must be object`);
+  let string = '';
+
+  Object.keys(obj).map((key, index) => {
+    string += index === 0 ? '?' : '&';
+    string += key + '=' + obj[key];
+  });
+
+  return string;
+};

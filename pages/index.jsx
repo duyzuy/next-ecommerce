@@ -1,19 +1,17 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
 import { Container } from 'semantic-ui-react';
 
 import SEO from '../components/common/Seo';
-
 import { TOP_PROMOTIONS } from '../constants/menu';
-
 import Brands from '../container/Brands';
-
 import { data } from '../constants/brandsData.js';
 import TopPromote from '../container/TopPromote';
-
 import styles from '../styles/home.module.scss';
+import { AppContext } from '../contexts';
 const Home = (props) => {
   const { brand } = props;
-
+  const { currency } = useContext(AppContext);
+  console.log(currency);
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />

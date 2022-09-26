@@ -1,3 +1,7 @@
+import { isEmpty } from '../utils/helper';
+import { objectToQueryString } from '../utils/helper';
+const API_URL = 'http://localhost:3000/api';
+
 const client = async (url, params = {}, method) => {
   const configs = {
     method: method ? method : 'POST',
@@ -8,28 +12,27 @@ const client = async (url, params = {}, method) => {
       'Content-Type': 'application/json'
     },
     redirect: 'follow',
-    referrerPolicy: 'no-referrer',
-    body: JSON.stringify({ ...params })
+    referrerPolicy: 'no-referrer'
   };
+  // if (!isEmpty(params)) {
+  //   configs.body = JSON.stringify({ ...params });
+  // }
 
-  let baseUrl = url;
+  let queryString = '';
   if (params !== '') {
-    Object.keys(params).forEach((key, index) => {
-      baseUrl = baseUrl.concat(
-        `${index === 0 ? '?' : '&'}${key}=${params[key]}`
-      );
-    });
+    queryString = objectToQueryString(params);
   }
+  const baseUrl = API_URL + '/' + url + queryString;
 
   const response = await fetch(baseUrl, { ...configs });
 
   return response.json();
 };
 
-client.get = async (url, params) => {
-  return client(url, { params, method: 'GET' });
+client.get = async (url, params = {}) => {
+  return await client(url, params, 'GET');
 };
-client.post = async (url, params) => {
-  return client(url, { params, method: 'POST' });
+client.post = (url, params) => {
+  return client(url, params, 'POST');
 };
 export { client };

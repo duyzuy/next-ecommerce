@@ -4,8 +4,9 @@ import CustomImage from '../CustomImage';
 import { formatPrice, getPercent } from '../../helpers/product';
 import * as Icon from 'react-feather';
 import { useRouter } from 'next/router';
+import Skeleton from 'react-loading-skeleton';
 const Card = (props) => {
-  const { type, data } = props;
+  const { type, isLoading, data } = props;
   const { images } = data;
   const router = useRouter();
 
@@ -54,32 +55,42 @@ const Card = (props) => {
       </>
     );
   };
+
   return (
-    <div
-      className={`ec__card ${type}`}
-      onClick={() => router.push(`/${type}/${data.id}`)}
-    >
-      <div className="ec__card--inner">
-        <div className="ec__card--image">
-          <div className="image">
-            <CustomImage src={thumbnailUrl} alt={data.name} />
+    <>
+      {isLoading === true ? (
+        <>
+          <Skeleton height={150} />
+          <Skeleton count={3} />
+        </>
+      ) : (
+        <div
+          className={`ec__card ${type}`}
+          onClick={() => router.push(`/${type}/${data.id}`)}
+        >
+          <div className="ec__card--inner">
+            <div className="ec__card--image">
+              <div className="image">
+                <CustomImage src={thumbnailUrl} alt={data.name} />
+              </div>
+            </div>
+            <div className="ec__card--bottom">
+              <h3 className="ec__card--title">{data.name}</h3>
+
+              <Price
+                price={data.price}
+                regularPrice={data.regular_price}
+                salePrice={data.sale_price}
+              />
+              <Rating
+                averageRating={data.average_rating}
+                ratingCount={data.rating_count}
+              />
+            </div>
           </div>
         </div>
-        <div className="ec__card--bottom">
-          <h3 className="ec__card--title">{data.name}</h3>
-
-          <Price
-            price={data.price}
-            regularPrice={data.regular_price}
-            salePrice={data.sale_price}
-          />
-          <Rating
-            averageRating={data.average_rating}
-            ratingCount={data.rating_count}
-          />
-        </div>
-      </div>
-    </div>
+      )}
+    </>
   );
 };
 

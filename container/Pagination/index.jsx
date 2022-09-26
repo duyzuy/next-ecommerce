@@ -5,7 +5,8 @@ import * as Icon from 'react-feather';
 import { DOT } from '../../constants/constants';
 
 const Pagination = (props) => {
-  const { type, totalPage, totalItem, current, onChangePage } = props;
+  const { type, totalPage, totalItem, current, onChangePage, isLoading } =
+    props;
   const [currentPage, setCurrentPage] = useState(current);
 
   const paginations = usePagination({
@@ -15,19 +16,20 @@ const Pagination = (props) => {
   });
 
   const nextPage = () => {
-    if (currentPage === Number(totalPage)) return;
+    if (currentPage === Number(totalPage) || isLoading === true) return;
     setCurrentPage((prevState) => prevState + 1);
   };
   const prevPage = () => {
-    if (currentPage <= 1) return;
+    if (currentPage <= 1 || isLoading === true) return;
     setCurrentPage((prevState) => prevState - 1);
   };
   const onSelectPage = (page) => {
+    if (isLoading === true) return;
     setCurrentPage(page);
   };
 
   useEffect(() => {
-    onChangePage(currentPage);
+    onChangePage(currentPage, 'paginateClick');
   }, [currentPage]);
   return (
     <div className="ec__pagination">
