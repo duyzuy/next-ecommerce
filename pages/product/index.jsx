@@ -12,16 +12,20 @@ import { contentType } from '../../constants/constants';
 import { queryParams, defaultValue } from '../../constants/product';
 import { useLoading } from '../../hooks/useLoading';
 import { isEmpty, isExists } from '../../utils/helper';
+import { updateQueryFromString } from '../../utils';
 import styles from '../../styles/product.module.scss';
 
 const Product = (props) => {
   const { products } = props;
   const router = useRouter();
   const [filter, setFilter] = useState(defaultValue);
-  const { query } = router;
-  console.log(filter);
-  const isLoading = useLoading(router);
+  const { query, asPath } = router;
 
+  const isLoading = useLoading(router);
+  updateQueryFromString('/product?page=1&sort=desc&perPage=24', {
+    key: 'page',
+    value: 5
+  });
   const currentPage = useMemo(() => {
     if (!isEmpty(query) && isExists(query, 'page')) {
       return Number(query['page']);
@@ -30,7 +34,8 @@ const Product = (props) => {
   }, [query.page]);
 
   const onChangePage = (page) => {
-    let path = '/product';
+    let path = asPath;
+
     path = path + `?page=${page}`;
 
     router.push(path);
