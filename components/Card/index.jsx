@@ -1,10 +1,10 @@
 import { useMemo } from 'react';
 import Image from 'next/image';
 import CustomImage from '../CustomImage';
-import { formatPrice, getPercent } from '../../helpers/product';
 import * as Icon from 'react-feather';
 import { useRouter } from 'next/router';
-import Skeleton from 'react-loading-skeleton';
+import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
+import Price from '../Price';
 const Card = (props) => {
   const { type, isLoading, data } = props;
   const { images } = data;
@@ -16,33 +16,6 @@ const Card = (props) => {
     }
   }, []);
 
-  const Price = ({ price, salePrice, regularPrice }) => {
-    return (
-      <div
-        className={
-          salePrice !== '' ? `ec__card--price has-sale` : `ec__card--price`
-        }
-      >
-        {salePrice !== '' ? (
-          <>
-            <p className="price sale">
-              <ins>{formatPrice(salePrice)}</ins>
-            </p>
-            <p className="price regular">
-              <del>{formatPrice(regularPrice)}</del>
-              <span className="percent">
-                {`-${getPercent(regularPrice, salePrice)}`}
-              </span>
-            </p>
-          </>
-        ) : (
-          <p className="price">
-            <ins>{formatPrice(price)}</ins>
-          </p>
-        )}
-      </div>
-    );
-  };
   const Rating = ({ averageRating, ratingCount }) => {
     return (
       <>
@@ -60,8 +33,17 @@ const Card = (props) => {
     <>
       {isLoading === true ? (
         <>
-          <Skeleton height={150} />
-          <Skeleton count={3} />
+          <div className={`ec__card ${type}`}>
+            <SkeletonTheme baseColor="#e9f5ff" highlightColor="#fbfdff">
+              <Skeleton height={150} style={{ marginBottom: `15px` }} />
+              <Skeleton count={3} height={20} style={{ marginBottom: `5px` }} />
+              <Skeleton
+                count={1}
+                height={20}
+                style={{ marginBottom: `5px`, width: '60%' }}
+              />
+            </SkeletonTheme>
+          </div>
         </>
       ) : (
         <div

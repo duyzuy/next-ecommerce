@@ -1,6 +1,14 @@
 import * as Icon from 'react-feather';
 import Input from '../../components/Input';
-const ProductToolBar = ({ onFilter, filter }) => {
+import {
+  productQueryParam,
+  productQueryValue
+} from '../../constants/queryParams';
+const ProductToolBar = ({ onFilterChangeRoute, filter, isLoading }) => {
+  const onFilter = (key, value) => {
+    if (isLoading) return;
+    onFilterChangeRoute(key, value);
+  };
   return (
     <div className="ec__product--tools">
       <div className="tool-inner">
@@ -19,7 +27,9 @@ const ProductToolBar = ({ onFilter, filter }) => {
             value="desc"
             id="priceDesc"
             checked={filter.order === 'desc' ? 'checked' : ''}
-            onChange={() => onFilter('order', 'desc')}
+            onChange={() =>
+              onFilter(productQueryParam.ORDER, productQueryValue.DESC)
+            }
           />
         </div>
         <div className="tool-sort asc">
@@ -31,7 +41,9 @@ const ProductToolBar = ({ onFilter, filter }) => {
             value="asc"
             name="productPrice"
             checked={filter.order === 'asc' ? 'checked' : ''}
-            onChange={() => onFilter('order', 'asc')}
+            onChange={() =>
+              onFilter(productQueryParam.ORDER, productQueryValue.ASC)
+            }
           />
         </div>
       </div>

@@ -17,15 +17,15 @@ const client = async (url, params = {}, method) => {
   // if (!isEmpty(params)) {
   //   configs.body = JSON.stringify({ ...params });
   // }
-
+  console.log('==============params==============', params);
   let queryString = '';
-  if (params !== '') {
+  if (!isEmpty(params)) {
+    console.log(`======================asdfasdfasfasfsfsfsdfsd`);
     queryString = objectToQueryString(params);
   }
   const baseUrl = API_URL + '/' + url + queryString;
-
   const response = await fetch(baseUrl, { ...configs });
-
+  console.log(baseUrl);
   return response.json();
 };
 

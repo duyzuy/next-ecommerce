@@ -80,6 +80,7 @@
                     border-color: $primary-color;
                     background-color: $bg-warning;
                 }
+            
             }
             .pagination--item + .pagination--item{
                 margin-left: 10px;
@@ -135,6 +136,9 @@
        white-space: nowrap;
         width: 100%;
         position: relative;
+        img{
+            max-width: 100%;
+        }
     }
     &--link{
         display: flex;

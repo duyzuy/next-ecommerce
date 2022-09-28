@@ -14,18 +14,19 @@ import { useLoading } from '../../hooks/useLoading';
 import { isEmpty, isExists } from '../../utils/helper';
 import { updateQueryFromString } from '../../utils';
 import styles from '../../styles/product.module.scss';
-
+import {
+  productQueryParam,
+  productQueryValue
+} from '../../constants/queryParams';
+import { withlayout } from '../../HOCs/WithLayout';
 const Product = (props) => {
   const { products } = props;
   const router = useRouter();
   const [filter, setFilter] = useState(defaultValue);
-  const { query, asPath } = router;
+  const { query } = router;
 
   const isLoading = useLoading(router);
-  updateQueryFromString('/product?page=1&sort=desc&perPage=24', {
-    key: 'page',
-    value: 5
-  });
+
   const currentPage = useMemo(() => {
     if (!isEmpty(query) && isExists(query, 'page')) {
       return Number(query['page']);
@@ -34,14 +35,15 @@ const Product = (props) => {
   }, [query.page]);
 
   const onChangePage = (page) => {
-    let path = asPath;
-
-    path = path + `?page=${page}`;
-
-    router.push(path);
+    onFilterChangeRoute(productQueryParam.PAGE, page);
   };
-  const onFilter = (key, value) => {
-    let path = '/product';
+  const onFilterChangeRoute = (key, value) => {
+    let path = router.asPath;
+    const newQueryString = updateQueryFromString(path, {
+      key,
+      value
+    });
+
     setFilter((prevState) => {
       return {
         ...prevState,
@@ -49,67 +51,72 @@ const Product = (props) => {
       };
     });
     path = `${path}?${key}=${value}`;
-    router.push(path);
+    router.push(newQueryString);
   };
-  useEffect(() => {}, []);
+
   return (
-    <>
-      <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
-      <Breadcrumb
-        items={[
-          { id: 'home', name: 'Trang chu', href: '/' },
-          { id: 'sanpham', name: 'San pham', href: '/product', current: true }
-        ]}
-      />
-      <div className={styles.ec__product}>
-        <Container>
-          <div className="ec__product--header">
-            <Header as="h1">Sản phẩm</Header>
-          </div>
-          <div className="ec__product--container">
-            <SideBar type="category" />
-            <div className="ec__product--list">
-              <ProductToolBar onFilter={onFilter} filter={filter} />
-              <div className="ec__product--items">
-                <Grid columns={3}>
-                  <Grid.Row>
-                    {products.data.map((prd) => (
-                      <Grid.Column key={prd.id}>
-                        <Card
-                          type={contentType.PRODUCT}
-                          data={prd}
-                          isLoading={isLoading}
-                        />
-                      </Grid.Column>
-                    ))}
-                  </Grid.Row>
-                </Grid>
-              </div>
-              <Pagination
-                type={contentType.PRODUCT}
-                totalPage={products.totalPage}
-                totalItem={products.totalItem}
-                current={currentPage}
-                onChangePage={onChangePage}
-                isLoading={isLoading}
-              />
+    <div className={styles.ec__product}>
+      <Container>
+        <div className="ec__product--header">
+          <Header as="h1">Sản phẩm</Header>
+        </div>
+        <div className="ec__product--container">
+          <SideBar type="category" />
+          <div className="ec__product--list">
+            <ProductToolBar
+              onFilterChangeRoute={onFilterChangeRoute}
+              filter={filter}
+              isLoading={isLoading}
+            />
+            <div className="ec__product--items">
+              <Grid columns={3}>
+                <Grid.Row>
+                  {products.data.map((prd) => (
+                    <Grid.Column key={prd.id}>
+                      <Card
+                        type={contentType.PRODUCT}
+                        data={prd}
+                        isLoading={isLoading}
+                      />
+                    </Grid.Column>
+                  ))}
+                </Grid.Row>
+              </Grid>
             </div>
+            <Pagination
+              type={contentType.PRODUCT}
+              totalPage={products.totalPage}
+              totalItem={products.totalItem}
+              current={currentPage}
+              onChangePage={onChangePage}
+              isLoading={isLoading}
+            />
           </div>
-        </Container>
-      </div>
-    </>
+        </div>
+      </Container>
+    </div>
   );
 };
 
-export default Product;
+export default withlayout(Product, {
+  title: 'San pham',
+  meta: {
+    title: 'Bep tu nhap khau',
+    description: 'bep tu nhap khau chinh hang'
+  },
+  breadcrumbs: [
+    { id: 'home', name: 'Trang chủ', href: '/' },
+    { id: 'sanpham', name: 'Sản phẩm', href: '/product', current: true }
+  ]
+});
 
-export async function getServerSideProps(context) {
+export async function getStaticProps(context) {
   const { query, res } = context;
 
-  res.setHeader(
-    'Cache-Control',
-    'public, s-maxage=10, stale-while-revalidate=59'
-  );
+  // res.setHeader(
+  //   'Cache-Control',
+  //   'public, s-maxage=10, stale-while-revalidate=59'
+  // );
 
   let queryObj = {};
   Object.keys(queryParams).forEach((key) => {
@@ -121,7 +128,7 @@ export async function getServerSideProps(context) {
   });
 
   const response = await client
-    .get(`/product`, {
+    .get(`product`, {
       perPage: 24,
       ...queryObj
     })

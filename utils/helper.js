@@ -36,8 +36,9 @@ export const isEmpty = (obj) => {
 };
 
 export const objectToQueryString = (obj) => {
-  if (typeof obj !== 'object' || isEmpty(obj))
-    throw new Error(`${obj} must be object`);
+  if (typeof obj !== 'object') throw new Error(`${obj} must be object`);
+
+  if (isEmpty(obj)) return;
   let string = '';
 
   Object.keys(obj).map((key, index) => {

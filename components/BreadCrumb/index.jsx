@@ -9,14 +9,17 @@ const Breadcrumb = (props) => {
       <>
         <span className="bread-item">
           <Link href={href}>
-            <a>{name}</a>
+            <a dangerouslySetInnerHTML={{ __html: name }}></a>
           </Link>
         </span>
         {isLast !== true && <span className="bread-space">/</span>}
       </>
     ) : (
       <>
-        <span className="bread-item">{name}</span>
+        <span
+          className="bread-item"
+          dangerouslySetInnerHTML={{ __html: name }}
+        ></span>
         {isLast !== true && <span className="bread-space">/</span>}
       </>
     );

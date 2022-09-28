@@ -1,12 +1,11 @@
 import { wcApi } from '../../../api/woo';
 
 const productHandler = (req, res) => {
-  const { perPage, page, order, orderby } = req?.query;
-
-  console.log(req.query);
+  const { perPage, page, order, orderby, status } = req?.query;
+  console.log(`===============API==============`, req.query);
   wcApi
     .get('products', {
-      status: 'publish',
+      status: status || 'publish',
       per_page: perPage,
       page,
       orderby,

@@ -1,0 +1,97 @@
+.ec__product__single{
+
+    
+    :global .ec__product--top{
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 10px;
+        margin-bottom: 30px;
+
+        .ec__product--title{
+            font-size: 20px;
+            line-height: 28px;
+
+        }
+        
+    }
+    :global .ec__product--body{
+   
+        background-color: #fff;
+        border-radius: 10px;
+
+        .ec__product--content{
+            padding: 20px;
+        }
+        .short-title{
+            font-size: 30px;
+            font-weight: 400;
+        }
+        .ec__product--description{
+            img{
+                max-width: 100%;
+                margin-top: 10px;
+                margin-bottom: 10px;
+            }
+            img.aligncenter{
+                display: block;
+                margin-left: auto;
+                margin-right: auto;
+            }
+            table {
+                display: table;
+                border-collapse: collapse;
+                border-width: 1;
+                margin-bottom: 10px;
+            }
+            tr td, tr th{
+                border: 1px solid #f1f1f1;
+                padding: 10px 15px;
+                min-width: 180px;
+            }
+            thead{
+                font-weight: bold;
+            }
+        }
+    }
+    :global .ec__product-top-row{
+        display: flex;
+    }
+    :global .ec__product-thumbail{
+        width: 40%;
+
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    :global .ec__product--shortDes{
+        width: 60%;
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    :global .ec__product--attr{
+        .attr-item {
+            margin-bottom: 10px;
+        }
+        .attr-label{
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+        .attr-name{
+            border: 1px solid 
+        }
+    }
+    :global .ec__product--addToCard{
+        background-color: #c83a3a;
+        width: 100%;
+        border-radius: 10px;
+        color: #fff;
+        font-weight: bold;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 15px;
+        svg{
+            margin-right: 10px;
+        }
+    }
+            
+}

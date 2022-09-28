@@ -4,15 +4,8 @@ import * as Icon from 'react-feather';
 import { DOT, paginateAction } from '../../constants/constants';
 
 const Pagination = (props) => {
-  const {
-    type,
-    totalPage,
-    totalItem,
-    current,
-    onChangePage,
-    isLoading,
-    firstLoad
-  } = props;
+  const { type, totalPage, totalItem, current, onChangePage, isLoading } =
+    props;
   const [currentPage, setCurrentPage] = useState(current);
   const [firstLoad, setFirstLoad] = useState(true);
   const paginations = usePagination({
@@ -22,11 +15,10 @@ const Pagination = (props) => {
   });
 
   const handleSelectPage = (action, page) => {
-    setFirstLoad(false);
     switch (action) {
       case paginateAction.NEXT:
         {
-          if (currentPage === Number(totalPage) || isLoading === true) return;
+          if (currentPage === Number(totalPage) || isLoading === flase) return;
           setCurrentPage((prevState) => prevState + 1);
         }
         break;
@@ -37,9 +29,11 @@ const Pagination = (props) => {
         }
         break;
       default: {
+        if (isLoading === true) return;
         setCurrentPage(page);
       }
     }
+    setFirstLoad(false);
   };
   useEffect(() => {
     if (firstLoad) return;

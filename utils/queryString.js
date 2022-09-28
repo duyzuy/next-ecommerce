@@ -1,7 +1,7 @@
 export const updateQueryFromString = (queryString, { key, value }) => {
   const querySearchKey = [`?${key}=`, `&${key}=`];
 
-  const expWithValue = `(\\?${key}=|\\&${key}=)+[0-9]*`;
+  const expWithValue = `(\\?${key}=|\\&${key}=)+[0-9]*[a-z]*`;
   const expNoValue = `(\\?${key}=|\\&${key}=)`;
 
   const regexWithValue = new RegExp(expWithValue, 'g');
@@ -10,12 +10,19 @@ export const updateQueryFromString = (queryString, { key, value }) => {
   const resultNoValue = queryString.match(regexNoValue);
 
   let updateQueryString = queryString;
-  resultValue.forEach((keyVal, index) => {
-    updateQueryString = updateQueryString.replace(
-      keyVal,
-      `${resultNoValue[index]}${value}`
-    );
-  });
+  if (resultNoValue === null || resultValue === null) {
+    updateQueryString =
+      (queryString.includes('?') &&
+        updateQueryString.concat('&', `${key}=${value}`)) ||
+      updateQueryString.concat('?', `${key}=${value}`);
+  } else {
+    resultValue.forEach((keyVal, index) => {
+      updateQueryString = updateQueryString.replace(
+        keyVal,
+        `${resultNoValue[index]}${value}`
+      );
+    });
+  }
 
   return updateQueryString;
 };
