@@ -5,8 +5,15 @@ import * as Icon from 'react-feather';
 import { DOT } from '../../constants/constants';
 
 const Pagination = (props) => {
-  const { type, totalPage, totalItem, current, onChangePage, isLoading } =
-    props;
+  const {
+    type,
+    totalPage,
+    totalItem,
+    current,
+    onChangePage,
+    isLoading,
+    firstLoad
+  } = props;
   const [currentPage, setCurrentPage] = useState(current);
 
   const paginations = usePagination({
