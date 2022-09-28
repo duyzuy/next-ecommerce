@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
-import { createArray } from '../../utils/helper';
 import { usePagination } from '../../hooks/usePagination';
 import * as Icon from 'react-feather';
-import { DOT } from '../../constants/constants';
+import { DOT, paginateAction } from '../../constants/constants';
 
 const Pagination = (props) => {
   const {
@@ -15,33 +14,44 @@ const Pagination = (props) => {
     firstLoad
   } = props;
   const [currentPage, setCurrentPage] = useState(current);
-
+  const [firstLoad, setFirstLoad] = useState(true);
   const paginations = usePagination({
     totalPage: Number(totalPage),
     currentPage: currentPage,
     pageRange: 3
   });
 
-  const nextPage = () => {
-    if (currentPage === Number(totalPage) || isLoading === true) return;
-    setCurrentPage((prevState) => prevState + 1);
+  const handleSelectPage = (action, page) => {
+    setFirstLoad(false);
+    switch (action) {
+      case paginateAction.NEXT:
+        {
+          if (currentPage === Number(totalPage) || isLoading === true) return;
+          setCurrentPage((prevState) => prevState + 1);
+        }
+        break;
+      case paginateAction.PREV:
+        {
+          if (currentPage <= 1 || isLoading === true) return;
+          setCurrentPage((prevState) => prevState - 1);
+        }
+        break;
+      default: {
+        setCurrentPage(page);
+      }
+    }
   };
-  const prevPage = () => {
-    if (currentPage <= 1 || isLoading === true) return;
-    setCurrentPage((prevState) => prevState - 1);
-  };
-  const onSelectPage = (page) => {
-    if (isLoading === true) return;
-    setCurrentPage(page);
-  };
-
   useEffect(() => {
-    onChangePage(currentPage, 'paginateClick');
+    if (firstLoad) return;
+    onChangePage(currentPage);
   }, [currentPage]);
   return (
     <div className="ec__pagination">
       <ul className="ec__pagination--items">
-        <li className="ec__pagination--item prev" onClick={prevPage}>
+        <li
+          className="ec__pagination--item prev"
+          onClick={() => handleSelectPage(paginateAction.PREV)}
+        >
           <Icon.ArrowLeft size={14} />
         </li>
         {paginations.map((page, index) => {
@@ -67,14 +77,17 @@ const Pagination = (props) => {
                     ? 'ec__pagination--item active'
                     : 'ec__pagination--item'
                 }
-                onClick={() => onSelectPage(page)}
+                onClick={() => handleSelectPage(paginateAction.SELECT, page)}
               >
                 <span key={page}>{page}</span>
               </li>
             );
           }
         })}
-        <li className="ec__pagination--item next" onClick={nextPage}>
+        <li
+          className="ec__pagination--item next"
+          onClick={() => handleSelectPage(paginateAction.NEXT)}
+        >
           <Icon.ArrowRight size={14} />
         </li>
       </ul>

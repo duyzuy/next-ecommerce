@@ -1,26 +1,31 @@
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter } from 'next/router';
+import { Container, Header, Grid } from 'semantic-ui-react';
 import { client } from '../../api/client';
 import SEO from '../../components/common/Seo';
-import { Container, Header, Grid } from 'semantic-ui-react';
-import styles from '../../styles/product.module.scss';
 import Card from '../../components/Card';
-import SideBar from '../../container/SideBar';
 import Breadcrumb from '../../components/BreadCrumb';
+import SideBar from '../../container/SideBar';
 import Pagination from '../../container/Pagination';
-import { isEmpty, isExists } from '../../utils/helper';
-import * as Icon from 'react-feather';
+import ProductToolBar from '../../container/ProductToolBar';
 import { contentType } from '../../constants/constants';
-import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
-import Input from '../../components/Input';
+import { queryParams, defaultValue } from '../../constants/product';
 import { useLoading } from '../../hooks/useLoading';
+import { isEmpty, isExists } from '../../utils/helper';
+import { updateQueryFromString } from '../../utils';
+import styles from '../../styles/product.module.scss';
+
 const Product = (props) => {
-  const [firstLoad, setFirstLoad] = useState(true);
   const { products } = props;
   const router = useRouter();
+  const [filter, setFilter] = useState(defaultValue);
+  const { query, asPath } = router;
 
-  const { query } = router;
   const isLoading = useLoading(router);
-
+  updateQueryFromString('/product?page=1&sort=desc&perPage=24', {
+    key: 'page',
+    value: 5
+  });
   const currentPage = useMemo(() => {
     if (!isEmpty(query) && isExists(query, 'page')) {
       return Number(query['page']);
@@ -28,15 +33,22 @@ const Product = (props) => {
     return 1;
   }, [query.page]);
 
-  const onChangePage = (page, action) => {
+  const onChangePage = (page) => {
+    let path = asPath;
+
+    path = path + `?page=${page}`;
+
+    router.push(path);
+  };
+  const onFilter = (key, value) => {
     let path = '/product';
-    if (page !== 1) {
-      path = path + `?page=${page}`;
-    }
-    if (page === 1 && action === 'paginateClick') {
-      path = path + `?page=1`;
-    }
-    setFirstLoad(false);
+    setFilter((prevState) => {
+      return {
+        ...prevState,
+        [key]: value
+      };
+    });
+    path = `${path}?${key}=${value}`;
     router.push(path);
   };
   useEffect(() => {}, []);
@@ -57,39 +69,7 @@ const Product = (props) => {
           <div className="ec__product--container">
             <SideBar type="category" />
             <div className="ec__product--list">
-              <div className="ec__product--tools">
-                <div className="tool-inner">
-                  <div className="tool-filter">
-                    <span className="ec__icon">
-                      <Icon.Filter size={16} />
-                    </span>
-                    Lọc Sản phẩm
-                  </div>
-                  <div className="tool-sort desc">
-                    <Input
-                      asRadio
-                      content="Giá từ cao - thấp"
-                      icon={() => <Icon.ArrowDown size={10} />}
-                      name="productPrice"
-                      value="desc"
-                      id="priceDesc"
-                      onChange={() => {
-                        console.log('change');
-                      }}
-                    />
-                  </div>
-                  <div className="tool-sort asc">
-                    <Input
-                      asRadio
-                      content="Giá từ thấp - cao"
-                      icon={() => <Icon.ArrowUp size={10} />}
-                      id="priceAsc"
-                      value="asc"
-                      name="productPrice"
-                    />
-                  </div>
-                </div>
-              </div>
+              <ProductToolBar onFilter={onFilter} filter={filter} />
               <div className="ec__product--items">
                 <Grid columns={3}>
                   <Grid.Row>
@@ -112,7 +92,6 @@ const Product = (props) => {
                 current={currentPage}
                 onChangePage={onChangePage}
                 isLoading={isLoading}
-                firstLoad={firstLoad}
               />
             </div>
           </div>
@@ -126,20 +105,26 @@ export default Product;
 
 export async function getServerSideProps(context) {
   const { query, res } = context;
-  let page = 1;
+
   res.setHeader(
     'Cache-Control',
     'public, s-maxage=10, stale-while-revalidate=59'
   );
 
-  if (!isEmpty(query) && isExists(query, 'page')) {
-    page = query['page'];
-  }
+  let queryObj = {};
+  Object.keys(queryParams).forEach((key) => {
+    queryObj = Object.assign(queryObj, {
+      [queryParams[key]]: isExists(query, queryParams[key])
+        ? query[queryParams[key]]
+        : defaultValue[queryParams[key]]
+    });
+  });
 
-  const response = await client(`/product`, {
-    perPage: 24,
-    page
-  })
+  const response = await client
+    .get(`/product`, {
+      perPage: 24,
+      ...queryObj
+    })
     .then((res) => {
       return res;
     })
