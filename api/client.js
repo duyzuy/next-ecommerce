@@ -20,7 +20,6 @@ const client = async (url, params = {}, method) => {
   console.log('==============params==============', params);
   let queryString = '';
   if (!isEmpty(params)) {
-    console.log(`======================asdfasdfasfasfsfsfsdfsd`);
     queryString = objectToQueryString(params);
   }
   const baseUrl = API_URL + '/' + url + queryString;

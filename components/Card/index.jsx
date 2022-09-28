@@ -1,5 +1,5 @@
-import { useMemo } from 'react';
-import Image from 'next/image';
+import { useMemo, useState } from 'react';
+
 import CustomImage from '../CustomImage';
 import * as Icon from 'react-feather';
 import { useRouter } from 'next/router';
@@ -7,6 +7,7 @@ import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import Price from '../Price';
 const Card = (props) => {
   const { type, isLoading, data } = props;
+
   const { images } = data;
   const router = useRouter();
 
@@ -28,7 +29,10 @@ const Card = (props) => {
       </>
     );
   };
-
+  const goToPage = (page) => {
+    console.log(page);
+    router.push(`/product/${page}`);
+  };
   return (
     <>
       {isLoading === true ? (
@@ -46,10 +50,7 @@ const Card = (props) => {
           </div>
         </>
       ) : (
-        <div
-          className={`ec__card ${type}`}
-          onClick={() => router.push(`/${type}/${data.id}`)}
-        >
+        <div className={`ec__card ${type}`} onClick={() => goToPage(data.slug)}>
           <div className="ec__card--inner">
             <div className="ec__card--image">
               <div className="image">

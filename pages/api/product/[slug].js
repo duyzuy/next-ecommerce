@@ -1,9 +1,12 @@
 import { wcApi } from '../../../api/woo';
 
 const singleProductHandler = (req, res) => {
-  const { pId } = req.query;
+  const { slug } = req.query;
+
   wcApi
-    .get(`products/${pId}`)
+    .get(`products`, {
+      slug: slug
+    })
     .then((response) => {
       res.status(200).json({
         data: response.data

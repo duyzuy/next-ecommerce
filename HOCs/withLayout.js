@@ -5,7 +5,7 @@ const withlayout = (Component, { title, meta = {}, breadcrumbs = [] } = {}) => {
     <div className="layout has-sidebar">
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
       <Breadcrumb items={breadcrumbs} />
-      <div class="layout-container">
+      <div className="layout-container">
         <Component {...props}>{props.children}</Component>
       </div>
     </div>

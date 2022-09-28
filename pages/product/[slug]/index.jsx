@@ -5,6 +5,7 @@ import SEO from '../../../components/common/Seo';
 import Breadcrumb from '../../../components/BreadCrumb';
 import { Container, Header, Grid } from 'semantic-ui-react';
 import { useMemo } from 'react';
+import { useLoading } from '../../../hooks/useLoading';
 import Slider from '../../../components/Slider';
 import styles from '../../../styles/singleproduct.module.scss';
 import Price from '../../../components/Price';
@@ -12,9 +13,9 @@ import * as Icon from 'react-feather';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data } = props;
-
+  const isLoading = useLoading(router);
   const images = useMemo(() => {
-    return data.images.map((img) => {
+    return data?.images?.map((img) => {
       return {
         id: img.id,
         src: img.src,
@@ -78,11 +79,11 @@ const ProductDetail = (props) => {
                   dangerouslySetInnerHTML={{ __html: data.name }}
                 ></h1>
                 <div className="ec__product--attr">
-                  {data.attributes.map((attr) => (
+                  {data?.attributes?.map((attr) => (
                     <div className="attr-item" key={attr.id}>
                       <p className="attr-label">{attr.name}</p>
                       <p className="arrr-names">
-                        {attr.options.map((op, index) => (
+                        {attr?.options?.map((op, index) => (
                           <span className="attr-name" key={index}>
                             {op}
                           </span>
@@ -140,12 +141,13 @@ export async function getStaticPaths() {
     .get(`product`)
     .then((res) => {
       res.data.forEach((prd) => {
-        paths.push({ params: { productId: prd.id.toString() } });
+        paths.push({ params: { slug: prd.slug } });
       });
     })
     .catch((error) => {
       console.log(error);
     });
+
   return {
     paths,
     fallback: false // can also be true or 'blocking'
@@ -155,8 +157,9 @@ export async function getStaticProps(context) {
   const { params } = context;
 
   const response = await client
-    .get(`product/${Number(params.productId)}`)
+    .get(`product/${params.slug}`)
     .then((res) => {
+      console.log(res);
       return res;
     })
     .catch((error) => {
@@ -164,6 +167,7 @@ export async function getStaticProps(context) {
     });
 
   return {
-    props: { data: response.data }
+    props: { data: response.data },
+    revalidate: 1
   };
 }

@@ -25,8 +25,7 @@ const Product = (props) => {
   const [filter, setFilter] = useState(defaultValue);
   const { query } = router;
 
-  const isLoading = useLoading(router);
-
+  const [isLoading, setIsLoading] = useState(false);
   const currentPage = useMemo(() => {
     if (!isEmpty(query) && isExists(query, 'page')) {
       return Number(query['page']);
@@ -38,6 +37,7 @@ const Product = (props) => {
     onFilterChangeRoute(productQueryParam.PAGE, page);
   };
   const onFilterChangeRoute = (key, value) => {
+    setIsLoading(true);
     let path = router.asPath;
     const newQueryString = updateQueryFromString(path, {
       key,
@@ -53,7 +53,9 @@ const Product = (props) => {
     path = `${path}?${key}=${value}`;
     router.push(newQueryString);
   };
-
+  useEffect(() => {
+    setIsLoading(false);
+  }, [router.asPath]);
   return (
     <div className={styles.ec__product}>
       <Container>
@@ -140,6 +142,7 @@ export async function getStaticProps(context) {
     });
 
   return {
-    props: { products: response }
+    props: { products: response },
+    revalidate: 1
   };
 }

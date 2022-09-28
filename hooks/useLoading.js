@@ -8,6 +8,7 @@ const useLoading = (router) => {
       url !== router.asPath && setIsLoading(true);
     };
     const handleComplete = (url) => {
+      console.log(url, router);
       url === router.asPath && setIsLoading(false);
     };
 

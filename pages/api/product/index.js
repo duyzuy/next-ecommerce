@@ -2,7 +2,7 @@ import { wcApi } from '../../../api/woo';
 
 const productHandler = (req, res) => {
   const { perPage, page, order, orderby, status } = req?.query;
-  console.log(`===============API==============`, req.query);
+
   wcApi
     .get('products', {
       status: status || 'publish',
