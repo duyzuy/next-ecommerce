@@ -41,76 +41,82 @@ const ProductDetail = (props) => {
           }
         ]}
       />
-      <Container className={styles.ec__product__single}>
-        <div className="ec__product--top">
-          <div className="ec__product-top-row">
-            <div className="ec__product-thumbail">
-              <Slider itemScroll={1} itemView={1} asMain itemSpacing={15}>
-                {images &&
-                  images.map((img) => (
-                    <Slider.Item key={img.id} asChild>
-                      <div className="ec__product--img">
-                        <img src={img.src} />
-                      </div>
-                    </Slider.Item>
-                  ))}
-              </Slider>
+      <Container>
+        <div className={styles.ec__product__single}>
+          <div className="ec__product--left">
+            <div className="ec__product--featured">
+              <div className="ec__product-thumbail">
+                <Slider itemScroll={1} itemView={1} asMain itemSpacing={15}>
+                  {images &&
+                    images.map((img) => (
+                      <Slider.Item key={img.id} asChild>
+                        <div className="ec__product--img">
+                          <img src={img.src} />
+                        </div>
+                      </Slider.Item>
+                    ))}
+                </Slider>
+              </div>
             </div>
-            <div className="ec__product--shortDes">
-              <h1
-                className="ec__product--title"
-                dangerouslySetInnerHTML={{ __html: data.name }}
-              ></h1>
-              <div className="ec__product--attr">
-                {data.attributes.map((attr) => (
-                  <div className="attr-item" key={attr.id}>
-                    <p className="attr-label">{attr.name}</p>
-                    <p className="arrr-names">
-                      {attr.options.map((op, index) => (
-                        <span className="attr-name" key={index}>
-                          {op}
-                        </span>
-                      ))}
-                    </p>
-                  </div>
-                ))}
-              </div>
-              <div className="ec__product--info">
-                <p className="info-item">
-                  <span className="info-label">SKU</span>
-                  <span className="info-name">{data.sku}</span>
-                </p>
-                <p className="info-item">
-                  <span className="info-label">Stock</span>
-                  <span className="info-name">{data.stock_status}</span>
-                </p>
-              </div>
-              <Price
-                price={data.price}
-                regularPrice={data.regular_price}
-                salePrice={data.sale_price}
-              />
-              <div className="ec__product--action">
-                <button
-                  onClick={() => addToCard(data.id, data)}
-                  className="ec__product--addToCard"
-                >
-                  <Icon.ShoppingCart size={16} />
-                  Thêm vào giỏ hàng
-                </button>
+            <div className="ec__product--body">
+              <div className="ec__product--content">
+                <Header as="h4" className="short-title">
+                  Thông tin sản phẩm
+                </Header>
+                <div
+                  className="ec__product--description"
+                  dangerouslySetInnerHTML={{ __html: data.description }}
+                ></div>
               </div>
             </div>
           </div>
-        </div>
-        <div className="ec__product--body">
-          <div className="ec__product--content">
-            <Header as="h4" className="short-title">
-              Thông tin sản phẩm
-            </Header>
-            <div
-              className="ec__product--description"
-              dangerouslySetInnerHTML={{ __html: data.description }}
-            ></div>
+          <div className="ec__product--right">
+            <div className="ec__product--right--inner">
+              <div className="ec__product--shortDes">
+                <h1
+                  className="ec__product--title"
+                  dangerouslySetInnerHTML={{ __html: data.name }}
+                ></h1>
+                <div className="ec__product--attr">
+                  {data.attributes.map((attr) => (
+                    <div className="attr-item" key={attr.id}>
+                      <p className="attr-label">{attr.name}</p>
+                      <p className="arrr-names">
+                        {attr.options.map((op, index) => (
+                          <span className="attr-name" key={index}>
+                            {op}
+                          </span>
+                        ))}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+                <div className="ec__product--info">
+                  <p className="info-item">
+                    <span className="info-label">SKU</span>
+                    <span className="info-name">{data.sku}</span>
+                  </p>
+                  <p className="info-item">
+                    <span className="info-label">Stock</span>
+                    <span className="info-name">{data.stock_status}</span>
+                  </p>
+                </div>
+                <Price
+                  price={data.price}
+                  regularPrice={data.regular_price}
+                  salePrice={data.sale_price}
+                />
+                <div className="ec__product--action">
+                  <button
+                    onClick={() => addToCard(data.id, data)}
+                    className="ec__product--addToCard"
+                  >
+                    <Icon.ShoppingCart size={16} />
+                    Thêm vào giỏ hàng
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </Container>
