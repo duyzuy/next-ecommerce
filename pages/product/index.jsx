@@ -31,7 +31,7 @@ const Product = (props) => {
       return Number(query['page']);
     }
     return 1;
-  }, [query.page]);
+  }, [query]);
 
   const onChangePage = (page) => {
     onFilterChangeRoute(productQueryParam.PAGE, page);
@@ -112,17 +112,16 @@ export default withlayout(Product, {
   ]
 });
 
-export async function getStaticProps(context) {
-  const { query, res } = context;
+export async function getServerSideProps(ctx) {
+  const { query, res, req } = ctx;
 
   // res.setHeader(
   //   'Cache-Control',
   //   'public, s-maxage=10, stale-while-revalidate=59'
   // );
-
-  let queryObj = {};
+  let queryObject = {};
   Object.keys(queryParams).forEach((key) => {
-    queryObj = Object.assign(queryObj, {
+    Object.assign(queryObject, {
       [queryParams[key]]: isExists(query, queryParams[key])
         ? query[queryParams[key]]
         : defaultValue[queryParams[key]]
@@ -130,10 +129,7 @@ export async function getStaticProps(context) {
   });
 
   const response = await client
-    .get(`product`, {
-      perPage: 24,
-      ...queryObj
-    })
+    .get(`product`, { ...queryObject })
     .then((res) => {
       return res;
     })
@@ -142,7 +138,8 @@ export async function getStaticProps(context) {
     });
 
   return {
-    props: { products: response },
-    revalidate: 1
+    props: {
+      products: response
+    }
   };
 }

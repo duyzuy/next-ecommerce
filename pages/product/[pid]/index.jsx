@@ -9,10 +9,12 @@ import { useLoading } from '../../../hooks/useLoading';
 import Slider from '../../../components/Slider';
 import styles from '../../../styles/singleproduct.module.scss';
 import Price from '../../../components/Price';
+import { queryParams, defaultValue } from '../../../constants/product';
 import * as Icon from 'react-feather';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data } = props;
+  // console.log(data);
   const isLoading = useLoading(router);
   const images = useMemo(() => {
     return data?.images?.map((img) => {
@@ -22,22 +24,22 @@ const ProductDetail = (props) => {
         name: img.name
       };
     });
-  }, [data.images]);
+  }, [data?.images]);
 
   const addToCard = (id, product) => {
     console.log(id);
   };
   return (
     <div className="ec__wrapper single-product">
-      <SEO title={data.name} description="bep tu nhap khau chinh hang" />
+      <SEO title={data?.name} description="bep tu nhap khau chinh hang" />
       <Breadcrumb
         items={[
           { id: 'home', name: 'Trang chủ', href: '/' },
           { id: 'prroduct', name: 'Sản phẩm', href: '/product' },
           {
             id: 'productDetail',
-            name: data.name,
-            href: `/${data.id}`,
+            name: data?.name,
+            href: `/${data?.id}`,
             current: true
           }
         ]}
@@ -66,7 +68,7 @@ const ProductDetail = (props) => {
                 </Header>
                 <div
                   className="ec__product--description"
-                  dangerouslySetInnerHTML={{ __html: data.description }}
+                  dangerouslySetInnerHTML={{ __html: data?.description }}
                 ></div>
               </div>
             </div>
@@ -76,7 +78,7 @@ const ProductDetail = (props) => {
               <div className="ec__product--shortDes">
                 <h1
                   className="ec__product--title"
-                  dangerouslySetInnerHTML={{ __html: data.name }}
+                  dangerouslySetInnerHTML={{ __html: data?.name }}
                 ></h1>
                 <div className="ec__product--attr">
                   {data?.attributes?.map((attr) => (
@@ -95,17 +97,17 @@ const ProductDetail = (props) => {
                 <div className="ec__product--info">
                   <p className="info-item">
                     <span className="info-label">SKU</span>
-                    <span className="info-name">{data.sku}</span>
+                    <span className="info-name">{data?.sku}</span>
                   </p>
                   <p className="info-item">
                     <span className="info-label">Stock</span>
-                    <span className="info-name">{data.stock_status}</span>
+                    <span className="info-name">{data?.stock_status}</span>
                   </p>
                 </div>
                 <Price
-                  price={data.price}
-                  regularPrice={data.regular_price}
-                  salePrice={data.sale_price}
+                  price={data?.price}
+                  regularPrice={data?.regular_price}
+                  salePrice={data?.sale_price}
                 />
                 <div className="ec__product--action">
                   <button
@@ -126,48 +128,64 @@ const ProductDetail = (props) => {
 };
 
 export default ProductDetail;
-export async function getStaticPaths() {
-  // When this is true (in preview environments) don't
-  // prerender any static pages
-  // (faster builds, but slower initial page load)
-  if (process.env.SKIP_BUILD_STATIC_GENERATION) {
-    return {
-      paths: [],
-      fallback: 'blocking'
-    };
-  }
-  let paths = [];
-  await client
-    .get(`product`)
-    .then((res) => {
-      res.data.forEach((prd) => {
-        paths.push({ params: { slug: prd.slug } });
-      });
-    })
-    .catch((error) => {
-      console.log(error);
-    });
+// export async function getStaticPaths() {
+//   // When this is true (in preview environments) don't
+//   // prerender any static pages
+//   // (faster builds, but slower initial page load)
+//   // if (process.env.SKIP_BUILD_STATIC_GENERATION) {
+//   //   return {
+//   //     paths: [],
+//   //     fallback: 'blocking'
+//   //   };
+//   // }
 
-  return {
-    paths,
-    fallback: false // can also be true or 'blocking'
-  };
-}
-export async function getStaticProps(context) {
-  const { params } = context;
+//   let paths = [];
+//   await client
+//     .get(`product`)
+//     .then((res) => {
+//       res.data.forEach((prd) => {
+//         paths.push({ params: { pid: prd.id.toString() } });
+//       });
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+//   console.log(paths);
+//   return {
+//     paths,
+//     fallback: false // can also be true or 'blocking'
+//   };
+// }
+// export async function getStaticProps(ctx) {
+//   const { params } = ctx;
+
+//   const response = await client
+//     .get(`product/${params.pid}`)
+//     .then((res) => {
+//       return res.data;
+//     })
+//     .catch((error) => {
+//       console.log(error);
+//     });
+
+//   return {
+//     props: { data: response },
+//     revalidate: 10
+//   };
+// }
+export async function getServerSideProps(ctx) {
+  const { params } = ctx;
 
   const response = await client
-    .get(`product/${params.slug}`)
+    .get(`product/${params.pid}`)
     .then((res) => {
-      console.log(res);
-      return res;
+      return res.data;
     })
     .catch((error) => {
       console.log(error);
     });
 
   return {
-    props: { data: response.data },
-    revalidate: 1
+    props: { data: response }
   };
 }

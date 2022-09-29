@@ -1,16 +1,13 @@
 import { wcApi } from '../../../api/woo';
 
-const singleProductHandler = (req, res) => {
-  const { slug } = req.query;
+const singleProductHandler = async (req, res) => {
+  const { pid } = req.query;
 
-  wcApi
-    .get(`products`, {
-      slug: slug
-    })
+  await wcApi
+    .get(`products/${pid}`)
     .then((response) => {
       res.status(200).json({
         data: response.data
-        // headers: response.headers
       });
     })
     .catch((error) => {

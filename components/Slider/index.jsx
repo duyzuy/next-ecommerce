@@ -112,7 +112,17 @@ const Slider = ({
       }
       return widthOfItems;
     });
-  }, [itemView, itemScroll, sliderDimensions]);
+  }, [
+    itemView,
+    itemScroll,
+    sliderDimensions,
+    asMain,
+    breakPoint,
+    itemScrollArr,
+    itemScrollSlider,
+    itemSpacing,
+    itemWidth
+  ]);
 
   useEffect(() => {
     setItemWidth(() => {
@@ -130,7 +140,7 @@ const Slider = ({
         (itemsRef.current.childNodes.length - itemViewSlider) / itemScrollSlider
       );
     });
-  }, [itemViewSlider, sliderDimensions]);
+  }, [itemViewSlider, sliderDimensions, itemScrollSlider, itemSpacing]);
   /**
    *
    * @params indexSlide, slideItems
@@ -149,7 +159,7 @@ const Slider = ({
     return () => {
       clearInterval(timmerId);
     };
-  }, [slideItems, indexSlide]);
+  }, [slideItems, indexSlide, timmerId]);
 
   useEffect(() => {
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;

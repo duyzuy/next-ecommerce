@@ -1,9 +1,9 @@
 import { wcApi } from '../../../api/woo';
 import { wooSetting } from '../../../constants/settings';
-const settingHandler = (req, res) => {
+const settingHandler = async (req, res) => {
   const { query } = req;
 
-  wcApi
+  await wcApi
     .get('settings/general')
     .then((response) => {
       let data;

@@ -2,7 +2,7 @@ export const productQueryParam = {
   PAGE: 'page',
   ORDER: 'order',
   ORDERBY: 'orderby',
-  PERPAGE: 'perPage',
+  PER_PAGE: 'per_page',
   STATUS: 'status'
 };
 

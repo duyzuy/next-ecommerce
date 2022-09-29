@@ -25,7 +25,8 @@ const AppProvider = (props) => {
   return (
     <AppContext.Provider
       value={{
-        currency
+        currency,
+        isLoading
       }}
     >
       {props.children}

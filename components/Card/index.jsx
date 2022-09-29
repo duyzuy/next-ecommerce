@@ -15,7 +15,7 @@ const Card = (props) => {
     if (images.length > 0) {
       return images[0].src;
     }
-  }, []);
+  }, [images]);
 
   const Rating = ({ averageRating, ratingCount }) => {
     return (
@@ -50,11 +50,16 @@ const Card = (props) => {
           </div>
         </>
       ) : (
-        <div className={`ec__card ${type}`} onClick={() => goToPage(data.slug)}>
+        <div className={`ec__card ${type}`} onClick={() => goToPage(data.id)}>
           <div className="ec__card--inner">
             <div className="ec__card--image">
               <div className="image">
-                <CustomImage src={thumbnailUrl} alt={data.name} />
+                <CustomImage
+                  src={thumbnailUrl}
+                  alt={data.name}
+                  width={500}
+                  height={500}
+                />
               </div>
             </div>
             <div className="ec__card--bottom">

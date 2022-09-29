@@ -23,7 +23,7 @@ const Paginations = (props) => {
       moveWidth = dimension.scrollWidth - dimension.width;
     }
     pagiItemRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
-  }, [indexSlide, pagiDimension]);
+  }, [indexSlide, pagiDimension, dimension.width, itemWidth]);
 
   return (
     <div className="ec__slide--pagination">

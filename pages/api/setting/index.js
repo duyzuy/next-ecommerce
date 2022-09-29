@@ -1,9 +1,9 @@
 import { wcApi } from '../../../api/woo';
 
-const settingHandler = (req, res) => {
+const settingHandler = async (req, res) => {
   const { perPage } = req?.query || 10;
   const { page } = req?.query || 1;
-  wcApi
+  await wcApi
     .get('products', {
       per_page: perPage,
       page,
