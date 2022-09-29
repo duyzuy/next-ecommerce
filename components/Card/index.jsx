@@ -30,7 +30,6 @@ const Card = (props) => {
     );
   };
   const goToPage = (page) => {
-    console.log(page);
     router.push(`/product/${page}`);
   };
   return (
@@ -53,14 +52,12 @@ const Card = (props) => {
         <div className={`ec__card ${type}`} onClick={() => goToPage(data.id)}>
           <div className="ec__card--inner">
             <div className="ec__card--image">
-              <div className="image">
-                <CustomImage
-                  src={thumbnailUrl}
-                  alt={data.name}
-                  width={500}
-                  height={500}
-                />
-              </div>
+              <CustomImage
+                src={thumbnailUrl}
+                alt={data.name}
+                width={500}
+                height={500}
+              />
             </div>
             <div className="ec__card--bottom">
               <h3 className="ec__card--title">{data.name}</h3>

@@ -7,6 +7,9 @@ const nextConfig = {
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')]
   },
+  images: {
+    domains: ['saigonhomekitchen.vn']
+  },
   i18n: {
     // These are all the locales you want to support in
     // your application

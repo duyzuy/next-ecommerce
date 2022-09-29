@@ -5,7 +5,8 @@ const myLoader = ({ src, width, quality }) => {
 };
 
 const CustomImage = (props) => {
-  return <Image {...props} />;
+  const { alt, ...rest } = props || {};
+  return <Image {...rest} alt={alt} />;
 };
 
 export default CustomImage;

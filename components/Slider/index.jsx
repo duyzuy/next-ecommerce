@@ -26,7 +26,7 @@ const Slider = ({
   let subComponentList = Object.keys(Slider);
   const sliderRef = useRef();
   const itemsRef = useRef();
-  const paginationRef = useRef();
+  const timmerIdRef = useRef();
   const [slideItems, setSlideItems] = useState([]);
   const [itemWidth, setItemWidth] = useState(0);
   const [maxIndexSlide, setMaxIndexSlide] = useState();
@@ -40,6 +40,182 @@ const Slider = ({
 
   const sliderDimensions = useDimensions(itemsRef);
 
+  const moveSlide = useCallback(
+    ({ action, indexGoto }) => {
+      if (asMain !== undefined && itemScrollSlider > itemView)
+        throw new Error('itemScroll must less than itemView');
+      let widthOfItems = 0;
+
+      if (asMain === undefined) {
+        for (let i = 0; i < itemScrollArr.length; i++) {
+          widthOfItems +=
+            Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
+        }
+        widthOfItems = widthOfItems + itemSpacing * itemScrollSlider;
+      } else {
+        if (itemView > itemScrollSlider) {
+          widthOfItems =
+            itemWidth * itemScrollSlider + itemSpacing * itemScrollSlider;
+        } else {
+          widthOfItems =
+            itemWidth * itemScrollSlider + itemSpacing * (itemScrollSlider - 1);
+        }
+      }
+
+      // update next array of items
+
+      setItemScrollArr((prevState) =>
+        prevState.map((item) => {
+          if (action === slider.NEXT) {
+            return item + itemScrollSlider;
+          }
+
+          if (action === slider.PREV) {
+            return item - itemScrollSlider;
+          }
+          if (action === slider.GOTO) {
+            return indexGoto;
+          }
+        })
+      );
+
+      setMoveWidth((prevState) => {
+        let moveWidth = 0;
+        if (asMain === undefined) {
+          switch (action) {
+            case slider.NEXT:
+              {
+                if (
+                  prevState + widthOfItems >
+                  sliderDimensions.scrollWidth - sliderDimensions.width
+                ) {
+                  moveWidth =
+                    sliderDimensions.scrollWidth - sliderDimensions.width;
+                } else {
+                  moveWidth = prevState + widthOfItems;
+                }
+              }
+              break;
+            case slider.PREV:
+              {
+                if (prevState - widthOfItems < 0) {
+                  moveWidth = 0;
+                } else {
+                  moveWidth = prevState - widthOfItems;
+                }
+              }
+              break;
+            default:
+              moveWidth = 0;
+          }
+        } else {
+          if (action === slider.NEXT) {
+            moveWidth = prevState + widthOfItems;
+          }
+          if (action === slider.PREV) {
+            if (prevState >= sliderDimensions.width) {
+              moveWidth = prevState - widthOfItems;
+            } else {
+              moveWidth = 0;
+            }
+          }
+          if (action === slider.GOTO) {
+            moveWidth = indexGoto * widthOfItems;
+          }
+        }
+
+        return moveWidth;
+      });
+
+      setIndexSlide((prevState) => {
+        let newIndex = 0;
+
+        switch (action) {
+          case slider.NEXT: {
+            newIndex = prevState + 1;
+            break;
+          }
+          case slider.PREV: {
+            newIndex = prevState - 1;
+            break;
+          }
+          case slider.GOTO: {
+            newIndex = indexGoto;
+            break;
+          }
+          default:
+            newIndex = 0;
+        }
+
+        return newIndex;
+      });
+
+      /**
+       *
+       * reset slider main
+       *
+       */
+      if (asMain !== undefined) {
+        if (
+          (action === slider.NEXT && indexSlide === maxIndexSlide) ||
+          (action === slider.PREV && indexSlide === 0)
+        ) {
+          setIndexSlide(0);
+          setMoveWidth(0);
+          setItemScrollArr(createArray(itemScroll));
+        }
+      }
+      /**
+       *
+       * reset slider
+       *
+       */
+      if (asMain === undefined) {
+        if (
+          (moveWidth ===
+            sliderDimensions.scrollWidth - sliderDimensions.width &&
+            action === slider.NEXT) ||
+          (moveWidth === 0 && action === slider.PREV)
+        ) {
+          setMoveWidth(0);
+          setItemScrollArr(createArray(itemScroll));
+        }
+
+        if (
+          (action === slider.NEXT && indexSlide === maxIndexSlide) ||
+          (indexSlide <= 0 && action === slider.PREV)
+        ) {
+          setIndexSlide(0);
+        }
+      }
+    },
+    [
+      asMain,
+      indexSlide,
+      itemScroll,
+      itemScrollArr,
+      itemScrollSlider,
+      itemSpacing,
+      itemView,
+      itemWidth,
+      maxIndexSlide
+    ]
+  );
+
+  const onClickNext = () => {
+    moveSlide({ action: slider.NEXT });
+    clearTimeout(timmerIdRef.current);
+  };
+
+  const onClickPrev = () => {
+    moveSlide({ action: slider.PREV });
+    clearTimeout(timmerIdRef.current);
+  };
+  const onMoveSlide = (index) => {
+    moveSlide({ action: slider.GOTO, indexGoto: index });
+    clearTimeout(timmerIdRef.current);
+  };
+  let titles = [];
   useEffect(() => {
     setSlideItems(itemsRef.current.childNodes);
 
@@ -118,10 +294,7 @@ const Slider = ({
     sliderDimensions,
     asMain,
     breakPoint,
-    itemScrollArr,
-    itemScrollSlider,
-    itemSpacing,
-    itemWidth
+    itemScrollArr
   ]);
 
   useEffect(() => {
@@ -140,7 +313,7 @@ const Slider = ({
         (itemsRef.current.childNodes.length - itemViewSlider) / itemScrollSlider
       );
     });
-  }, [itemViewSlider, sliderDimensions, itemScrollSlider, itemSpacing]);
+  }, [itemViewSlider, sliderDimensions]);
   /**
    *
    * @params indexSlide, slideItems
@@ -148,185 +321,21 @@ const Slider = ({
    * Set Auto Slider
    *
    */
-  let timmerId;
 
   useEffect(() => {
     autoPlay === true
-      ? (timmerId = setInterval(() => {
+      ? (timmerIdRef.current = setInterval(() => {
           moveSlide({ action: slider.NEXT });
         }, duration))
       : null;
     return () => {
-      clearInterval(timmerId);
+      clearInterval(timmerIdRef.current);
     };
-  }, [slideItems, indexSlide, timmerId]);
+  }, [slideItems, indexSlide, autoPlay, duration, moveSlide]);
 
   useEffect(() => {
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
   }, [indexSlide, moveWidth, sliderDimensions]);
-
-  const moveSlide = ({ action, indexGoto }) => {
-    if (asMain !== undefined && itemScrollSlider > itemView)
-      throw new Error('itemScroll must less than itemView');
-    let widthOfItems = 0;
-
-    if (asMain === undefined) {
-      for (let i = 0; i < itemScrollArr.length; i++) {
-        widthOfItems +=
-          Math.round(100 * slideItems[itemScrollArr[i]].offsetWidth) / 100;
-      }
-      widthOfItems = widthOfItems + itemSpacing * itemScrollSlider;
-    } else {
-      if (itemView > itemScrollSlider) {
-        widthOfItems =
-          itemWidth * itemScrollSlider + itemSpacing * itemScrollSlider;
-      } else {
-        widthOfItems =
-          itemWidth * itemScrollSlider + itemSpacing * (itemScrollSlider - 1);
-      }
-    }
-
-    // update next array of items
-
-    setItemScrollArr((prevState) =>
-      prevState.map((item) => {
-        if (action === slider.NEXT) {
-          return item + itemScrollSlider;
-        }
-
-        if (action === slider.PREV) {
-          return item - itemScrollSlider;
-        }
-        if (action === slider.GOTO) {
-          return indexGoto;
-        }
-      })
-    );
-
-    setMoveWidth((prevState) => {
-      let moveWidth = 0;
-      if (asMain === undefined) {
-        switch (action) {
-          case slider.NEXT:
-            {
-              if (
-                prevState + widthOfItems >
-                sliderDimensions.scrollWidth - sliderDimensions.width
-              ) {
-                moveWidth =
-                  sliderDimensions.scrollWidth - sliderDimensions.width;
-              } else {
-                moveWidth = prevState + widthOfItems;
-              }
-            }
-            break;
-          case slider.PREV:
-            {
-              if (prevState - widthOfItems < 0) {
-                moveWidth = 0;
-              } else {
-                moveWidth = prevState - widthOfItems;
-              }
-            }
-            break;
-          default:
-            moveWidth = 0;
-        }
-      } else {
-        if (action === slider.NEXT) {
-          moveWidth = prevState + widthOfItems;
-        }
-        if (action === slider.PREV) {
-          if (prevState >= sliderDimensions.width) {
-            moveWidth = prevState - widthOfItems;
-          } else {
-            moveWidth = 0;
-          }
-        }
-        if (action === slider.GOTO) {
-          moveWidth = indexGoto * widthOfItems;
-        }
-      }
-
-      return moveWidth;
-    });
-
-    setIndexSlide((prevState) => {
-      let newIndex = 0;
-
-      switch (action) {
-        case slider.NEXT: {
-          newIndex = prevState + 1;
-          break;
-        }
-        case slider.PREV: {
-          newIndex = prevState - 1;
-          break;
-        }
-        case slider.GOTO: {
-          newIndex = indexGoto;
-          break;
-        }
-        default:
-          newIndex = 0;
-      }
-
-      return newIndex;
-    });
-
-    /**
-     *
-     * reset slider main
-     *
-     */
-    if (asMain !== undefined) {
-      if (
-        (action === slider.NEXT && indexSlide === maxIndexSlide) ||
-        (action === slider.PREV && indexSlide === 0)
-      ) {
-        setIndexSlide(0);
-        setMoveWidth(0);
-        setItemScrollArr(createArray(itemScroll));
-      }
-    }
-    /**
-     *
-     * reset slider
-     *
-     */
-    if (asMain === undefined) {
-      if (
-        (moveWidth === sliderDimensions.scrollWidth - sliderDimensions.width &&
-          action === slider.NEXT) ||
-        (moveWidth === 0 && action === slider.PREV)
-      ) {
-        setMoveWidth(0);
-        setItemScrollArr(createArray(itemScroll));
-      }
-
-      if (
-        (action === slider.NEXT && indexSlide === maxIndexSlide) ||
-        (indexSlide <= 0 && action === slider.PREV)
-      ) {
-        setIndexSlide(0);
-      }
-    }
-  };
-
-  const onClickNext = () => {
-    moveSlide({ action: slider.NEXT });
-    clearTimeout(timmerId);
-  };
-
-  const onClickPrev = () => {
-    moveSlide({ action: slider.PREV });
-    clearTimeout(timmerId);
-  };
-  const onMoveSlide = (index) => {
-    moveSlide({ action: slider.GOTO, indexGoto: index });
-    clearTimeout(timmerId);
-  };
-  let titles = [];
 
   return (
     <div

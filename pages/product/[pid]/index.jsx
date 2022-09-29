@@ -11,6 +11,7 @@ import styles from '../../../styles/singleproduct.module.scss';
 import Price from '../../../components/Price';
 import { queryParams, defaultValue } from '../../../constants/product';
 import * as Icon from 'react-feather';
+import CustomImage from '../../../components/CustomImage';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data } = props;
@@ -51,10 +52,16 @@ const ProductDetail = (props) => {
               <div className="ec__product-thumbail">
                 <Slider itemScroll={1} itemView={1} asMain itemSpacing={15}>
                   {images &&
-                    images.map((img) => (
-                      <Slider.Item key={img.id} asChild>
+                    images.map((img, index) => (
+                      <Slider.Item key={`img-${index}`} asChild>
                         <div className="ec__product--img">
-                          <img src={img.src} />
+                          <CustomImage
+                            src={img.src}
+                            alt={img.name}
+                            width={100}
+                            height={100}
+                            layout="responsive"
+                          />
                         </div>
                       </Slider.Item>
                     ))}
@@ -81,12 +88,12 @@ const ProductDetail = (props) => {
                   dangerouslySetInnerHTML={{ __html: data?.name }}
                 ></h1>
                 <div className="ec__product--attr">
-                  {data?.attributes?.map((attr) => (
-                    <div className="attr-item" key={attr.id}>
+                  {data?.attributes?.map((attr, index) => (
+                    <div className="attr-item" key={index}>
                       <p className="attr-label">{attr.name}</p>
                       <p className="arrr-names">
                         {attr?.options?.map((op, index) => (
-                          <span className="attr-name" key={index}>
+                          <span className="attr-name" key={`n-${index}`}>
                             {op}
                           </span>
                         ))}
