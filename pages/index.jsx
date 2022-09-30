@@ -17,7 +17,7 @@ const Home = (props) => {
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
       <div className="home__wrap">
         <TopPromote banner={TOP_PROMOTIONS} />
-        <Brands data={brand} />
+        {/* <Brands data={brand} /> */}
       </div>
     </>
   );

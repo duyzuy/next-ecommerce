@@ -1,7 +1,7 @@
 import Slider from '../../components/Slider';
 import { Container, Grid } from 'semantic-ui-react';
-
 import styles from '../../styles/top_promote.module.scss';
+import Image from 'next/image';
 const TopPromote = (props) => {
   const { banner } = props;
   return (
@@ -16,19 +16,24 @@ const TopPromote = (props) => {
           >
             <Slider
               asMain
-              autoPlay
-              itemView={1}
-              itemSpacing={15}
+              autoPlay={false}
+              slidesToShow={2}
+              slidesToScroll={2}
+              spacing={15}
               duration={5000}
               pagination={4}
+              infinite={true}
+              dots={true}
             >
               {banner.map((item, index) => (
-                <Slider.Item
-                  key={index}
-                  name={item.name}
-                  path={item.path}
-                  thumbnail={item.thumbnail}
-                />
+                <Slider.Item key={`topsl-${index}`} className="top-slide">
+                  <Image
+                    src={item.src}
+                    layout="intrinsic"
+                    width={900}
+                    height={450}
+                  />
+                </Slider.Item>
               ))}
             </Slider>
           </Grid.Column>

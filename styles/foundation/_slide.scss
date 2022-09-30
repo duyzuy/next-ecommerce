@@ -132,12 +132,14 @@
 
     }
     &--item{
+        position: relative;
        margin-right: 15px;
        white-space: nowrap;
         width: 100%;
-        position: relative;
+        line-height: 0;
         img{
             max-width: 100%;
+            object-fit: cover;
         }
     }
     &--link{

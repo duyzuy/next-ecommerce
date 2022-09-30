@@ -16,10 +16,16 @@ export const useDimensions = (myRef) => {
     if (myRef.current) {
       setDimensions(getDimensions());
     }
-
+    let timeOut = setTimeout(() => {
+      setDimensions((prevState) => ({
+        ...prevState,
+        scrollWidth: myRef.current.scrollWidth
+      }));
+    }, 100);
     window.addEventListener('resize', handleResize);
 
     return () => {
+      clearTimeout(timeOut);
       window.removeEventListener('resize', handleResize);
     };
   }, [myRef]);

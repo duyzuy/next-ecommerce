@@ -9,7 +9,7 @@ export const isExists = (obj, key) => {
   // return false;
 };
 
-export const createArray = (length) => {
+export const makeArrayFromLength = (length) => {
   if (typeof length !== 'number') return;
   return Array.from({ length }, (_, i) => {
     return i;
