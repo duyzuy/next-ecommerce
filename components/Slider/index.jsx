@@ -38,6 +38,16 @@ const Slider = ({
     return createArray(itemScroll);
   });
 
+  const [slide, setSlide] = useState({
+    itemWidth: 0,
+    itemScroll: 1,
+    itemView: 1,
+    items: []
+    currentIndex: 1,
+    moveWidth: 0,
+    
+  })
+
   const sliderDimensions = useDimensions(itemsRef);
 
   const moveSlide = useCallback(
@@ -288,14 +298,7 @@ const Slider = ({
       }
       return widthOfItems;
     });
-  }, [
-    itemView,
-    itemScroll,
-    sliderDimensions,
-    asMain,
-    breakPoint,
-    itemScrollArr
-  ]);
+  }, [itemView, itemScroll, sliderDimensions, asMain, breakPoint]);
 
   useEffect(() => {
     setItemWidth(() => {
@@ -331,7 +334,7 @@ const Slider = ({
     return () => {
       clearInterval(timmerIdRef.current);
     };
-  }, [slideItems, indexSlide, autoPlay, duration, moveSlide]);
+  }, [slideItems, indexSlide, autoPlay, duration]);
 
   useEffect(() => {
     itemsRef.current.style.transform = `translate3d(-${moveWidth}px, 0, 0)`;
