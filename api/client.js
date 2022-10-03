@@ -22,7 +22,7 @@ const client = async (url, params = {}, method) => {
   if (!isEmpty(params)) {
     queryString = objectToQueryString(params);
   }
-  const baseUrl = API_URL + '/' + url + queryString;
+  const baseUrl = url + queryString;
   const response = await fetch(baseUrl, { ...configs });
 
   return response.json();

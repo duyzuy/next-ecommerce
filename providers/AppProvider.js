@@ -9,7 +9,7 @@ const AppProvider = (props) => {
     (async () => {
       setIsLoading(true);
       await client
-        .get('setting/general', {
+        .get('http://localhost:3000/api/setting/general', {
           type: wooSetting.WOO_CURRENCY
         })
         .then((response) => {

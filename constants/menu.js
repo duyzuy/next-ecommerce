@@ -131,10 +131,5 @@ export const TOP_PROMOTIONS = [
     name: 'Khuyến mại cực tốt trong tháng 10 với các sản phẩm Bếp từ',
     path: 'product/7',
     src: '/assets/images/slider/slide-4.png'
-  },
-  {
-    name: 'Không gian nhà bếp tại Thành phố Hcm',
-    path: 'product/8',
-    src: '/assets/images/slider/slide-5.png'
   }
 ];

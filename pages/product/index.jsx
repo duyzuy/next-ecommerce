@@ -73,7 +73,7 @@ const Product = (props) => {
             <div className="ec__product--items">
               <Grid columns={3}>
                 <Grid.Row>
-                  {products.data.map((prd) => (
+                  {products?.data?.map((prd) => (
                     <Grid.Column key={prd.id}>
                       <Card
                         type={contentType.PRODUCT}
@@ -87,8 +87,8 @@ const Product = (props) => {
             </div>
             <Pagination
               type={contentType.PRODUCT}
-              totalPage={products.totalPage}
-              totalItem={products.totalItem}
+              totalPage={products?.totalPage}
+              totalItem={products?.totalItem}
               current={currentPage}
               onChangePage={onChangePage}
               isLoading={isLoading}
@@ -128,11 +128,17 @@ export async function getServerSideProps(ctx) {
     });
   });
 
-  const response = await client
-    .get(`product`, { ...queryObject })
-    .then((res) => {
-      return res;
-    })
+  // const response = await client
+  //   .get(`http://localhost:3000/api/product`, { ...queryObject })
+  //   .then((res) => {
+  //     return res;
+  //   })
+  //   .catch((error) => {
+  //     console.log(error);
+  //   });
+
+  const response = await fetch('http://localhost:3000/api/product')
+    .then((res) => res.json())
     .catch((error) => {
       console.log(error);
     });

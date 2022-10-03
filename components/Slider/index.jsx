@@ -10,7 +10,7 @@ import Paginations from './Paginations';
 import SliderNav from './SliderNav';
 import * as Icon from 'react-feather';
 import { useDimensions } from '../../hooks/useDimensions';
-import { makeArrayFromLength } from '../../utils/helper';
+import { makeArrayFromLength, makeArrayFromNumber } from '../../utils/helper';
 
 const slider = {
   NEXT: 'next',
@@ -35,7 +35,7 @@ const Slider = ({
   const itemsRef = useRef();
   const timmerIdRef = useRef();
   const sliderDimensions = useDimensions(itemsRef);
-  console.log(sliderDimensions);
+
   const [slideShow, setSlideShow] = useState({
     items: [],
     itemWidth: 0,
@@ -47,8 +47,8 @@ const Slider = ({
 
   const moveSlide = useCallback(
     ({ action, indexGoto }) => {
-      if (asMain !== undefined && slidesToScroll > slidesToShow)
-        throw new Error('slidesToScroll must less than or equal slidesToShow');
+      // if (asMain !== undefined && slidesToScroll > slidesToShow)
+      //   throw new Error('slidesToScroll must less than or equal slidesToShow');
 
       let widthOfItems = 0;
 
@@ -98,12 +98,12 @@ const Slider = ({
       } else {
         if (action === slider.NEXT) {
           if (
-            slideShow.transitionX + widthOfItems >
+            slideShow.transitionX + widthOfItems <=
             sliderDimensions.scrollWidth
           ) {
-            widthOfTransition = 0;
-          } else {
             widthOfTransition = slideShow.transitionX + widthOfItems;
+          } else {
+            widthOfTransition = 0;
           }
         }
         if (action === slider.PREV) {
@@ -120,38 +120,82 @@ const Slider = ({
 
       // update new Current index items
 
-      const newCurrenIntdex = slideShow.currentIndex.map((item, index) => {
-        if (action === slider.NEXT) {
-          if (item + slidesToScroll <= slideShow.items.length - 1) {
-            return item + slidesToScroll;
-          } else {
-            return index;
+      const lastSlideIndex = slideShow.items.length - 1;
+
+      let endLop = false;
+      const newCurrenIntdex = slideShow.currentIndex.reduce(
+        (accumulate, item, index) => {
+          switch (action) {
+            case slider.NEXT:
+              {
+                let newItem = item + slidesToScroll;
+                if (newItem <= lastSlideIndex) {
+                  accumulate.push(newItem);
+                } else {
+                  if (
+                    slideShow.currentIndex.includes(lastSlideIndex) &&
+                    endLop === false
+                  ) {
+                    const crIndex = makeArrayFromNumber(
+                      index,
+                      slidesToScroll - 1
+                    );
+                    accumulate.push(...crIndex);
+                    endLop = true;
+                  }
+
+                  if (
+                    !slideShow.currentIndex.includes(lastSlideIndex) &&
+                    endLop === false
+                  ) {
+                    endLop === true;
+                  }
+                }
+              }
+              break;
+            case slider.PREV:
+              {
+                let newItem = item - slidesToScroll;
+                if (newItem >= 0) {
+                  accumulate.push(newItem);
+                } else {
+                  accumulate = [...slideShow.currentIndex];
+                }
+              }
+              break;
+
+            case slider.GOTO:
+              {
+                const crIndex = makeArrayFromNumber(
+                  indexGoto,
+                  slidesToScroll - 1
+                );
+                accumulate = [...crIndex];
+              }
+              break;
           }
-        }
 
-        if (action === slider.PREV) {
-          return item - slidesToScroll;
-        }
-        if (action === slider.GOTO) {
-          return indexGoto + index;
-        }
-      });
+          return accumulate;
+        },
+        []
+      );
 
-      const slIndex =
-        slideShow.slideIndex < slideShow.maxSlideIndex
-          ? slideShow.slideIndex + 1
-          : 0;
+      console.log(newCurrenIntdex);
+      // const slIndex =
+      //   slideShow.slideIndex < slideShow.maxSlideIndex
+      //     ? slideShow.slideIndex + 1
+      //     : 0;
 
       setSlideShow((prevState) => ({
         ...prevState,
         currentIndex: newCurrenIntdex,
-        transitionX: widthOfTransition,
-        slideIndex: slIndex
+        transitionX: widthOfTransition
+        // slideIndex: slIndex
       }));
     },
-    [slideShow]
+    [slideShow, sliderDimensions, asMain, slidesToScroll, spacing]
   );
-
+  console.log(slideShow);
   const onClickNext = () => {
     moveSlide({ action: slider.NEXT });
     clearTimeout(timmerIdRef.current);
@@ -170,19 +214,18 @@ const Slider = ({
     let itemSlide = itemsRef.current.childNodes || [];
     let scrollWidth = 0;
     itemsRef?.current?.childNodes.forEach((item) => {
-      console.log(item.offsetWidth, `1`);
       scrollWidth += item.offsetWidth + spacing;
     });
     // console.log(scrollWidth, spacing);
     let slToShow = slidesToShow,
       slToScroll = slidesToScroll,
-      crIndex = makeArrayFromLength(slidesToScroll);
+      crIndex = makeArrayFromNumber(0, slidesToScroll - 1);
 
     if (breakPoint !== undefined) {
       if (sliderDimensions.width >= breakPoint.desktop.width) {
         slToShow = breakPoint.desktop.slideToShow || 1;
         slToScroll = breakPoint.desktop.slideToScroll || 1;
-        crIndex = makeArrayFromLength(breakPoint.desktop.slideToScroll);
+        crIndex = makeArrayFromNumber(0, breakPoint.desktop.slideToScroll - 1);
       }
 
       if (
@@ -191,7 +234,7 @@ const Slider = ({
       ) {
         slToShow = breakPoint.tablet.slideToShow || 1;
         slToScroll = breakPoint.tablet.slideToScroll || 1;
-        crIndex = makeArrayFromLength(breakPoint.tablet.slideToScroll);
+        crIndex = makeArrayFromNumber(0, breakPoint.tablet.slideToScroll - 1);
       }
 
       if (
@@ -200,21 +243,22 @@ const Slider = ({
       ) {
         slToShow = breakPoint.mobile.slideToShow || 1;
         slToScroll = breakPoint.mobile.slideToScroll || 1;
-        crIndex = makeArrayFromLength(breakPoint.mobile.slideToScroll);
+        crIndex = makeArrayFromNumber(0, breakPoint.mobile.slideToScroll - 1);
       }
       if (sliderDimensions.width <= breakPoint.mobile.width) {
         slToShow = breakPoint.mobile.slideToShow || 1;
         slToScroll = breakPoint.mobile.slideToScroll || 1;
-        crIndex = makeArrayFromLength(breakPoint.mobile.slideToScroll);
+        crIndex = makeArrayFromNumber(0, breakPoint.mobile.slideToScroll - 1);
       }
     }
-
+    slToScroll = slToScroll > slidesToShow ? slidesToShow : slToScroll;
     const widthOfItem =
       Math.round(
         (100 * (sliderDimensions.width - spacing * (slToShow - 1))) / slToShow
       ) / 100;
 
     const maxSlIndex = Math.round((itemSlide.length - slToShow) / slToScroll);
+
     setSlideShow((prevState) => ({
       ...prevState,
       itemWidth: widthOfItem,
@@ -224,7 +268,13 @@ const Slider = ({
       currentIndex: crIndex,
       maxSlideIndex: maxSlIndex
     }));
-  }, [breakPoint, slidesToShow, slidesToScroll, sliderDimensions.width]);
+  }, [
+    breakPoint,
+    slidesToShow,
+    slidesToScroll,
+    sliderDimensions.width,
+    spacing
+  ]);
 
   /**
    *
@@ -243,11 +293,11 @@ const Slider = ({
     return () => {
       clearInterval(timmerIdRef.current);
     };
-  }, [slideShow.items, slideShow.currentIndex, autoPlay, duration]);
+  }, [slideShow.items, slideShow.currentIndex, autoPlay, duration, moveSlide]);
 
   useEffect(() => {
     itemsRef.current.style.transform = `translate3d(-${slideShow.transitionX}px, 0, 0)`;
-  }, [slideShow.currentIndex, sliderDimensions]);
+  }, [slideShow.currentIndex, sliderDimensions, slideShow.transitionX]);
 
   return (
     <div
