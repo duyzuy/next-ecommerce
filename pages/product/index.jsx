@@ -131,37 +131,23 @@ export async function getServerSideProps(ctx) {
     });
   });
 
+  //get data from woocommerce
   const response = await wcApi
     .get('products', {
       ...queryObject
     })
-    .then((response) => {
+    .then((res) => {
       return {
-        data: response.data,
-        totalItems: response.headers['x-wp-total'],
-        totalPage: response.headers['x-wp-totalpages']
+        data: res.data,
+        totalItems: res.headers['x-wp-total'],
+        totalPage: res.headers['x-wp-totalpages']
       };
-      // res.status(200).json({
-      //   data: response.data,
-      //   totalItems: response.headers['x-wp-total'],
-      //   totalPage: response.headers['x-wp-totalpages']
-      //   // headers: response.headers
-      // });
     })
     .catch((error) => {
       console.log('Response Status:', error.status);
       console.log('Response Headers:', error.headers);
       console.log('Response Data:', error.data);
     });
-  console.log(response);
-  // const response = await client
-  //   .get(`product`, { ...queryObject })
-  //   .then((res) => {
-  //     return res;
-  //   })
-  //   .catch((error) => {
-  //     console.log(error);
-  //   });
 
   return {
     props: {
