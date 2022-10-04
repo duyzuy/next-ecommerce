@@ -131,7 +131,15 @@ export async function getServerSideProps(ctx) {
     });
   });
 
-  //get data from woocommerce
+  /**
+   *
+   * get data from woocommerce
+   * @params
+   *
+   *
+   *
+   *
+   */
   const response = await wcApi
     .get('products', {
       ...queryObject
