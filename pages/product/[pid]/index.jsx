@@ -165,7 +165,7 @@ export default ProductDetail;
 // }
 // export async function getStaticProps(ctx) {
 //   const { params } = ctx;
-
+//   console.log(ctx);
 //   const response = await client
 //     .get(`product/${params.pid}`)
 //     .then((res) => {
@@ -180,9 +180,10 @@ export default ProductDetail;
 //     revalidate: 10
 //   };
 // }
+
 export async function getServerSideProps(ctx) {
   const { params } = ctx;
-
+  console.log(ctx);
   const response = await client
     .get(`product/${params.pid}`)
     .then((res) => {

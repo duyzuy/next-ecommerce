@@ -14,6 +14,7 @@ import { useLoading } from '../../hooks/useLoading';
 import { isEmpty, isExists } from '../../utils/helper';
 import { updateQueryFromString } from '../../utils';
 import styles from '../../styles/product.module.scss';
+import { wcApi } from '../../api/woo';
 import {
   productQueryParam,
   productQueryValue
@@ -24,6 +25,7 @@ const Product = (props) => {
   const router = useRouter();
   const [filter, setFilter] = useState(defaultValue);
   const { query } = router;
+  console.log(props);
 
   const [isLoading, setIsLoading] = useState(false);
   const currentPage = useMemo(() => {
@@ -115,10 +117,11 @@ export default withlayout(Product, {
 export async function getServerSideProps(ctx) {
   const { query, res, req } = ctx;
 
-  // res.setHeader(
-  //   'Cache-Control',
-  //   'public, s-maxage=10, stale-while-revalidate=59'
-  // );
+  res.setHeader(
+    'Cache-Control',
+    'public, s-maxage=10, stale-while-revalidate=59'
+  );
+
   let queryObject = {};
   Object.keys(queryParams).forEach((key) => {
     Object.assign(queryObject, {
@@ -128,20 +131,37 @@ export async function getServerSideProps(ctx) {
     });
   });
 
+  const response = await wcApi
+    .get('products', {
+      ...queryObject
+    })
+    .then((response) => {
+      return {
+        data: response.data,
+        totalItems: response.headers['x-wp-total'],
+        totalPage: response.headers['x-wp-totalpages']
+      };
+      // res.status(200).json({
+      //   data: response.data,
+      //   totalItems: response.headers['x-wp-total'],
+      //   totalPage: response.headers['x-wp-totalpages']
+      //   // headers: response.headers
+      // });
+    })
+    .catch((error) => {
+      console.log('Response Status:', error.status);
+      console.log('Response Headers:', error.headers);
+      console.log('Response Data:', error.data);
+    });
+  console.log(response);
   // const response = await client
-  //   .get(`http://localhost:3000/api/product`, { ...queryObject })
+  //   .get(`product`, { ...queryObject })
   //   .then((res) => {
   //     return res;
   //   })
   //   .catch((error) => {
   //     console.log(error);
   //   });
-
-  const response = await fetch('http://localhost:3000/api/product')
-    .then((res) => res.json())
-    .catch((error) => {
-      console.log(error);
-    });
 
   return {
     props: {

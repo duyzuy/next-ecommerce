@@ -11,7 +11,7 @@ import { AppContext } from '../contexts';
 const Home = (props) => {
   const { brand } = props;
   const { currency } = useContext(AppContext);
-
+  console.log(currency);
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
