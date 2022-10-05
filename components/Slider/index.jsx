@@ -35,7 +35,7 @@ const Slider = ({
   const itemsRef = useRef();
   const timmerIdRef = useRef();
   const sliderDimensions = useDimensions(itemsRef);
-  console.log(sliderDimensions);
+
   const [slideShow, setSlideShow] = useState({
     items: [],
     itemWidth: 0,
@@ -120,23 +120,48 @@ const Slider = ({
 
       // update new Current index items
 
-      const newCurrenIntdex = slideShow.currentIndex.map((item, index) => {
-        if (action === slider.NEXT) {
-          if (item + slidesToScroll <= slideShow.items.length - 1) {
-            return item + slidesToScroll;
-          } else {
-            return index;
+      // const newCurrenIntdex = slideShow.currentIndex.map((item, index) => {
+      //   if (action === slider.NEXT) {
+      //     if (item + slidesToScroll <= slideShow.items.length - 1) {
+      //       return item + slidesToScroll;
+      //     } else {
+      //       return index;
+      //     }
+      //   }
+
+      //   if (action === slider.PREV) {
+      //     return item - slidesToScroll;
+      //   }
+      //   if (action === slider.GOTO) {
+      //     return indexGoto + index;
+      //   }
+      // });
+      const lastIndOfItem = slideShow.items.length - 1;
+      const newCurrenIntdex = slideShow.currentIndex.reduce(
+        (accumulate, itemIdx) => {
+          if (action === slider.NEXT) {
+            if (itemIdx + slidesToScroll <= lastIndOfItem) {
+              accumulate.concat([itemIdx + slidesToScroll]);
+            } else {
+              let item = itemIdx;
+              do {
+                item - 1;
+              } while (item > lastIndOfItem);
+              return item;
+            }
           }
-        }
 
-        if (action === slider.PREV) {
-          return item - slidesToScroll;
-        }
-        if (action === slider.GOTO) {
-          return indexGoto + index;
-        }
-      });
-
+          // if (action === slider.PREV) {
+          //   return item - slidesToScroll;
+          // }
+          // if (action === slider.GOTO) {
+          //   return indexGoto + index;
+          // }
+          return accumulate;
+        },
+        []
+      );
+      console.log('new current====', newCurrenIntdex);
       const slIndex =
         slideShow.slideIndex < slideShow.maxSlideIndex
           ? slideShow.slideIndex + 1
@@ -165,12 +190,11 @@ const Slider = ({
     moveSlide({ action: slider.GOTO, indexGoto: index });
     clearTimeout(timmerIdRef.current);
   };
-
+  console.log(slideShow);
   useEffect(() => {
     let itemSlide = itemsRef.current.childNodes || [];
     let scrollWidth = 0;
     itemsRef?.current?.childNodes.forEach((item) => {
-      console.log(item.offsetWidth, `1`);
       scrollWidth += item.offsetWidth + spacing;
     });
     // console.log(scrollWidth, spacing);
