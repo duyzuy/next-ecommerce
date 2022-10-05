@@ -1,30 +1,27 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Container, Header, Grid } from 'semantic-ui-react';
-import { client } from '../../api/client';
-import SEO from '../../components/common/Seo';
 import Card from '../../components/Card';
-import Breadcrumb from '../../components/BreadCrumb';
 import SideBar from '../../container/SideBar';
 import Pagination from '../../container/Pagination';
 import ProductToolBar from '../../container/ProductToolBar';
 import { contentType } from '../../constants/constants';
 import { queryParams, defaultValue } from '../../constants/product';
-import { useLoading } from '../../hooks/useLoading';
 import { isEmpty, isExists } from '../../utils/helper';
 import { updateQueryFromString } from '../../utils';
 import styles from '../../styles/product.module.scss';
+import { wcApi } from '../../api/woo';
 import {
   productQueryParam,
   productQueryValue
 } from '../../constants/queryParams';
 import { withlayout } from '../../HOCs/WithLayout';
 const Product = (props) => {
-  const { products } = props;
+  const { products, productQuery } = props;
   const router = useRouter();
   const [filter, setFilter] = useState(defaultValue);
   const { query } = router;
-
+  console.log(products);
   const [isLoading, setIsLoading] = useState(false);
   const currentPage = useMemo(() => {
     if (!isEmpty(query) && isExists(query, 'page')) {
@@ -73,11 +70,12 @@ const Product = (props) => {
             <div className="ec__product--items">
               <Grid columns={3}>
                 <Grid.Row>
-                  {products.data.map((prd) => (
+                  {products?.data?.map((prd) => (
                     <Grid.Column key={prd.id}>
                       <Card
                         type={contentType.PRODUCT}
                         data={prd}
+                        query={productQuery}
                         isLoading={isLoading}
                       />
                     </Grid.Column>
@@ -87,8 +85,8 @@ const Product = (props) => {
             </div>
             <Pagination
               type={contentType.PRODUCT}
-              totalPage={products.totalPage}
-              totalItem={products.totalItem}
+              totalPage={products?.totalPage}
+              totalItem={products?.totalItem}
               current={currentPage}
               onChangePage={onChangePage}
               isLoading={isLoading}
@@ -115,10 +113,12 @@ export default withlayout(Product, {
 export async function getServerSideProps(ctx) {
   const { query, res, req } = ctx;
 
-  // res.setHeader(
-  //   'Cache-Control',
-  //   'public, s-maxage=10, stale-while-revalidate=59'
-  // );
+  res.setHeader(
+    'Cache-Control',
+    's-maxage=86400',
+    'public, s-maxage=10, stale-while-revalidate=59'
+  );
+
   let queryObject = {};
   Object.keys(queryParams).forEach((key) => {
     Object.assign(queryObject, {
@@ -128,18 +128,38 @@ export async function getServerSideProps(ctx) {
     });
   });
 
-  const response = await client
-    .get(`product`, { ...queryObject })
+  /**
+   *
+   * get data from woocommerce
+   * @params
+   *
+   *
+   */
+  const response = await wcApi
+    .get('products', {
+      ...queryObject
+    })
     .then((res) => {
-      return res;
+      return {
+        data: res.data,
+        totalItems: res.headers['x-wp-total'],
+        totalPage: res.headers['x-wp-totalpages']
+      };
     })
     .catch((error) => {
-      console.log(error);
+      console.log('Response Status:', error.status);
+      console.log('Response Headers:', error.headers);
+      console.log('Response Data:', error.data);
+
+      return {
+        data: error.data
+      };
     });
 
   return {
     props: {
-      products: response
+      products: response,
+      query: { ...queryObject }
     }
   };
 }

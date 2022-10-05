@@ -41,7 +41,7 @@ export const objectToQueryString = (obj) => {
   if (isEmpty(obj)) return;
   let string = '';
 
-  Object.keys(obj).map((key, index) => {
+  Object.keys(obj).forEach((key, index) => {
     string += index === 0 ? '?' : '&';
     string += key + '=' + obj[key];
   });

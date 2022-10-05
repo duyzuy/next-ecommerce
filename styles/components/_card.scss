@@ -19,6 +19,9 @@
         >span{
             padding-top: 100%
         }
+        img{
+            object-fit: contain;
+        }
 
     }
     &--title{
@@ -61,7 +64,24 @@
                 }
             }
         }
+        &.single{
+            margin-bottom: 20px;
+            .price{
+                font-size: 22px;
+            }
+            &.has-sale{
+                .price{
+                    &.regular{
+                        color: #3c3c3c;
+                        opacity: 0.8;
+                        font-size: 14px;
+                        font-weight: normal;
+                    }
+
+                }
+            }
+        }
  
     }
-
+ 
 }

@@ -2,29 +2,32 @@
 @use 'components/card';
 @use 'components/pagination';
 @use 'components/formControl';
+@use 'components/button';
 
 @font-face {
-    font-family: productSans;
-    src: url('/assets/fonts/googleSans/ProductSans-Medium.ttf');
+    font-family: Product-Sans;
+    src: url('/assets/fonts/googleSans/Product-Sans-Regular.ttf'),  url('/assets/fonts/googleSans/Product-Sans-Regular.otf');
   }
 @font-face {
-    font-family: productSans;
-    src: url('/assets/fonts/googleSans/ProductSans-Bold.ttf');
+    font-family: Product-Sans;
+    src: url('/assets/fonts/googleSans/Product-Sans-Bold.ttf'), url('/assets/fonts/googleSans/Product-Sans-Bold.otf');
     font-weight: bold;
   }
   @font-face {
-    font-family: productSans;
-    src: url('/assets/fonts/googleSans/ProductSans-Regular.ttf');
+    font-family: Product-Sans;
+    src: url('/assets/fonts/googleSans/Product-Sans-Italic.ttf'), url('/assets/fonts/googleSans/Product-Sans-Italic.otf');
     font-weight: 400;
+    font-style: italic;
   }
   @font-face {
-    font-family: productSans;
-    src: url('/assets/fonts/googleSans/ProductSans-Light.ttf');
-    font-weight: 300;
+    font-family: Product-Sans;
+    src: url('/assets/fonts/googleSans/Product-Sans-Bold-Italic.ttf'),url('/assets/fonts/googleSans/Product-Sans-Bold-Italic.otf') ;
+    font-weight: bold;
+    font-style: italic;
   }
 
 body{
-   
+  font-family: Product-Sans;
   background-color: #f4f8ff;
 }
 .ec_main{
