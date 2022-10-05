@@ -3,23 +3,28 @@ import '../styles/global.scss';
 import AppProvider from '../providers/AppProvider';
 import Layout from '../components/Layout';
 import 'react-loading-skeleton/dist/skeleton.css';
-function MyApp({ Component, pageProps }) {
+import { getCategories } from '../api/product';
+function MyApp({ Component, pageProps, appData }) {
   return (
     <AppProvider>
-      <Layout>
+      <Layout {...appData}>
         <Component {...pageProps} />
       </Layout>
     </AppProvider>
   );
 }
 
-// MyApp.getInitialProps = (ctx) => {
-//   console.log(ctx);
-//   return {
-//     appData: {
-//       lang: 'vi'
-//     }
-//   };
-// };
+MyApp.getInitialProps = async (ctx) => {
+  const categories = await getCategories('products/categories', {
+    per_page: 20,
+    hide_empty: true
+  });
+
+  return {
+    appData: {
+      categories: categories
+    }
+  };
+};
 
 export default MyApp;

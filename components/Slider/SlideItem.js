@@ -13,7 +13,7 @@ const SlideItem = ({
   asChild
 }) => {
   let itemStyles = {
-    marginRight: itemView > 1 || main === undefined ? `${spacing}px` : 0
+    marginRight: `${spacing}px`
   };
 
   if (main !== undefined) {

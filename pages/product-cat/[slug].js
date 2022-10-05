@@ -3,22 +3,22 @@ import { queryParams, defaultValue } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
 
 import { withlayout } from '../../HOCs/WithLayout';
-import { getProductList } from '../../api/product';
+import { getProductList, getCategory } from '../../api/product';
 import ProductArchive from '../../container/ProductArchive';
-const Product = (props) => {
-  const { products, productQuery } = props;
+const ProductCategory = (props) => {
+  const { category, products } = props;
 
   return (
     <ProductArchive
-      title="Sản phẩm"
+      title={category.name}
       products={products}
       type={contentType.PRODUCT}
-      productQuery={productQuery}
+      category={category}
     />
   );
 };
 
-export default withlayout(Product, {
+export default withlayout(ProductCategory, {
   title: 'San pham',
   meta: {
     title: 'Bep tu nhap khau',
@@ -26,18 +26,18 @@ export default withlayout(Product, {
   },
   breadcrumbs: [
     { id: 'home', name: 'Trang chủ', href: '/' },
-    { id: 'sanpham', name: 'Sản phẩm', href: '/product', current: true }
+    { id: 'sanpham', name: 'Danh muc san pham', href: '/product' },
+    {
+      id: 'tendanh',
+      name: 'ten cua danh muc',
+      href: '/product/ten',
+      current: true
+    }
   ]
 });
 
 export async function getServerSideProps(ctx) {
-  const { query, res, req } = ctx;
-
-  res.setHeader(
-    'Cache-Control',
-    's-maxage=86400',
-    'public, s-maxage=10, stale-while-revalidate=59'
-  );
+  const { query, req, res } = ctx;
 
   let queryObject = {};
   Object.keys(queryParams).forEach((key) => {
@@ -48,21 +48,17 @@ export async function getServerSideProps(ctx) {
     });
   });
 
-  /**
-   *
-   * get data from woocommerce
-   * @params
-   *
-   *
-   */
-
+  const category = await getCategory('products/categories', {
+    slug: query.slug
+  });
+  queryObject = {
+    ...queryObject,
+    category: category[0].id
+  };
   const products = await getProductList('products', {
     ...queryObject
   });
   return {
-    props: {
-      products: products,
-      query: { ...queryObject }
-    }
+    props: { category: category[0], products: products }
   };
 }

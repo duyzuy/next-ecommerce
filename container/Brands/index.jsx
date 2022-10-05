@@ -40,7 +40,7 @@ const Brands = (props) => {
           >
             {data &&
               data.map((brand, index) => (
-                <Slider.Item key={index} asChild>
+                <Slider.Item key={index}>
                   <div className="ec__brand--item">
                     <Link href={brand.path}>
                       <a className="ec__brand--link">

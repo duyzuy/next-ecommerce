@@ -1,12 +1,13 @@
 import Header from './common/Header';
 import Footer from './common/Footer';
 
-const Layout = ({ children }) => {
+const Layout = (props) => {
+  const { categories } = props;
   return (
     <>
-      <Header />
+      <Header categories={categories} />
       <main id="main" className="ec_main">
-        {children}
+        {props.children}
       </main>
       <Footer />
     </>

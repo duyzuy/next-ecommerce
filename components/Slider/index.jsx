@@ -180,12 +180,6 @@ const Slider = ({
         []
       );
 
-      // console.log(newCurrenIntdex);
-      // const slIndex =
-      //   slideShow.slideIndex < slideShow.maxSlideIndex
-      //     ? slideShow.slideIndex + 1
-      //     : 0;
-
       setSlideShow((prevState) => ({
         ...prevState,
         currentIndex: newCurrenIntdex,
@@ -195,7 +189,7 @@ const Slider = ({
     },
     [slideShow, sliderDimensions, asMain, slidesToScroll, spacing]
   );
-  // console.log(slideShow);
+
   const onClickNext = () => {
     moveSlide({ action: slider.NEXT });
     clearTimeout(timmerIdRef.current);
@@ -209,7 +203,7 @@ const Slider = ({
     moveSlide({ action: slider.GOTO, indexGoto: index });
     clearTimeout(timmerIdRef.current);
   };
-  console.log(slideShow);
+  // console.log(slideShow);
   useEffect(() => {
     let itemSlide = itemsRef.current.childNodes || [];
     let scrollWidth = 0;

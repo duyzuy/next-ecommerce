@@ -8,7 +8,9 @@ import { isActive } from '../../utils/acrtiveMenu';
 import Link from 'next/link';
 import Slider from '../Slider';
 import styles from '../../styles/header.module.scss';
-const Header = () => {
+
+const Header = (props) => {
+  const { categories } = props;
   return (
     <header id="ec__header" className={styles.ec_header}>
       <div id="ec_header_top" className={styles.ec_header_top}>
@@ -107,16 +109,34 @@ const Header = () => {
       </div>
       <div id="ec_header_bottom" className={styles.ec_header_bottom}>
         <Container>
-          {/* <Slider autoPlay itemSpacing={15} itemScroll={2} duration={8000}>
-            {MENUS_BOTTOM.map((item, index) => (
-              <Slider.Item
-                key={index}
-                name={item.name}
-                path={item.path}
-                thumbnail={item.thumbnail}
-              />
+          <Slider autoPlay spacing={30} itemScroll={2} duration={8000}>
+            {categories.map((item, index) => (
+              <Slider.Item key={index}>
+                <div className="ec__cat--item">
+                  <Link href={`product-cat/${item.slug}`}>
+                    <a className="ec__cat--link">
+                      <div className="ec__cat--thumbnail">
+                        <Image
+                          src={
+                            item.image !== null
+                              ? item.image.src
+                              : '/assets/images/image.svg'
+                          }
+                          alt={item.name}
+                          width={100}
+                          height={100}
+                          layout="responsive"
+                          priority
+                        />
+                      </div>
+
+                      <p className="sub--text">{item.name}</p>
+                    </a>
+                  </Link>
+                </div>
+              </Slider.Item>
             ))}
-          </Slider> */}
+          </Slider>
         </Container>
       </div>
     </header>

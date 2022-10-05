@@ -17,8 +17,8 @@ const TopPromote = (props) => {
             <Slider
               asMain
               autoPlay={true}
-              slidesToShow={2}
-              slidesToScroll={2}
+              slidesToShow={1}
+              slidesToScroll={1}
               spacing={15}
               duration={5000}
               pagination={4}
