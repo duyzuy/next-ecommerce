@@ -1,16 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Container, Header, Grid } from 'semantic-ui-react';
-import { client } from '../../api/client';
-import SEO from '../../components/common/Seo';
 import Card from '../../components/Card';
-import Breadcrumb from '../../components/BreadCrumb';
 import SideBar from '../../container/SideBar';
 import Pagination from '../../container/Pagination';
 import ProductToolBar from '../../container/ProductToolBar';
 import { contentType } from '../../constants/constants';
 import { queryParams, defaultValue } from '../../constants/product';
-import { useLoading } from '../../hooks/useLoading';
 import { isEmpty, isExists } from '../../utils/helper';
 import { updateQueryFromString } from '../../utils';
 import styles from '../../styles/product.module.scss';
@@ -21,12 +17,11 @@ import {
 } from '../../constants/queryParams';
 import { withlayout } from '../../HOCs/WithLayout';
 const Product = (props) => {
-  const { products } = props;
+  const { products, productQuery } = props;
   const router = useRouter();
   const [filter, setFilter] = useState(defaultValue);
   const { query } = router;
-  console.log(props);
-
+  console.log(products);
   const [isLoading, setIsLoading] = useState(false);
   const currentPage = useMemo(() => {
     if (!isEmpty(query) && isExists(query, 'page')) {
@@ -80,6 +75,7 @@ const Product = (props) => {
                       <Card
                         type={contentType.PRODUCT}
                         data={prd}
+                        query={productQuery}
                         isLoading={isLoading}
                       />
                     </Grid.Column>
@@ -119,6 +115,7 @@ export async function getServerSideProps(ctx) {
 
   res.setHeader(
     'Cache-Control',
+    's-maxage=86400',
     'public, s-maxage=10, stale-while-revalidate=59'
   );
 
@@ -137,8 +134,6 @@ export async function getServerSideProps(ctx) {
    * @params
    *
    *
-   *
-   *
    */
   const response = await wcApi
     .get('products', {
@@ -155,11 +150,16 @@ export async function getServerSideProps(ctx) {
       console.log('Response Status:', error.status);
       console.log('Response Headers:', error.headers);
       console.log('Response Data:', error.data);
+
+      return {
+        data: error.data
+      };
     });
 
   return {
     props: {
-      products: response
+      products: response,
+      query: { ...queryObject }
     }
   };
 }

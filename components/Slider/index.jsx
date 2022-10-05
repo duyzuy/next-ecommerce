@@ -180,7 +180,7 @@ const Slider = ({
         []
       );
 
-      console.log(newCurrenIntdex);
+      // console.log(newCurrenIntdex);
       // const slIndex =
       //   slideShow.slideIndex < slideShow.maxSlideIndex
       //     ? slideShow.slideIndex + 1
@@ -195,7 +195,7 @@ const Slider = ({
     },
     [slideShow, sliderDimensions, asMain, slidesToScroll, spacing]
   );
-  console.log(slideShow);
+  // console.log(slideShow);
   const onClickNext = () => {
     moveSlide({ action: slider.NEXT });
     clearTimeout(timmerIdRef.current);

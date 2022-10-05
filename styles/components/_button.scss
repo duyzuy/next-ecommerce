@@ -1,0 +1,19 @@
+@use '../foundation/variables' as *;
+.button{
+    cursor: pointer;
+    &--link{
+        color: $link-color;
+
+        &.has-icon{
+   
+            svg{
+                position: relative;
+                top: 2px;
+                margin-left: 5px;
+            }
+
+        }
+    }
+
+
+}

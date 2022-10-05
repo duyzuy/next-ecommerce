@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import Price from '../Price';
 const Card = (props) => {
-  const { type, isLoading, data } = props;
+  const { type, isLoading, data, query } = props;
 
   const { images } = data;
   const router = useRouter();
@@ -29,8 +29,11 @@ const Card = (props) => {
       </>
     );
   };
-  const goToPage = (page) => {
-    router.push(`/product/${page}`);
+  const goToPage = (slug) => {
+    router.push({
+      pathname: `/product/${slug}`,
+      query: query
+    });
   };
   return (
     <>
@@ -49,7 +52,7 @@ const Card = (props) => {
           </div>
         </>
       ) : (
-        <div className={`ec__card ${type}`} onClick={() => goToPage(data.id)}>
+        <div className={`ec__card ${type}`} onClick={() => goToPage(data.slug)}>
           <div className="ec__card--inner">
             <div className="ec__card--image">
               <CustomImage
