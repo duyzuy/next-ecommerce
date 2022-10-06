@@ -5,6 +5,7 @@ import { isEmpty, isExists } from '../../utils/helper';
 import { withlayout } from '../../HOCs/WithLayout';
 import { getProductList, getCategory } from '../../api/product';
 import ProductArchive from '../../container/ProductArchive';
+
 const ProductCategory = (props) => {
   const { category, products } = props;
 

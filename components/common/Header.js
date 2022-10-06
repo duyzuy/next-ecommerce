@@ -31,7 +31,7 @@ const Header = (props) => {
               <span>Danh mục</span>
             </div>
             <div className={styles.ec_header_promo}>
-              <Link href="/">
+              <Link href="/khuyen-mai">
                 <a>Khuyến mại</a>
               </Link>
             </div>
@@ -113,7 +113,7 @@ const Header = (props) => {
             {categories.map((item, index) => (
               <Slider.Item key={index}>
                 <div className="ec__cat--item">
-                  <Link href={`product-cat/${item.slug}`}>
+                  <Link href={`/product-cat/${item.slug}`}>
                     <a className="ec__cat--link">
                       <div className="ec__cat--thumbnail">
                         <Image
