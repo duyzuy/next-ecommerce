@@ -28,9 +28,11 @@ const Slider = ({
   slidesToShow = 1,
   slidesToScroll = 1,
   spacing = 10,
-  breakPoint
+  breakPoint,
+  pagination = 'left' || 'right' || 'bottom'
 }) => {
   let subComponentList = Object.keys(Slider);
+
   const sliderRef = useRef();
   const itemsRef = useRef();
   const timmerIdRef = useRef();
@@ -293,18 +295,30 @@ const Slider = ({
     itemsRef.current.style.transform = `translate3d(-${slideShow.transitionX}px, 0, 0)`;
   }, [slideShow.currentIndex, sliderDimensions, slideShow.transitionX]);
 
+  const slideClass = useMemo(() => {
+    let className = 'ec__slide';
+    if (asMain !== undefined) {
+      className = className.concat(' ', 'ec__slide--main');
+    }
+    if (pagination && pagination === 'left') {
+      className = className.concat(' ', 'paginate-left');
+    }
+    if (pagination && pagination === 'right') {
+      className = className.concat(' ', 'paginate-right');
+    }
+    if (pagination && pagination === 'bottom') {
+      className = className.concat(' ', 'paginate-bottom');
+    }
+
+    return className;
+  }, []);
   return (
-    <div
-      className={`ec__slide ${
-        asMain !== undefined ? 'ec__slide--main' : 'ec__slide--sub'
-      }`}
-      ref={sliderRef}
-    >
+    <div className={slideClass} ref={sliderRef}>
       <div className="ec__slide--list">
         <ul className="ec__slide--items" ref={itemsRef}>
           {subComponentList.map((key) =>
             React.Children.map(children, (child, index) => {
-              if (child.type.name === key) {
+              if (child?.type?.name === key && child?.type?.name === 'Item') {
                 const newChild = {
                   ...child,
                   props: {
@@ -326,19 +340,19 @@ const Slider = ({
           )}
         </ul>
       </div>
-      {/* {asMain && pagination && (
-        <Paginations
-          titles={titles}
-          onMoveSlide={onMoveSlide}
-          itemWidth={
-            Math.round(
-              (100 * (sliderDimensions.width - 10 * (pageViewItem - 1))) /
-                pageViewItem
-            ) / 100
-          }
-          indexSlide={indexSlide}
-        />
-      )} */}
+      <div className="ec__slide--pagination">
+        {subComponentList.map((key) =>
+          React.Children.map(children, (child, index) => {
+            if (
+              child?.type?.name === key &&
+              child?.type?.name === 'Pagination'
+            ) {
+              return child;
+            }
+            return null;
+          })
+        )}
+      </div>
       <SliderNav
         onClickPrev={onClickPrev}
         onClickNext={onClickNext}
@@ -356,16 +370,16 @@ const Slider = ({
 const Item = (props) => {
   return <SlideItem {...props} />;
 };
-const Pagination = ({ title, width, onMoveSlide }) => {
+const Pagination = (props) => {
+  const { children } = props;
+
   return (
-    <Paginations
-      titles={title}
-      onMoveSlide={onMoveSlide}
-      pagiWidth={width}
-      indexSlide={indexSlide}
-    />
+    <ul className="pagination--items">
+      <li className="pagination--item">{children}</li>
+    </ul>
   );
 };
 Slider.Item = Item;
+Slider.Pagination = Pagination;
 
 export default Slider;

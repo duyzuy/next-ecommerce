@@ -32,17 +32,6 @@ export const MENUS = [
   }
 ];
 
-export const ROUTES = [
-  {
-    name: 'Product',
-    path: 'product'
-  },
-  {
-    name: 'Page Detail',
-    path: 'page/[pageId]'
-  }
-];
-
 export const MENUS_BOTTOM = [
   {
     name: 'Bếp điện, bếp từ',

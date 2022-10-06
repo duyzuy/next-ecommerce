@@ -8,6 +8,22 @@
         .ec__slide--list{
             width: 100%;
             border-radius: 5px;
+        
+        }
+        &.paginate-left{
+            .ec__slide--list{
+                width: calc(100% - 60px);
+                margin-left: auto;
+            }
+            .ec__slide--pagination{
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                right: inherit;
+                width: 60px;
+    
+            }
         }
         .ec__slide--link{
             display: block;
@@ -54,26 +70,26 @@
             }
         }
         .ec__slide--pagination{
-            position: absolute;
-            overflow-x: hidden;
             left: 0;
             right: 0;
-            overflow: hidden;
+            overflow-x: hidden;
+
             .pagination--items{
                 display: flex;
                 list-style-type: none;
                 flex-wrap: nowrap;
                 padding: 0;
-                margin-top: 10px;
-                margin-bottom: 0;
+                margin: 0;
                 transition: all cubic-bezier(0.4, 0, 0.2, 1) 320ms;
             }
             .pagination--item{
-                padding: 5px 10px;
+                width: 60px;
+                height: 60px;
                 margin-bottom: 0;
-                background-color: #f1f1f1;
+                background-color: #fff;
                 border-radius: 5px;
-                border: 1px solid transparent;
+                border: 1px solid #f1f1f1;
+                padding: 5px;
                 cursor: pointer;
 
                 &.active{

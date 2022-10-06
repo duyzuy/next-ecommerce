@@ -2,7 +2,6 @@ import { contentType } from '../../constants/constants';
 import { queryParams, defaultValue } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
 
-import { withlayout } from '../../HOCs/WithLayout';
 import { getProductList, getCategory } from '../../api/product';
 import ProductArchive from '../../container/ProductArchive';
 
@@ -11,31 +10,15 @@ const ProductCategory = (props) => {
 
   return (
     <ProductArchive
-      title={category.name}
       products={products}
       type={contentType.PRODUCT}
       category={category}
+      isCategory={true}
     />
   );
 };
 
-export default withlayout(ProductCategory, {
-  title: 'San pham',
-  meta: {
-    title: 'Bep tu nhap khau',
-    description: 'bep tu nhap khau chinh hang'
-  },
-  breadcrumbs: [
-    { id: 'home', name: 'Trang chủ', href: '/' },
-    { id: 'sanpham', name: 'Danh muc san pham', href: '/product' },
-    {
-      id: 'tendanh',
-      name: 'ten cua danh muc',
-      href: '/product/ten',
-      current: true
-    }
-  ]
-});
+export default ProductCategory;
 
 export async function getServerSideProps(ctx) {
   const { query, req, res } = ctx;

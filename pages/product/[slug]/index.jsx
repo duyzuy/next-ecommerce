@@ -1,24 +1,26 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
-
 import SEO from '../../../components/common/Seo';
 import Breadcrumb from '../../../components/BreadCrumb';
 import { Container, Header, Grid } from 'semantic-ui-react';
 import { useMemo } from 'react';
-
-import Slider from '../../../components/Slider';
 import styles from '../../../styles/singleproduct.module.scss';
 import Price from '../../../components/Price';
 import { wcApi } from '../../../api/woo';
 import * as Icon from 'react-feather';
-import CustomImage from '../../../components/CustomImage';
+
 import Link from 'next/link';
-import ProductReviews from '../../../container/ProductReviews';
+
+import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
+
+import ProductReview from '../../../container/ProductDetail/ProductReviews';
+import ProductDescriptions from '../../../container/ProductDetail/ProductDescriptions';
+import ProductGallery from '../../../container/ProductDetail/ProductGallery';
+
 const ProductDetail = (props) => {
-  const [isExpand, setIsExpand] = useState(false);
   const router = useRouter();
   const { data, reviews } = props;
-
+  const { breadItems } = useBreadcrumb(router);
   const images = useMemo(() => {
     return data?.images?.map((img) => {
       return {
@@ -49,43 +51,26 @@ const ProductDetail = (props) => {
       </div>
     );
   };
+  const items = useMemo(() => {
+    return [
+      ...breadItems,
+      {
+        id: 'productDetail',
+        name: data?.name,
+        path: `/${data?.slug}`,
+        current: true
+      }
+    ];
+  }, []);
   return (
     <div className="ec__wrapper single-product">
       <SEO title={data?.name} description="bep tu nhap khau chinh hang" />
-      <Breadcrumb
-        items={[
-          { id: 'home', name: 'Trang chủ', href: '/' },
-          { id: 'prroduct', name: 'Sản phẩm', href: '/product' },
-          {
-            id: 'productDetail',
-            name: data?.name,
-            href: `/${data?.id}`,
-            current: true
-          }
-        ]}
-      />
+      <Breadcrumb items={items} />
       <Container>
         <div className={styles.ec__product__single}>
           <div className="ec__product--left">
             <div className="ec__product--featured">
-              <div className="ec__product-thumbail">
-                <Slider itemScroll={1} itemView={1} asMain itemSpacing={15}>
-                  {images &&
-                    images.map((img, index) => (
-                      <Slider.Item key={`img-${index}`} asChild>
-                        <div className="ec__product--img">
-                          <CustomImage
-                            src={img.src}
-                            alt={img.name}
-                            width={100}
-                            height={100}
-                            layout="responsive"
-                          />
-                        </div>
-                      </Slider.Item>
-                    ))}
-                </Slider>
-              </div>
+              <ProductGallery images={images} />
             </div>
 
             <div className="ec__product--body">
@@ -125,57 +110,9 @@ const ProductDetail = (props) => {
                 </div>
               </div>
               <div className="ec__product--content product-description">
-                <Header as="h4" className="ec__product--body--title">
-                  <Icon.Grid
-                    size={22}
-                    style={{
-                      marginRight: 10,
-                      position: 'relative',
-                      marginRight: 10,
-                      top: 4
-                    }}
-                  />
-                  Thông tin sản phẩm
-                </Header>
-                <div
-                  className={
-                    (isExpand && 'ec__product--description expanded') ||
-                    'ec__product--description'
-                  }
-                  dangerouslySetInnerHTML={{ __html: data?.description }}
-                ></div>
-                <div className="ec__product--expand">
-                  <span
-                    className="button button--link has-icon"
-                    onClick={() => setIsExpand((prevState) => !prevState)}
-                  >
-                    {(isExpand && (
-                      <>
-                        Thu gọn <Icon.ChevronUp size={16} />
-                      </>
-                    )) || (
-                      <>
-                        Xem thêm <Icon.ChevronDown size={16} />
-                      </>
-                    )}
-                  </span>
-                </div>
+                <ProductDescriptions description={data.description} />
                 <div className="divider"></div>
-                <Header as="h4" className="ec__product--body--title">
-                  <Icon.MessageCircle
-                    size={22}
-                    style={{
-                      marginRight: 10,
-                      position: 'relative',
-                      marginRight: 10,
-                      top: 4
-                    }}
-                  />
-                  Nhận xét & đánh giá
-                </Header>
-                <div className={'ec__product--reviews'}>
-                  <ProductReviews reviews={reviews} />
-                </div>
+                <ProductReview reviews={reviews} />
               </div>
             </div>
           </div>
@@ -219,7 +156,7 @@ const ProductDetail = (props) => {
                   <div className="ec__product--label">Danh mục</div>
                   <div className="ec__product--catnames">
                     {data?.categories.map((cat) => (
-                      <span className="cat-name">
+                      <span className="cat-name" key={cat.id}>
                         <Link href={`../product-cat/${cat.slug}`}>
                           <a>{cat.name}</a>
                         </Link>
@@ -252,47 +189,7 @@ const ProductDetail = (props) => {
 };
 
 export default ProductDetail;
-// export async function getStaticPaths(ctx) {
 
-//   // When this is true (in preview environments) don't
-//   // prerender any static pages
-//   // (faster builds, but slower initial page load)
-//   let paths = [];
-//   if (process.env.SKIP_BUILD_STATIC_GENERATION) {
-//     return {
-//       paths: [],
-//       fallback: 'blocking'
-//     };
-//   }
-
-//   await wcApi
-//     .get(`products`)
-//     .then((res) => {
-//       res.data.forEach((prd) => {
-//         paths.push({ params: { pid: prd.id.toString() } });
-//       });
-//     })
-//     .catch((error) => {
-//       return error.data;
-//     });
-
-//   return {
-//     paths,
-//     fallback: false // can also be true or 'blocking'
-//   };
-// }
-// export async function getStaticProps(ctx) {
-//   const { params } = ctx;
-//   const response = await wcApi
-//     .get(`products/${params.pid}`)
-//     .then((res) => res.data)
-//     .catch((error) => error);
-
-//   return {
-//     props: { data: response },
-//     revalidate: 10
-//   };
-// }
 export async function getServerSideProps(ctx) {
   const { params } = ctx;
 
@@ -306,10 +203,10 @@ export async function getServerSideProps(ctx) {
     .catch((error) => error);
 
   const { id } = productDetail;
-
+  // 10851
   const productReviews = await wcApi
     .get(`products/reviews`, {
-      product: 10851
+      product: id
     })
     .then((res) => {
       return res.data;

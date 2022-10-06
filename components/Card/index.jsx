@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import Price from '../Price';
 const Card = (props) => {
-  const { type, isLoading, data, query } = props;
+  const { type, isLoading, data } = props;
 
   const { images } = data;
   const router = useRouter();
@@ -31,8 +31,7 @@ const Card = (props) => {
   };
   const goToPage = (slug) => {
     router.push({
-      pathname: `/product/${slug}`,
-      query: query
+      pathname: `/product/${slug}`
     });
   };
   return (
