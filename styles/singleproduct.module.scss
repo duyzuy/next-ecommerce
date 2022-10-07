@@ -1,3 +1,4 @@
+@use 'foundation/variables' as *;
 .ec__product__single{
 
     display: flex;
@@ -42,8 +43,8 @@
         .ec__product--average{
             display: flex;
             svg{
-                color: #ffc402;
-                fill: #ffc402
+                color: $primary-color;
+                fill: $primary-color
             }
           
         }
@@ -84,7 +85,7 @@
                 
                 /* Handle on hover */
                 &::-webkit-scrollbar-thumb:hover {
-                    background: #fec401;
+                    background: $primary-color;
                 }
                 .swiper-slide{
                     border: 1px solid #f1f1f1;
@@ -124,7 +125,7 @@
                 padding-left: 30px;
 
                 .swiper-button-next, .swiper-button-prev{
-                    background-color: #f8fafc;
+                    background-color: $grey-light-one;
                     width: 36px;
                     height: 36px;
                     border-radius: 50%;
@@ -368,8 +369,8 @@
     :global .ec__product--reviews{
         .cm-rating{
             svg{
-                color: #ffc402;
-                fill: #ffc402
+                color: $primary-color;
+                fill: $primary-color
             }
         }
         .no-comment{
@@ -386,14 +387,15 @@
             align-items: center;
             width: 100%;
             max-width: 240px;
-            background-color: #064fff;
+            background-color: transparent;
             padding: 10px 15px;
             border-radius: 5px;
-            color: #fff;
+            color: $link-color;
             margin-left: auto;
             margin-right: auto;
            justify-content: center;
            font-weight: bold;
+           border: 1px solid $link-color;
            svg{
             margin-right: 5px;
            }
