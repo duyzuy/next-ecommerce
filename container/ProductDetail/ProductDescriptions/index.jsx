@@ -8,7 +8,7 @@ const ProductDescriptions = (props) => {
   return (
     <>
       <Header as="h4" className="ec__product--body--title">
-        <Icon.Grid
+        <Icon.FileText
           size={22}
           style={{
             marginRight: 10,
@@ -17,7 +17,7 @@ const ProductDescriptions = (props) => {
             top: 4
           }}
         />
-        Thông tin sản phẩm
+        {props.title}
       </Header>
       <div
         className={

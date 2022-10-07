@@ -2,9 +2,8 @@ import { contentType } from '../../constants/constants';
 import { queryParams, defaultValue } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
 
-import { getProductList, getCategory } from '../../api/product';
 import ProductArchive from '../../container/ProductArchive';
-
+import { getProductByCategory } from '../../api/product';
 const ProductCategory = (props) => {
   const { category, products } = props;
 
@@ -32,17 +31,9 @@ export async function getServerSideProps(ctx) {
     });
   });
 
-  const category = await getCategory('products/categories', {
-    slug: query.slug
-  });
-  queryObject = {
-    ...queryObject,
-    category: category[0].id
-  };
-  const products = await getProductList('products', {
-    ...queryObject
-  });
+  const data = await getProductByCategory(query.slug, { ...queryObject });
+
   return {
-    props: { category: category[0], products: products }
+    props: { category: data.category, products: data.products }
   };
 }

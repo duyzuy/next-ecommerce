@@ -20,7 +20,7 @@ const useBreadcrumb = (router) => {
     }
     //handle product detail
 
-    console.log(pathName, productPath);
+    // console.log(pathName, productPath);
     //handle product cat
     // const productCatPath = ROUTES.productCatDetail.path.split('/').slice(1);
     // if (isPathRoute(productCatPath, pathName)) {

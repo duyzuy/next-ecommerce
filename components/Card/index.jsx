@@ -5,6 +5,7 @@ import * as Icon from 'react-feather';
 import { useRouter } from 'next/router';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import Price from '../Price';
+import Rating from '../Rating';
 const Card = (props) => {
   const { type, isLoading, data } = props;
 
@@ -17,18 +18,6 @@ const Card = (props) => {
     }
   }, [images]);
 
-  const Rating = ({ averageRating, ratingCount }) => {
-    return (
-      <>
-        {ratingCount !== 0 && (
-          <>
-            {averageRating}
-            <Icon.Star size={14} />
-          </>
-        )}
-      </>
-    );
-  };
   const goToPage = (slug) => {
     router.push({
       pathname: `/product/${slug}`
@@ -70,8 +59,10 @@ const Card = (props) => {
                 salePrice={data.sale_price}
               />
               <Rating
-                averageRating={data.average_rating}
-                ratingCount={data.rating_count}
+                average={data.average_rating}
+                starIcon={() => (
+                  <Icon.Star size={13} style={{ marginRight: 5 }} />
+                )}
               />
             </div>
           </div>

@@ -15,7 +15,7 @@ const ProductReview = (props) => {
             top: 4
           }}
         />
-        Nhận xét & đánh giá
+        {props.title}
       </Header>
       <div className={'ec__product--reviews'}>
         <ProductComment reviews={reviews} />

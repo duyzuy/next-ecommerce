@@ -63,7 +63,29 @@
         }
    
         .ec__product--gallery{
+            position: relative;
+            img{
+                object-fit: contain;
+            }
             .product-swiper-thumb{
+                &::-webkit-scrollbar {
+                    width: 5px;
+                }
+                
+                /* Track */
+                &::-webkit-scrollbar-track {
+                    background:  #fff
+                }
+                
+                /* Handle */
+                &::-webkit-scrollbar-thumb {
+                    background: #eaeaea;
+                }
+                
+                /* Handle on hover */
+                &::-webkit-scrollbar-thumb:hover {
+                    background: #fec401;
+                }
                 .swiper-slide{
                     border: 1px solid #f1f1f1;
                     border-radius: 5px;
@@ -71,38 +93,109 @@
                     cursor: pointer;
                 }
                 .swiper-slide-thumb-active {
-                    border-color: #c83a3a;
+                    border-color: #064fff;
+                }
+                .ec__product--thumb{
+                    width: 100%;
                 }
             }
       
             &.vertical{
+                .product-swiper-thumb{
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    height: 100%;
+                    width: 80px;
+                    overflow-y: auto;
+                    padding-right: 15px;
+                    /* width */
+                    
+                }
                 .swiper-slide{
                     height: 100% !important;
                     width: 100% !important;
                     box-sizing: border-box;
                 }
               .product-swiper-main{
-                width: calc(100% - 60px);
-                display: inline-block;
+                width: calc(100% - 80px);
+      
                 margin-left: auto;
                 padding-left: 30px;
+
+                .swiper-button-next, .swiper-button-prev{
+                    background-color: #f8fafc;
+                    width: 36px;
+                    height: 36px;
+                    border-radius: 50%;
+                    bottom: 0;
+                    top: inherit;
+                    left: 0;
+                    &:after, &:before{
+                        font-size: 14px;
+                        color: #3c3c3c
+                    }
+                }
+                .swiper-button-next{
+                    left: 50px;
+                }
+
               }
               .ec__product--thumb{
                 width: 100%;
                 height: 100%;
               }
-              .product-swiper-thumb{
-                display: inline-block;
-                float: left;
-                width: 60px;
-                .ec__product--thumb{
-                    width: 100%;
-                }
 
-              }
             }
+            
             >div{
                 display: block;
+            }
+        }
+        .ec__product--bottom{
+            padding-top: 10px;
+            .ec__product--gallery--actions{
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                .button{
+                    padding: 10px;
+                    border-radius: 10px;
+                    border: 1px solid #f1f1f1;
+                    min-width: 100px;
+                    text-align: center;
+                    font-weight: bold;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    svg{
+                        margin-right: 8px;
+                    }
+                    .text{
+                        min-width: 40px;
+                        text-align: right;
+                    }
+                }
+                .button + .button{
+                    margin-left: 10px;
+                }
+            }
+            .ec__product--gallery--btns{
+                float: left;
+                .button{
+                    background-color: #f8fafc;;
+                    width: 40px;
+                    height: 40px;
+                    display: inline-flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 30px;
+                    border-radius: 50%;
+        
+                }
+                .button + .button{
+                    margin-left: 10px;
+                }
             }
         }
     }
@@ -252,7 +345,7 @@
     
     }
     :global .ec__product--addToCard{
-        background-color: #c83a3a;
+        background: linear-gradient(45deg, #3f51b5, #03a9f4);
         width: 100%;
         border-radius: 10px;
         color: #fff;
@@ -311,3 +404,4 @@
     }
             
 }
+

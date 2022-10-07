@@ -21,7 +21,7 @@ const ProductArchive = (props) => {
   const [filter, setFilter] = useState(defaultValue);
   const { query } = router;
   const { breadItems } = useBreadcrumb(router);
-  console.log(breadItems);
+
   const [isLoading, setIsLoading] = useState(false);
   const currentPage = useMemo(() => {
     if (!isEmpty(query) && isExists(query, 'page')) {
@@ -70,7 +70,7 @@ const ProductArchive = (props) => {
   return (
     <div className="layout has-sidebar">
       <SEO
-        title={`${(isCategory && category.name) || '| Bếp từ nhập khẩu'}`}
+        title={`${(isCategory && category.name) || 'Bếp từ nhập khẩu'}`}
         description="bep tu nhap khau chinh hang"
       />
       <Breadcrumb items={breadcrumbs} />

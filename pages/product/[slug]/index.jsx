@@ -16,7 +16,8 @@ import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
 import ProductReview from '../../../container/ProductDetail/ProductReviews';
 import ProductDescriptions from '../../../container/ProductDetail/ProductDescriptions';
 import ProductGallery from '../../../container/ProductDetail/ProductGallery';
-
+import Rating from '../../../components/Rating';
+import { getProductDetail } from '../../../api/product';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews } = props;
@@ -35,22 +36,6 @@ const ProductDetail = (props) => {
     console.log(id);
   };
 
-  const Rating = ({ average, rating, isAllow }) => {
-    if (isAllow) {
-    }
-    return (
-      <div className="ec__product--rate">
-        <span className="ec__product--average">
-          <Icon.Star size={18} style={{ marginRight: 5 }} />
-          <span className="arerage-number">{average}</span>
-        </span>
-        <span className="space">|</span>
-        <span className="ec__product--rating">
-          <a href="">{rating} Đánh giá</a>
-        </span>
-      </div>
-    );
-  };
   const items = useMemo(() => {
     return [
       ...breadItems,
@@ -110,9 +95,12 @@ const ProductDetail = (props) => {
                 </div>
               </div>
               <div className="ec__product--content product-description">
-                <ProductDescriptions description={data.description} />
+                <ProductDescriptions
+                  title="Thông tin sản phẩm"
+                  description={data.description}
+                />
                 <div className="divider"></div>
-                <ProductReview reviews={reviews} />
+                <ProductReview title="Nhận xét & đánh giá" reviews={reviews} />
               </div>
             </div>
           </div>
@@ -123,6 +111,9 @@ const ProductDetail = (props) => {
                   average={data.average_rating}
                   rating={data.rating_count}
                   isAllow={data.reviews_allowed}
+                  starIcon={() => (
+                    <Icon.Star size={18} style={{ marginRight: 5 }} />
+                  )}
                 />
                 <h1
                   className="ec__product--title"
@@ -193,29 +184,11 @@ export default ProductDetail;
 export async function getServerSideProps(ctx) {
   const { params } = ctx;
 
-  const productDetail = await wcApi
-    .get(`products`, {
-      slug: params.slug
-    })
-    .then((res) => {
-      return res.data[0];
-    })
-    .catch((error) => error);
-
-  const { id } = productDetail;
-  // 10851
-  const productReviews = await wcApi
-    .get(`products/reviews`, {
-      product: id
-    })
-    .then((res) => {
-      return res.data;
-    })
-    .catch((error) => {
-      return error.data;
-    });
+  const productDetail = await getProductDetail({
+    slug: params.slug
+  });
 
   return {
-    props: { data: productDetail, reviews: productReviews }
+    props: { data: productDetail.product, reviews: productDetail.review }
   };
 }
