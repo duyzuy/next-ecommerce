@@ -17,12 +17,16 @@ const Header = (props) => {
         <Container>
           <div className={styles.flex_row}>
             <div className={styles.ec_header_logo}>
-              <Image
-                src="/assets/images/logo-saigonhome-original.svg"
-                alt="logo"
-                width={340}
-                height={90}
-              />
+              <Link href="/">
+                <a>
+                  <Image
+                    src="/assets/images/logo-saigonhome-original.svg"
+                    alt="logo"
+                    width={340}
+                    height={90}
+                  />
+                </a>
+              </Link>
             </div>
             <div className={styles.ec_header_category}>
               <span className="ec_icon">

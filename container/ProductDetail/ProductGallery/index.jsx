@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react';
 import CustomImage from '../../../components/CustomImage';
-import { Swiper, SwiperSlide, useSwiperSlide } from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/free-mode';
-import 'swiper/css/navigation';
 import 'swiper/css/thumbs';
-import 'swiper/css/scrollbar';
-import { FreeMode, Navigation, Thumbs, Pagination, Scrollbar } from 'swiper';
+import { FreeMode, Thumbs } from 'swiper';
 import * as Icon from 'react-feather';
 
 const ProductGallery = ({ images }) => {

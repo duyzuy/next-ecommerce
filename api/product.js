@@ -55,6 +55,18 @@ export const getProductList = async (url, params) => {
   return products;
 };
 
+export const getProductByIds = async (ids) => {
+  const products = await wcApi
+    .get('products', { include: [...ids] })
+    .then((res) => {
+      console.log(res);
+      return res.data;
+    })
+    .catch((error) => error.data);
+
+  return products;
+};
+
 export const getProductDetail = async (params) => {
   const productDetail = await wcApi
     .get(`products`, { ...params })

@@ -2,6 +2,7 @@ import Slider from '../../components/Slider';
 import { Container, Grid } from 'semantic-ui-react';
 import styles from '../../styles/top_promote.module.scss';
 import Image from 'next/image';
+
 const TopPromote = (props) => {
   const { banner } = props;
   return (

@@ -6,22 +6,20 @@ import { Container, Header, Grid } from 'semantic-ui-react';
 import { useMemo } from 'react';
 import styles from '../../../styles/singleproduct.module.scss';
 import Price from '../../../components/Price';
-import { wcApi } from '../../../api/woo';
 import * as Icon from 'react-feather';
-
 import Link from 'next/link';
-
 import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
-
 import ProductReview from '../../../container/ProductDetail/ProductReviews';
 import ProductDescriptions from '../../../container/ProductDetail/ProductDescriptions';
 import ProductGallery from '../../../container/ProductDetail/ProductGallery';
 import Rating from '../../../components/Rating';
-import { getProductDetail } from '../../../api/product';
+import { getProductByIds, getProductDetail } from '../../../api/product';
+import ProductSlider from '../../../container/ProductSlider';
 const ProductDetail = (props) => {
   const router = useRouter();
-  const { data, reviews } = props;
+  const { data, reviews, related } = props;
   const { breadItems } = useBreadcrumb(router);
+
   const images = useMemo(() => {
     return data?.images?.map((img) => {
       return {
@@ -174,6 +172,24 @@ const ProductDetail = (props) => {
             </div>
           </div>
         </div>
+        <div className={styles.ec__product__related}>
+          <Header as="h4" className="ec__product--body--title">
+            <Icon.Grid
+              size={22}
+              style={{
+                marginRight: 10,
+                position: 'relative',
+                marginRight: 10,
+                top: 4
+              }}
+            />
+            Sản phẩm khác
+          </Header>
+
+          <div className="prd__related--list">
+            <ProductSlider products={related} spacing={20} perView={4} />
+          </div>
+        </div>
       </Container>
     </div>
   );
@@ -187,8 +203,15 @@ export async function getServerSideProps(ctx) {
   const productDetail = await getProductDetail({
     slug: params.slug
   });
+  const ids = productDetail.product.related_ids;
 
+  const productRelated = await getProductByIds([...ids]);
+  console.log(productRelated);
   return {
-    props: { data: productDetail.product, reviews: productDetail.review }
+    props: {
+      data: productDetail.product,
+      reviews: productDetail.review,
+      related: productRelated
+    }
   };
 }
