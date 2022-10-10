@@ -1,9 +1,7 @@
-import { useMemo } from 'react';
 import { contentType } from '../../constants/constants';
 import { queryParams, defaultValue } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
 
-import { withlayout } from '../../HOCs/WithLayout';
 import { getProductList } from '../../api/product';
 import ProductArchive from '../../container/ProductArchive';
 
