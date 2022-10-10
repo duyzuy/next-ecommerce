@@ -25,7 +25,13 @@ const Input = (props) => {
   if (asCheckbox || asCheckbox !== undefined) {
     return (
       <div className="ec__form--control checkbox">
-        <input type="checkbox" {...rest} />
+        <input type="checkbox" {...rest} onChange={handleChange} />
+        <label htmlFor={props.id}>
+          {icon !== undefined && typeof icon === 'function' ? (
+            <span className="ec__form--icon">{icon()}</span>
+          ) : null}
+          {content}
+        </label>
       </div>
     );
   }

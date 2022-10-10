@@ -19,7 +19,7 @@ export const defaultValue = {
   [queryParams.PER_PAGE]: 24,
   [queryParams.ORDER]: 'desc' || 'asc',
   [queryParams.STATUS]: 'publish' || 'private' || 'any',
-  [queryParams.ORDER_BY]: 'price',
+  [queryParams.ORDER_BY]: 'date' || 'price' || 'rating',
   [queryParams.TYPE]: 'simple',
   [queryParams.ATTRIBUTE]: '',
   [queryParams.ATTRIBUTE_TERM]: '',

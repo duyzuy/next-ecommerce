@@ -19,6 +19,7 @@ const ProductArchive = (props) => {
 
   const router = useRouter();
   const [filter, setFilter] = useState(defaultValue);
+  console.log(filter);
   const { query } = router;
   const { breadItems } = useBreadcrumb(router);
 

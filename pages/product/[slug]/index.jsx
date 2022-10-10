@@ -19,7 +19,7 @@ import RightSidebar from '../../../container/ProductDetail/RightSidebar';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
-
+  console.log(reviews, data);
   const { breadItems } = useBreadcrumb(router);
 
   const images = useMemo(() => {
@@ -114,7 +114,6 @@ export async function getServerSideProps(ctx) {
   const response = await getProductDetail({
     slug: params.slug
   });
-  const ids = productDetail.product.related_ids;
 
   const { related_ids, upsell_ids } = response.product;
   const productRelated = await getProductsByIds(related_ids);

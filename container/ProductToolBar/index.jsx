@@ -20,6 +20,48 @@ const ProductToolBar = ({ onFilterChangeRoute, filter, isLoading }) => {
         </div>
         <div className="tool-sort desc">
           <Input
+            asCheckbox
+            content="Mới nhất"
+            icon={() => <Icon.Star size={10} />}
+            name="productOrderBy"
+            value="date"
+            id="prdDate"
+            checked={filter.orderby === 'date' ? 'checked' : ''}
+            onChange={() =>
+              onFilter(productQueryParam.ORDERBY, productQueryValue.DATE)
+            }
+          />
+        </div>
+        <div className="tool-sort desc">
+          <Input
+            asCheckbox
+            content="Đánh giá"
+            icon={() => <Icon.Star size={10} />}
+            name="productOrderBy"
+            value="rating"
+            id="prdRating"
+            checked={filter.orderby === 'rating' ? 'checked' : ''}
+            onChange={() =>
+              onFilter(productQueryParam.ORDERBY, productQueryValue.RATING)
+            }
+          />
+        </div>
+        <div className="tool-sort desc">
+          <Input
+            asCheckbox
+            content="Giá"
+            icon={() => <Icon.Star size={10} />}
+            name="productOrderBy"
+            value="price"
+            id="prdPrice"
+            checked={filter.orderby === 'price' ? 'checked' : ''}
+            onChange={() =>
+              onFilter(productQueryParam.ORDERBY, productQueryValue.PRICE)
+            }
+          />
+        </div>
+        <div className="tool-sort desc">
+          <Input
             asRadio
             content="Giá từ cao - thấp"
             icon={() => <Icon.ArrowDown size={10} />}

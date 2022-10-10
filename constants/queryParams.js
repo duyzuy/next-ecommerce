@@ -9,5 +9,8 @@ export const productQueryParam = {
 export const productQueryValue = {
   ASC: 'asc',
   DESC: 'desc',
-  PUBLISH: 'publish'
+  PUBLISH: 'publish',
+  DATE: 'date',
+  RATING: 'rating',
+  PRICE: 'price'
 };

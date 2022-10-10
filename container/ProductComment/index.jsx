@@ -1,5 +1,6 @@
 import { Button, Comment, Form, Header } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
+import { useEffect, useMemo } from 'react';
 const ProductComment = (props) => {
   const { reviews } = props;
 
@@ -21,10 +22,80 @@ const ProductComment = (props) => {
       </div>
     );
   };
+  const ratingResults = useMemo(() => {
+    return reviews.reduce((arr, obj) => {}, {});
+  }, [reviews]);
+  const internalIp = async () => {
+    if (!RTCPeerConnection) {
+      throw new Error('Not supported.');
+    }
 
+    const peerConnection = new RTCPeerConnection({ iceServers: [] });
+
+    peerConnection.createDataChannel('');
+    peerConnection.createOffer(
+      peerConnection.setLocalDescription.bind(peerConnection),
+      () => {}
+    );
+
+    peerConnection.addEventListener('icecandidateerror', (event) => {
+      throw new Error(event.errorText);
+    });
+
+    return new Promise(async (resolve) => {
+      peerConnection.addEventListener('icecandidate', async ({ candidate }) => {
+        peerConnection.close();
+
+        if (candidate && candidate.candidate) {
+          const result = candidate.candidate.split(' ')[4];
+          console.log(candidate);
+          if (result.endsWith('.local')) {
+            const inputDevices =
+              await navigator.mediaDevices.enumerateDevices();
+            const inputDeviceTypes = inputDevices.map(({ kind }) => kind);
+
+            const constraints = {};
+
+            if (inputDeviceTypes.includes('audioinput')) {
+              constraints.audio = true;
+            } else if (inputDeviceTypes.includes('videoinput')) {
+              constraints.video = true;
+            } else {
+              throw new Error('An audio or video input device is required!');
+            }
+
+            const mediaStream = await navigator.mediaDevices.getUserMedia(
+              constraints
+            );
+            mediaStream.getTracks().forEach((track) => track.stop());
+            resolve(internalIp());
+          }
+          resolve(result);
+        }
+      });
+    });
+  };
+  useEffect(() => {
+    (async () => {
+      const ip = await internalIp();
+      console.log(ip);
+    })();
+  }, []);
   const CommentList = ({ commentReviews }) => {
     return (
       <>
+        <div className="reviewResult">
+          <div className="starts"></div>
+          <div className="status">
+            <div className="status-bars">
+              <div className="bar"></div>
+              <div className="bar"></div>
+              <div className="bar"></div>
+              <div className="bar"></div>
+              <div className="bar"></div>
+            </div>
+          </div>
+        </div>
         <Header as="h3" dividing>
           Comments
         </Header>
