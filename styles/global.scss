@@ -3,8 +3,9 @@
 @use 'components/pagination';
 @use 'components/formControl';
 @use 'components/button';
-@use 'components/productSlider';
+@use 'components/productSlide';
 
+@use 'foundation/variables' as *;
 @font-face {
     font-family: Product-Sans;
     src: url('/assets/fonts/googleSans/Product-Sans-Regular.ttf'),  url('/assets/fonts/googleSans/Product-Sans-Regular.otf');
@@ -30,6 +31,9 @@
 body{
   font-family: Product-Sans;
   background-color: #f4f8ff;
+}
+a{
+  color: #3a62c1
 }
 .ec_main{
     min-height: 50vh;

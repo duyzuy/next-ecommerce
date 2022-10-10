@@ -92,4 +92,13 @@ export const getProductDetail = async (params) => {
   };
 };
 
+export const getProductsByIds = async (ids) => {
+  const products = await wcApi
+    .get('products', { include: [...ids] })
+    .then((res) => res.data)
+    .catch((error) => error.data);
+
+  return products;
+};
+
 export const getHomePageContent = async (url, params) => {};
