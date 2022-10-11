@@ -24,7 +24,12 @@ const ProductComment = (props) => {
   };
   const ratingResults = useMemo(() => {
     return reviews.reduce((acc, obj) => {
-      return Object.assign(acc, { [obj.rating]: [{ ...obj }] });
+      acc = {
+        ...acc,
+        [obj.rating]: [...(acc[obj.rating] || []), { ...obj }]
+      };
+      // return Object.assign(acc, { [obj.rating]: [{ ...obj }] });
+      return acc;
     }, {});
   }, [reviews]);
 
