@@ -23,8 +23,12 @@ const ProductComment = (props) => {
     );
   };
   const ratingResults = useMemo(() => {
-    return reviews.reduce((arr, obj) => {}, {});
+    return reviews.reduce((acc, obj) => {
+      return Object.assign(acc, { [obj.rating]: [{ ...obj }] });
+    }, {});
   }, [reviews]);
+
+  console.log(ratingResults);
   const internalIp = async () => {
     if (!RTCPeerConnection) {
       throw new Error('Not supported.');
@@ -48,7 +52,7 @@ const ProductComment = (props) => {
 
         if (candidate && candidate.candidate) {
           const result = candidate.candidate.split(' ')[4];
-          console.log(candidate);
+
           if (result.endsWith('.local')) {
             const inputDevices =
               await navigator.mediaDevices.enumerateDevices();
@@ -85,7 +89,15 @@ const ProductComment = (props) => {
     return (
       <>
         <div className="reviewResult">
-          <div className="starts"></div>
+          <div className="starts">
+            <Icon.Star
+              size={40}
+              style={{
+                fill: '#F4BE2C',
+                color: '#F4BE2C'
+              }}
+            />
+          </div>
           <div className="status">
             <div className="status-bars">
               <div className="bar"></div>
