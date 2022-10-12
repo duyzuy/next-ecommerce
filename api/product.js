@@ -59,7 +59,6 @@ export const getProductByIds = async (ids) => {
   const products = await wcApi
     .get('products', { include: [...ids] })
     .then((res) => {
-      console.log(res);
       return res.data;
     })
     .catch((error) => error.data);
@@ -74,10 +73,13 @@ export const getProductDetail = async (params) => {
     .catch((error) => error.data);
 
   const { id } = productDetail;
-  // 10851
+
   const productReviews = await wcApi
     .get(`products/reviews`, {
-      product: id
+      product: id,
+      // status: 'approved',
+      orderby: 'date',
+      per_page: 24
     })
     .then((res) => {
       return res.data;

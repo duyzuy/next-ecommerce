@@ -1,8 +1,44 @@
+import { useMemo } from 'react';
 import { Header } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
-import ProductComment from '../../ProductComment';
+import CommentList from './CommentList';
+import NoRating from './NoRating';
+import ReviewSummary from './ReviewSummary';
+import ReviewForm from './ReviewForm';
 const ProductReview = (props) => {
-  const { reviews } = props;
+  const { title, reviews, ratingCount, averageRating } = props;
+
+  const ratingResults = useMemo(() => {
+    const reviewKeys = [5, 4, 3, 2, 1];
+
+    let reviewList = reviews.reduce((obj, review) => {
+      return {
+        ...obj,
+        [review.rating]: {
+          ...obj[review.rating],
+          rating: review.rating,
+          count:
+            obj[review.rating] === undefined ? 1 : obj[review.rating].count + 1
+        }
+      };
+    }, {});
+
+    return reviewKeys.map((key) => {
+      return {
+        score: (reviewList[key] && reviewList[key].rating) || key,
+        count: (reviewList[key] && reviewList[key].count) || 0,
+        average:
+          (reviewList[key] &&
+            Math.abs(reviewList[key].count / ratingCount).toFixed(2)) ||
+          0
+      };
+    });
+  }, [reviews, ratingCount]);
+
+  const averageRate = useMemo(() => {
+    return Number(averageRating).toFixed(1);
+  }, [averageRating]);
+
   return (
     <>
       <Header as="h4" className="ec__product--body--title">
@@ -15,10 +51,18 @@ const ProductReview = (props) => {
             top: 4
           }}
         />
-        {props.title}
+        {title}
       </Header>
       <div className={'ec__product--reviews'}>
-        <ProductComment reviews={reviews} />
+        <ReviewSummary
+          ratingCount={ratingCount}
+          averageRate={averageRate}
+          ratingResults={ratingResults}
+        />
+        {(reviews.length > 0 && <CommentList reviews={reviews} />) || (
+          <NoRating />
+        )}
+        <ReviewForm />
       </div>
     </>
   );

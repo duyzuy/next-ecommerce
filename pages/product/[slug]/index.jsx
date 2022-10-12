@@ -47,6 +47,7 @@ const ProductDetail = (props) => {
       }
     ];
   }, []);
+
   return (
     <div className={styles.ec__product__single}>
       <SEO title={data?.name} description="bep tu nhap khau chinh hang" />
@@ -72,7 +73,12 @@ const ProductDetail = (props) => {
                   description={data.description}
                 />
                 <div className="divider"></div>
-                <ProductReview title="Nhận xét & đánh giá" reviews={reviews} />
+                <ProductReview
+                  title="Nhận xét & đánh giá"
+                  reviews={reviews}
+                  ratingCount={data.rating_count}
+                  averageRating={data.average_rating}
+                />
               </div>
             </div>
           </div>
