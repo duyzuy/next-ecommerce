@@ -440,6 +440,7 @@
      
         .bars{
             position: relative;
+            flex:1;
             .bar + .bar{
                 margin-top: 5px;
             }
