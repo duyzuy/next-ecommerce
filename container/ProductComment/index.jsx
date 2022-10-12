@@ -23,14 +23,18 @@ const ProductComment = (props) => {
     );
   };
   const ratingResults = useMemo(() => {
-    return reviews.reduce((acc, obj) => {
+    let reviewList = reviews.reduce((acc, obj) => {
       acc = {
         ...acc,
         [obj.rating]: [...(acc[obj.rating] || []), { ...obj }]
       };
-      // return Object.assign(acc, { [obj.rating]: [{ ...obj }] });
       return acc;
     }, {});
+
+    reviewList = Object.keys(reviewList)
+      .sort((a, b) => a < b)
+      .map((key) => ({ [key]: reviewList[key] }));
+    return reviewList;
   }, [reviews]);
 
   console.log(ratingResults);
