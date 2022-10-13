@@ -6,13 +6,20 @@ import NoRating from './NoRating';
 import ReviewSummary from './ReviewSummary';
 import ReviewForm from './ReviewForm';
 const ProductReview = (props) => {
-  const { title, reviews, ratingCount, averageRating } = props;
+  const {
+    title,
+    reviews,
+    ratingCount,
+    averageRating,
+    product,
+    onSubmitReview
+  } = props;
 
   const ratingResults = useMemo(() => {
     const reviewKeys = [5, 4, 3, 2, 1];
 
-    let reviewList = reviews.reduce((obj, review) => {
-      return {
+    let reviewList = reviews.reduce(
+      (obj, review) => ({
         ...obj,
         [review.rating]: {
           ...obj[review.rating],
@@ -20,19 +27,18 @@ const ProductReview = (props) => {
           count:
             obj[review.rating] === undefined ? 1 : obj[review.rating].count + 1
         }
-      };
-    }, {});
+      }),
+      {}
+    );
 
-    return reviewKeys.map((key) => {
-      return {
-        score: (reviewList[key] && reviewList[key].rating) || key,
-        count: (reviewList[key] && reviewList[key].count) || 0,
-        average:
-          (reviewList[key] &&
-            Math.abs(reviewList[key].count / ratingCount).toFixed(2)) ||
-          0
-      };
-    });
+    return reviewKeys.map((key) => ({
+      score: (reviewList[key] && reviewList[key].rating) || key,
+      count: (reviewList[key] && reviewList[key].count) || 0,
+      average:
+        (reviewList[key] &&
+          Math.abs(reviewList[key].count / ratingCount).toFixed(2)) ||
+        0
+    }));
   }, [reviews, ratingCount]);
 
   const averageRate = useMemo(() => {
@@ -59,10 +65,8 @@ const ProductReview = (props) => {
           averageRate={averageRate}
           ratingResults={ratingResults}
         />
-        {(reviews.length > 0 && <CommentList reviews={reviews} />) || (
-          <NoRating />
-        )}
-        <ReviewForm />
+        {reviews.length > 0 && <CommentList reviews={reviews} />}
+        <ReviewForm productId={product.id} onSubmitReview={onSubmitReview} />
       </div>
     </>
   );

@@ -3,23 +3,21 @@ import SEO from '../../../components/common/Seo';
 import Breadcrumb from '../../../components/BreadCrumb';
 import { Container, Header } from 'semantic-ui-react';
 import { useMemo } from 'react';
-import styles from '../../../styles/singleproduct.module.scss';
-
 import * as Icon from 'react-feather';
-
 import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
 import { getProductDetail, getProductsByIds } from '../../../api/product';
 import ProductReview from '../../../container/ProductDetail/ProductReviews';
 import ProductDescriptions from '../../../container/ProductDetail/ProductDescriptions';
 import ProductGallery from '../../../container/ProductDetail/ProductGallery';
-
 import ProductSlide from '../../../container/ProdcutSlide';
 import ProductInfo from '../../../container/ProductDetail/ProductInfo';
 import RightSidebar from '../../../container/ProductDetail/RightSidebar';
+
+import styles from '../../../styles/singleproduct.module.scss';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
-  console.log(reviews, data);
+
   const { breadItems } = useBreadcrumb(router);
 
   const images = useMemo(() => {
@@ -48,6 +46,9 @@ const ProductDetail = (props) => {
     ];
   }, []);
 
+  const onSubmitReview = (reviewSubmit) => {
+    console.log(reviewSubmit);
+  };
   return (
     <div className={styles.ec__product__single}>
       <SEO title={data?.name} description="bep tu nhap khau chinh hang" />
@@ -78,6 +79,8 @@ const ProductDetail = (props) => {
                   reviews={reviews}
                   ratingCount={data.rating_count}
                   averageRating={data.average_rating}
+                  product={data}
+                  onSubmitReview={onSubmitReview}
                 />
               </div>
             </div>

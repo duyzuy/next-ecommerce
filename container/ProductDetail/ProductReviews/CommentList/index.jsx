@@ -1,5 +1,8 @@
+import { useCallback, useMemo } from 'react';
 import { Comment, Header } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
+import RateStars from '../../../../components/RateStars';
+import { formatDate } from '../../../../utils/date';
 const CommentList = ({ reviews }) => {
   return (
     <Comment.Group>
@@ -10,11 +13,13 @@ const CommentList = ({ reviews }) => {
           <Comment.Content>
             <Comment.Author as="a">{review.reviewer}</Comment.Author>
             <Comment.Metadata>
-              <span className="cm-date">{review.date_created}</span>
-              <span className="spacing">|</span>
+              <span className="cm-date">{formatDate(review.date_created)}</span>
+              <span
+                className="spacing"
+                style={{ marginLeft: 5, marginRight: 5 }}
+              ></span>
               <span className="cm-rating">
-                Đánh giá {review.rating}{' '}
-                <Icon.Star size={12} style={{ position: 'relative', top: 2 }} />
+                <RateStars rate={review.rating} size={12} />
               </span>
             </Comment.Metadata>
 

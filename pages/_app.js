@@ -1,8 +1,8 @@
-import 'semantic-ui-css/semantic.min.css';
-import '../styles/global.scss';
 import AppProvider from '../providers/AppProvider';
 import Layout from '../components/Layout';
 import 'react-loading-skeleton/dist/skeleton.css';
+import 'semantic-ui-css/semantic.min.css';
+import '../styles/global.scss';
 import 'swiper/css/bundle';
 import { getCategories } from '../api/product';
 function MyApp({ Component, pageProps, appData }) {

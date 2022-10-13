@@ -10,11 +10,6 @@ const NoRating = () => {
         <Header>Chưa có đánh giá & nhận xét</Header>
         <p>Nếu muốn nhận xét và đánh giá sản phẩm hãy đánh giá nha</p>
       </div>
-      <p className="button">
-        <span className="button button-review">
-          <Icon.Star size={16} /> Đánh giá
-        </span>
-      </p>
     </div>
   );
 };

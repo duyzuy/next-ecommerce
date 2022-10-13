@@ -374,9 +374,10 @@
     :global .ec__product--reviews{
         .comment{
             padding: 15px;
-            box-shadow: 0px 0px 12px rgb(0 0 0 / 6%);
-            border-radius: 10px;
+            // box-shadow: 0px 0px 12px rgb(0 0 0 / 6%);
+            border-radius: 5px;
             margin-bottom: 20px;
+            border: 1px solid #f4f8ff
         }
         .cm-rating{
             svg{
@@ -386,7 +387,6 @@
         }
         .no-comment{
             text-align: center;
-            padding: 30px 0;
         }
         .ec-icon{
             display: block;
@@ -417,26 +417,34 @@
     }
     
     :global .ec__product--reviews{
-        .review-result{
-            display: flex;
-            align-items: center;
-            border-radius: 10px;
-            padding: 20px;
-            border: 1px solid transparent;
-            .starts{
-                text-align: center;
-               
-                margin-right: 30px;
-                .average{
-                    font-size: 30px; 
-                    margin-bottom: 10px;
-                }
+        
+        .cm-rating{
+            line-height: 0;
+            position: relative;
+            top: 1px
+        }
+        .review-summary{
+            margin-bottom: 30px;
 
-                .count{
-                    color: rgba(0,0,0,.4)
+            .review-result{
+                display: flex;
+                align-items: center;
+                border-radius: 10px;
+                padding: 20px;
+                border: 1px solid transparent;
+                .average{
+                    text-align: center;
+                   
+                    margin-right: 30px;
+                    .average-number{
+                        font-size: 40px; 
+                        line-height: 40px;
+                        font-weight: bold;
+                    }
                 }
             }
         }
+       
      
         .bars{
             position: relative;
@@ -447,18 +455,20 @@
             .bar{
               
                 display: block;
-
+                .bar-stars{
+                    white-space: nowrap;
+                }
                 .bar-score{
                     display: inline-flex;
                     align-items: center;
                     line-height: 1;
-                    width: 30px;
+                    // width: 30px;
                 }
              
                 .bar-line{
                     position: relative;
                     height: 5px;
-                    width: 120px;
+                    width: calc(100% - 120px);
                     background-color: #f1f1f1;
                     display: inline-block;
                     margin: 0 10px;
@@ -470,7 +480,7 @@
                         left: 0;
                         top: 0;
                         bottom: 0;
-                        background-color: #f4be2c;
+                        background-color: #6c6c6c;
                        
                     }
                   
@@ -478,7 +488,7 @@
                 .bar-count{
                 
                     font-size: 12px;
-                    width: 10px;
+                    width: 15px;
                     text-align: center;
                     display: inline-block;
                 }

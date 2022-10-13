@@ -1,21 +1,13 @@
 import * as Icon from 'react-feather';
+import RateStars from '../../../../components/RateStars';
+import NoRating from '../NoRating';
 const ReviewSummary = ({ averageRate, ratingCount, ratingResults }) => {
-  return (
-    <>
+  const RatingResult = ({ averageRate, ratingCount, ratingResults }) => {
+    return (
       <div className="review-result">
-        <div className="starts">
-          <div className="average">{averageRate}</div>
-          <div className="right">
-            <div className="star-icon">
-              <Icon.Star
-                size={40}
-                style={{
-                  fill: '#F4BE2C',
-                  color: '#F4BE2C'
-                }}
-              />
-            </div>
-
+        <div className="average">
+          <div className="average-number">{averageRate}</div>
+          <div className="average-star">
             <div className="count">{`${ratingCount} đánh giá`} </div>
           </div>
         </div>
@@ -23,17 +15,13 @@ const ReviewSummary = ({ averageRate, ratingCount, ratingResults }) => {
           {ratingResults.map((rate, index) => {
             return (
               <div key={index} className="bar">
-                <span className="bar-score">
-                  <span className="icon">
-                    <Icon.Star
-                      size={14}
-                      style={{
-                        fill: '#fff',
-                        color: '#F4BE2C'
-                      }}
-                    />
-                  </span>
-                  <span className="number">&#8194;{rate.score}</span>
+                <span className="bar-stars">
+                  <RateStars
+                    asRevert
+                    maxRating={5}
+                    rate={rate.score}
+                    size={14}
+                  />
                 </span>
                 <span className="bar-line">
                   <span
@@ -46,15 +34,29 @@ const ReviewSummary = ({ averageRate, ratingCount, ratingResults }) => {
             );
           })}
         </div>
-        <span
-          className="button button-review"
-          style={{ maxWidth: 160, marginRight: 'inherit' }}
-        >
-          <Icon.PenTool size={16} />
-          Viết đánh giá
-        </span>
       </div>
-    </>
+    );
+  };
+  return (
+    <div className="review-summary">
+      {(ratingCount > 0 && (
+        <RatingResult
+          averageRate={averageRate}
+          ratingCount={ratingCount}
+          ratingResults={ratingResults}
+        />
+      )) || <NoRating />}
+      <span
+        className="button button-review"
+        style={{
+          marginLeft: 'auto',
+          marginRight: 'auto'
+        }}
+      >
+        <Icon.Star size={16} />
+        Viết đánh giá
+      </span>
+    </div>
   );
 };
 export default ReviewSummary;
