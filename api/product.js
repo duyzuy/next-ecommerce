@@ -104,3 +104,19 @@ export const getProductsByIds = async (ids) => {
 };
 
 export const getHomePageContent = async (url, params) => {};
+
+export const createProductReview = async (prdId, data) => {
+  const response = await wcApi
+    .post(`products/reviews`, {
+      product_id: prdId,
+      ...data
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return response;
+};

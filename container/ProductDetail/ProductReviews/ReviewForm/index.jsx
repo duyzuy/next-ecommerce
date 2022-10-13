@@ -4,19 +4,12 @@ import RateStars from '../../../../components/RateStars';
 
 const ReviewForm = ({ productId, onSubmitReview }) => {
   const [reviewData, setReviewData] = useState({
-    productId: 0,
     review: '',
     reviewer: '',
     reviewerEmail: '',
     rating: 0
   });
 
-  useEffect(() => {
-    setReviewData({
-      ...reviewData,
-      productId: productId
-    });
-  }, [productId]);
   const onChange = (key, val) => {
     setReviewData((prevReview) => ({
       ...prevReview,

@@ -5,7 +5,11 @@ import { Container, Header } from 'semantic-ui-react';
 import { useMemo } from 'react';
 import * as Icon from 'react-feather';
 import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
-import { getProductDetail, getProductsByIds } from '../../../api/product';
+import {
+  getProductDetail,
+  getProductsByIds,
+  createProductReview
+} from '../../../api/product';
 import ProductReview from '../../../container/ProductDetail/ProductReviews';
 import ProductDescriptions from '../../../container/ProductDetail/ProductDescriptions';
 import ProductGallery from '../../../container/ProductDetail/ProductGallery';
@@ -46,8 +50,16 @@ const ProductDetail = (props) => {
     ];
   }, []);
 
-  const onSubmitReview = (reviewSubmit) => {
-    console.log(reviewSubmit);
+  const onSubmitReview = async (reviewsData) => {
+    const dataSubmit = {
+      review: reviewsData.review,
+      reviewer: reviewsData.reviewer,
+      reviewer_email: reviewsData.reviewerEmail,
+      rating: reviewsData.rating
+    };
+    console.log(dataSubmit);
+    const response = await createProductReview(data.id, { ...dataSubmit });
+    console.log(response);
   };
   return (
     <div className={styles.ec__product__single}>
