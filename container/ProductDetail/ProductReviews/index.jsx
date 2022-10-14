@@ -12,13 +12,14 @@ const ProductReview = (props) => {
     ratingCount,
     averageRating,
     product,
-    onSubmitReview
+    onSubmitReview,
+    onLoadMore
   } = props;
 
   const ratingResults = useMemo(() => {
     const reviewKeys = [5, 4, 3, 2, 1];
 
-    let reviewList = reviews.reduce(
+    let reviewList = reviews.reviews.reduce(
       (obj, review) => ({
         ...obj,
         [review.rating]: {
@@ -39,7 +40,7 @@ const ProductReview = (props) => {
           Math.abs(reviewList[key].count / ratingCount).toFixed(2)) ||
         0
     }));
-  }, [reviews, ratingCount]);
+  }, [reviews.reviews, ratingCount]);
 
   const averageRate = useMemo(() => {
     return Number(averageRating).toFixed(1);
@@ -65,7 +66,9 @@ const ProductReview = (props) => {
           averageRate={averageRate}
           ratingResults={ratingResults}
         />
-        {reviews.length > 0 && <CommentList reviews={reviews} />}
+        {reviews.reviews.length > 0 && (
+          <CommentList reviews={reviews} onLoadMore={onLoadMore} />
+        )}
         <ReviewForm productId={product.id} onSubmitReview={onSubmitReview} />
       </div>
     </>

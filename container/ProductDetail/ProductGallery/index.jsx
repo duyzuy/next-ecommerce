@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import CustomImage from '../../../components/CustomImage';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -112,4 +112,4 @@ const ProductGallery = ({ images }) => {
   );
 };
 
-export default ProductGallery;
+export default memo(ProductGallery);

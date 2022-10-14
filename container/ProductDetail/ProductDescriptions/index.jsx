@@ -1,10 +1,11 @@
-import { useState } from 'react';
+import { useState, memo } from 'react';
 import { Header } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
 
 const ProductDescriptions = (props) => {
   const [isExpand, setIsExpand] = useState(false);
   const { description } = props;
+
   return (
     <>
       <Header as="h4" className="ec__product--body--title">
@@ -46,4 +47,4 @@ const ProductDescriptions = (props) => {
   );
 };
 
-export default ProductDescriptions;
+export default memo(ProductDescriptions);

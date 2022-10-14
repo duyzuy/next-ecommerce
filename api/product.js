@@ -72,15 +72,23 @@ export const getProductDetail = async (params) => {
     .then((res) => res.data[0])
     .catch((error) => error.data);
 
-  const { id } = productDetail;
+  return {
+    product: productDetail
+  };
+};
 
+export const getReviewsByProductId = async (
+  productId,
+  params = { perPage: 6, page: 1, status: 'approved' }
+) => {
+  let queryParams = {
+    product: productId,
+    per_page: params.perPage,
+    page: params.page,
+    status: params.status
+  };
   const productReviews = await wcApi
-    .get(`products/reviews`, {
-      product: id,
-      // status: 'approved',
-      orderby: 'date',
-      per_page: 24
-    })
+    .get(`products/reviews`, { ...queryParams })
     .then((res) => {
       return res.data;
     })
@@ -89,8 +97,8 @@ export const getProductDetail = async (params) => {
     });
 
   return {
-    product: productDetail,
-    review: productReviews
+    reviews: productReviews,
+    ...params
   };
 };
 

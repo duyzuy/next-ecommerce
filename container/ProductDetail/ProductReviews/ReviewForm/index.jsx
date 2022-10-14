@@ -1,32 +1,41 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Form, Rating } from 'semantic-ui-react';
-import RateStars from '../../../../components/RateStars';
 
-const ReviewForm = ({ productId, onSubmitReview }) => {
-  const [reviewData, setReviewData] = useState({
+const ReviewForm = ({ onSubmitReview }) => {
+  const [formData, setFormData] = useState({
     review: '',
     reviewer: '',
     reviewerEmail: '',
-    rating: 0
+    rating: 0,
+    agree: false
   });
 
-  const onChange = (key, val) => {
-    setReviewData((prevReview) => ({
+  const onChange = useCallback((key, val) => {
+    setFormData((prevReview) => ({
       ...prevReview,
       [key]: val
     }));
-  };
+  }, []);
 
-  const onRate = (e, { rating, maxRating }) => {
+  const onRate = useCallback((e, { rating, maxRating }) => {
     let rate = rating;
 
     if (rating > maxRating) return;
-    if (rating === reviewData.rating) rate = 0;
-    setReviewData((prevReview) => ({
+    if (rating === formData.rating) rate = 0;
+    setFormData((prevReview) => ({
       ...prevReview,
       rating: rate
     }));
+  }, []);
+  const resetFormData = () => {
+    setFormData({ review: '', reviewer: '', reviewerEmail: '', rating: 0 });
   };
+
+  const onFormSubmit = (e) => {
+    e.preventDefault();
+    onSubmitReview(formData, resetFormData);
+  };
+
   return (
     <>
       <div className="review-form">
@@ -34,42 +43,65 @@ const ReviewForm = ({ productId, onSubmitReview }) => {
           <div className="rate-control"></div>
         </div>
         <div className="review-control">
-          <Form>
-            <Form.Group inline>
+          <form className="ui form" onSubmit={onFormSubmit}>
+            <div className="field">
               <label>Đánh giá</label>
-              <Rating maxRating={5} onRate={onRate} size="massive" clearable />
-            </Form.Group>
-            <Form.Group widths="equal">
-              <Form.Input
-                fluid
-                label="Họ và tên"
-                name="fullname"
-                placeholder="Họ và tên"
-                onChange={(e) => onChange('reviewer', e.target.value)}
+              <Rating
+                maxRating={5}
+                rating={formData.rating}
+                onRate={onRate}
+                size="massive"
+                clearable
               />
-              <Form.Input
-                fluid
-                label="Email"
-                name="email"
-                placeholder="Email"
-                onChange={(e) => onChange('reviewerEmail', e.target.value)}
-              />
-            </Form.Group>
-
-            <Form.TextArea
-              label="Bình luận"
-              name="review"
-              placeholder="Nhận xét sản phẩm"
-              onChange={(e) => onChange('review', e.target.value)}
-            />
-            <Form.Checkbox label="Lưu thông tin cho bình luận kế tiếp" />
-            <Form.Button
-              type="button"
-              onClick={() => onSubmitReview(reviewData)}
-            >
-              Gửi đánh giá
-            </Form.Button>
-          </Form>
+            </div>
+            <div className="equal width fields">
+              <div className="field">
+                <label>Họ và tên</label>
+                <div className="ui input">
+                  <input
+                    type="text"
+                    placeholder="Họ và tên"
+                    value={formData.reviewer}
+                    onChange={(e) => onChange('reviewer', e.target.value)}
+                  />
+                </div>
+              </div>
+              <div className="field">
+                <label>Email</label>
+                <div className="ui input">
+                  <input
+                    type="text"
+                    placeholder="Email"
+                    value={formData.reviewerEmail}
+                    onChange={(e) => onChange('reviewerEmail', e.target.value)}
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="field">
+              <label>Bình luận</label>
+              <textarea
+                placeholder="Bình luận"
+                rows="3"
+                value={formData.review}
+                onChange={(e) => onChange('review', e.target.value)}
+              ></textarea>
+            </div>
+            <div className="field">
+              <div className="ui checkbox">
+                <input
+                  type="checkbox"
+                  readOnly=""
+                  tabIndex="0"
+                  value={formData.agree}
+                  checked={(formData.agree && 'checked') || ''}
+                  onChange={(e) => onChange('agree', e.target.checked)}
+                />
+                <label>Lưu thông tin cho bình luận kế tiếp</label>
+              </div>
+            </div>
+            <button className="ui button">Gửi đánh giá</button>
+          </form>
         </div>
       </div>
     </>

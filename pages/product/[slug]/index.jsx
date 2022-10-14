@@ -1,28 +1,32 @@
+import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import SEO from '../../../components/common/Seo';
-import Breadcrumb from '../../../components/BreadCrumb';
-import { Container, Header } from 'semantic-ui-react';
-import { useMemo } from 'react';
-import * as Icon from 'react-feather';
-import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
 import {
   getProductDetail,
   getProductsByIds,
-  createProductReview
+  getReviewsByProductId
 } from '../../../api/product';
+import { client } from '../../../api/client';
+import { Container, Header } from 'semantic-ui-react';
+import * as Icon from 'react-feather';
+import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
+import SEO from '../../../components/common/Seo';
+import Breadcrumb from '../../../components/BreadCrumb';
 import ProductReview from '../../../container/ProductDetail/ProductReviews';
 import ProductDescriptions from '../../../container/ProductDetail/ProductDescriptions';
 import ProductGallery from '../../../container/ProductDetail/ProductGallery';
 import ProductSlide from '../../../container/ProdcutSlide';
 import ProductInfo from '../../../container/ProductDetail/ProductInfo';
 import RightSidebar from '../../../container/ProductDetail/RightSidebar';
-
+import { isValidEmail } from '../../../utils/validate';
 import styles from '../../../styles/singleproduct.module.scss';
+
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
 
   const { breadItems } = useBreadcrumb(router);
+
+  const [productReviews, setProductReviews] = useState(reviews);
 
   const images = useMemo(() => {
     return data?.images?.map((img) => {
@@ -38,6 +42,27 @@ const ProductDetail = (props) => {
     console.log(id);
   };
 
+  const loadMoreReviews = async () => {
+    const { perPage } = productReviews;
+
+    if (perPage === data.rating_count) return;
+
+    const nextPage = perPage + 3;
+
+    if (nextPage > data.rating_count) {
+      nextPage = data.rating_count;
+    }
+
+    const response = await client.get(`product/${data.id}/reviews`, {
+      perPage: nextPage
+    });
+
+    setProductReviews((prevState) => ({
+      ...prevState,
+      perPage: response.perPage,
+      reviews: response.data
+    }));
+  };
   const breadCrumbItems = useMemo(() => {
     return [
       ...breadItems,
@@ -48,19 +73,55 @@ const ProductDetail = (props) => {
         current: true
       }
     ];
-  }, []);
+  }, [productReviews]);
 
-  const onSubmitReview = async (reviewsData) => {
+  const handleSubmitReview = async (reviewsData, callback) => {
+    if (
+      reviewsData.review === '' ||
+      reviewsData.reviewer === '' ||
+      reviewsData.reviewerEmail === '' ||
+      reviewsData.rating === 0
+    ) {
+      return;
+    }
+
+    if (!isValidEmail(reviewsData.reviewerEmail)) {
+      console.log('email not valid');
+      return;
+    }
+
     const dataSubmit = {
       review: reviewsData.review,
       reviewer: reviewsData.reviewer,
       reviewer_email: reviewsData.reviewerEmail,
       rating: reviewsData.rating
     };
-    console.log(dataSubmit);
-    const response = await createProductReview(data.id, { ...dataSubmit });
-    console.log(response);
+
+    const response = await client.post(`product/${data.id}/reviews/create`, {
+      ...dataSubmit
+    });
+
+    //Update new List on UI
+
+    if (response.statusCode === 201) {
+      const reviewList = await client.get(`product/${data.id}/reviews`);
+
+      setProductReviews((prevState) => ({
+        ...prevState,
+        reviews: reviewList.data
+      }));
+      if (callback && typeof callback === 'function') callback();
+    }
   };
+
+  // useEffect(() => {
+  //   (async () => {
+  //     const reviewList = await client.get(`product/${data.id}/reviews`, {
+  //       perPage: 100
+  //     });
+  //     console.log(reviewList);
+  //   })();
+  // }, [data.id]);
   return (
     <div className={styles.ec__product__single}>
       <SEO title={data?.name} description="bep tu nhap khau chinh hang" />
@@ -88,11 +149,12 @@ const ProductDetail = (props) => {
                 <div className="divider"></div>
                 <ProductReview
                   title="Nhận xét & đánh giá"
-                  reviews={reviews}
+                  reviews={productReviews}
                   ratingCount={data.rating_count}
                   averageRating={data.average_rating}
                   product={data}
-                  onSubmitReview={onSubmitReview}
+                  onSubmitReview={handleSubmitReview}
+                  onLoadMore={loadMoreReviews}
                 />
               </div>
             </div>
@@ -136,13 +198,15 @@ export async function getServerSideProps(ctx) {
     slug: params.slug
   });
 
+  const reviews = await getReviewsByProductId(response.product.id);
+
   const { related_ids, upsell_ids } = response.product;
   const productRelated = await getProductsByIds(related_ids);
 
   return {
     props: {
       data: response.product,
-      reviews: response.review,
+      reviews: reviews,
       productRelated: productRelated
     }
   };
