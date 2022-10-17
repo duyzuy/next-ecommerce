@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Header } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
 import CommentList from './CommentList';
@@ -15,7 +15,7 @@ const ProductReview = (props) => {
     onSubmitReview,
     onLoadMore
   } = props;
-
+  const [isShowForm, setIsShowForm] = useState(false);
   const ratingResults = useMemo(() => {
     const reviewKeys = [5, 4, 3, 2, 1];
 
@@ -46,6 +46,10 @@ const ProductReview = (props) => {
     return Number(averageRating).toFixed(1);
   }, [averageRating]);
 
+  const onShowForm = () => {
+    console.log(1);
+    setIsShowForm(true);
+  };
   return (
     <>
       <Header as="h4" className="ec__product--body--title">
@@ -65,11 +69,15 @@ const ProductReview = (props) => {
           ratingCount={ratingCount}
           averageRate={averageRate}
           ratingResults={ratingResults}
+          onShowForm={onShowForm}
         />
         {reviews.reviews.length > 0 && (
           <CommentList reviews={reviews} onLoadMore={onLoadMore} />
         )}
-        <ReviewForm productId={product.id} onSubmitReview={onSubmitReview} />
+
+        {(isShowForm && (
+          <ReviewForm productId={product.id} onSubmitReview={onSubmitReview} />
+        )) || <></>}
       </div>
     </>
   );

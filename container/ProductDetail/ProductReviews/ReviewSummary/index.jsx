@@ -1,7 +1,12 @@
 import * as Icon from 'react-feather';
 import RateStars from '../../../../components/RateStars';
 import NoRating from '../NoRating';
-const ReviewSummary = ({ averageRate, ratingCount, ratingResults }) => {
+const ReviewSummary = ({
+  averageRate,
+  ratingCount,
+  ratingResults,
+  onShowForm
+}) => {
   const RatingResult = ({ averageRate, ratingCount, ratingResults }) => {
     return (
       <div className="review-result">
@@ -37,6 +42,7 @@ const ReviewSummary = ({ averageRate, ratingCount, ratingResults }) => {
       </div>
     );
   };
+
   return (
     <div className="review-summary">
       {(ratingCount > 0 && (
@@ -52,6 +58,7 @@ const ReviewSummary = ({ averageRate, ratingCount, ratingResults }) => {
           marginLeft: 'auto',
           marginRight: 'auto'
         }}
+        onClick={onShowForm}
       >
         <Icon.Star size={16} />
         Viết đánh giá

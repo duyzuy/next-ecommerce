@@ -415,7 +415,47 @@
             margin-bottom: 30px;
         }
     }
-    
+    :global .review-form-wrapper{
+        position: fixed;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .overlay{
+            position: absolute;
+            background-color: #00000030;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+        .review-form{
+            background-color: #fff;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+        }
+        .rating-control{
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .ui.rating {
+
+        
+            .active.icon, 
+            .selected.icon{
+                color: #ffc600
+            }
+        }
+    }
     :global .ec__product--reviews{
         
         .cm-rating{

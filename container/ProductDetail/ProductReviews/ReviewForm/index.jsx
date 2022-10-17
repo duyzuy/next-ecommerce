@@ -37,16 +37,15 @@ const ReviewForm = ({ onSubmitReview }) => {
   };
 
   return (
-    <>
+    <div className="review-form-wrapper">
+      <div className="overlay"></div>
       <div className="review-form">
-        <div className="review-form-rate">
-          <div className="rate-control"></div>
-        </div>
         <div className="review-control">
           <form className="ui form" onSubmit={onFormSubmit}>
-            <div className="field">
+            <div className="field rating-control">
               <label>Đánh giá</label>
               <Rating
+                icon="start"
                 maxRating={5}
                 rating={formData.rating}
                 onRate={onRate}
@@ -104,7 +103,7 @@ const ReviewForm = ({ onSubmitReview }) => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default ReviewForm;
