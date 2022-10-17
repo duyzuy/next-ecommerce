@@ -37,7 +37,7 @@ const ReviewForm = ({ onSubmitReview }) => {
   };
 
   return (
-    <>
+    <div className="modal-review">
       <div className="review-form">
         <div className="review-form-rate">
           <div className="rate-control"></div>
@@ -104,7 +104,7 @@ const ReviewForm = ({ onSubmitReview }) => {
           </form>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default ReviewForm;

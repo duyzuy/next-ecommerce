@@ -42,6 +42,7 @@ export const getProductByCategory = async (slug, queryObject) => {
     products: products
   };
 };
+
 export const getProductList = async (url, params) => {
   const products = await wcApi
     .get(url, { ...params })
@@ -118,6 +119,79 @@ export const createProductReview = async (prdId, data) => {
     .post(`products/reviews`, {
       product_id: prdId,
       ...data
+    })
+    .then((res) => {
+      return res.data;
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+
+  return response;
+};
+
+export const getProductByCategoryId = async (
+  catId,
+  params = { perPage: 16 }
+) => {
+  //check categoryID avaiable
+
+  const cat = await wcApi
+    .get(`products/categories/${catId}`)
+    .then((res) => {
+      return {
+        status: res.status,
+        data: res.data
+      };
+    })
+    .catch((error) => {
+      return {
+        status: error.response.status,
+        data: error.response.data
+      };
+    });
+
+  //get products if category Id exists
+  if (cat.status === 200) {
+    const prdData = await wcApi
+      .get(`products`, {
+        category: catId,
+        per_page: params.perPage,
+        page: (params.page && params.page) || 1
+      })
+      .then((res) => {
+        return {
+          data: res.data,
+          total: res.headers['x-wp-total'],
+          totalPages: res.headers['x-wp-totalpages'],
+          page: (params.page && params.page) || 1
+        };
+      })
+      .catch((error) => {
+        return error.response.data;
+      });
+
+    return {
+      status: 200,
+      id: cat.data.id,
+      image: cat.data.image,
+      name: cat.data.name,
+      slug: cat.data.slug,
+      count: cat.data.count,
+      lists: prdData
+    };
+  }
+
+  return {
+    status: cat.status,
+    data: cat.data
+  };
+};
+
+export const getCategires = async (params) => {
+  const response = await wcApi
+    .get(`products/categories`, {
+      ...params
     })
     .then((res) => {
       return res.data;

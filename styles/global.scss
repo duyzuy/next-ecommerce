@@ -64,3 +64,27 @@ button{
   cursor: pointer;
   padding: 10px 15px
 }
+.section-product{
+  margin-bottom: 30px;
+  .container{
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+
+  }
+  .section-header{
+    margin-bottom: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    span{
+      margin-left: auto;
+    }
+    .header{
+      margin-bottom: 0;
+    }
+  }
+  .section-products{
+    padding-bottom: 30px;
+  }
+}
