@@ -18,7 +18,7 @@ const Pagination = (props) => {
     switch (action) {
       case paginateAction.NEXT:
         {
-          if (currentPage === Number(totalPage) || isLoading === flase) return;
+          if (currentPage === Number(totalPage) || isLoading === true) return;
           setCurrentPage((prevState) => prevState + 1);
         }
         break;

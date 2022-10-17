@@ -37,8 +37,7 @@ const ReviewForm = ({ onSubmitReview }) => {
   };
 
   return (
-    <div className="review-form-wrapper">
-      <div className="overlay"></div>
+    <div className="modal-review">
       <div className="review-form">
         <div className="review-control">
           <form className="ui form" onSubmit={onFormSubmit}>

@@ -23,7 +23,7 @@ import styles from '../../../styles/singleproduct.module.scss';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
-
+  console.log(data);
   const { breadItems } = useBreadcrumb(router);
 
   const [productReviews, setProductReviews] = useState(reviews);
