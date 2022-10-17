@@ -47,8 +47,11 @@ const ProductReview = (props) => {
   }, [averageRating]);
 
   const onShowForm = () => {
-    console.log(1);
     setIsShowForm(true);
+  };
+
+  const onCloseModal = () => {
+    setIsShowForm(false);
   };
   return (
     <>
@@ -76,7 +79,11 @@ const ProductReview = (props) => {
         )}
 
         {(isShowForm && (
-          <ReviewForm productId={product.id} onSubmitReview={onSubmitReview} />
+          <ReviewForm
+            productId={product.id}
+            onSubmitReview={onSubmitReview}
+            onCloseModal={onCloseModal}
+          />
         )) || <></>}
       </div>
     </>

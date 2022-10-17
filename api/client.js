@@ -34,4 +34,38 @@ client.get = async (url, params = {}) => {
 client.post = (url, params) => {
   return client(url, params, 'POST');
 };
-export { client };
+
+const wpClient = async (url, params = {}, method) => {
+  const configs = {
+    method: method ? method : 'POST',
+    // mode: 'cors',
+    cache: 'no-cache',
+    // credentials: 'same-origin',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+    // redirect: 'follow',
+    // referrerPolicy: 'no-referrer'
+  };
+  if (!isEmpty(params)) {
+    configs.body = JSON.stringify({ ...params });
+  }
+
+  let queryString = '';
+  if (!isEmpty(params)) {
+    queryString = objectToQueryString(params);
+  }
+  const baseUrl = `https://saigonhomekitchen.vn/wp-json/v1` + '/' + url;
+  const response = await fetch(baseUrl, { ...configs });
+
+  return response.json();
+};
+
+wpClient.get = async (url, params = {}) => {
+  return await wpClient(url, params, 'GET');
+};
+wpClient.post = (url, params) => {
+  return wpClient(url, params, 'POST');
+};
+
+export { client, wpClient };

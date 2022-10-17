@@ -1,7 +1,7 @@
 import { useCallback, useState, useEffect } from 'react';
 import { Form, Rating } from 'semantic-ui-react';
 
-const ReviewForm = ({ onSubmitReview }) => {
+const ReviewForm = ({ onSubmitReview, onCloseModal }) => {
   const [formData, setFormData] = useState({
     review: '',
     reviewer: '',
@@ -38,13 +38,14 @@ const ReviewForm = ({ onSubmitReview }) => {
 
   return (
     <div className="modal-review">
+      <div className="overlay" onClick={onCloseModal}></div>
       <div className="review-form">
         <div className="review-control">
           <form className="ui form" onSubmit={onFormSubmit}>
             <div className="field rating-control">
               <label>Đánh giá</label>
               <Rating
-                icon="start"
+                icon="star"
                 maxRating={5}
                 rating={formData.rating}
                 onRate={onRate}

@@ -66,7 +66,7 @@ const Header = (props) => {
                 </Link>
               </div>
               <div className={styles.ec_header_acount}>
-                <Link href="/">
+                <Link href="/auth/register">
                   <a className="item">
                     <Icon.User size={20} />
                   </a>
