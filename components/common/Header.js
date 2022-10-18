@@ -3,11 +3,9 @@ import Image from 'next/image';
 import { Container, Menu, Input } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
 import MenuItem from '../MenuItem';
-import { MENUS, MENUS_BOTTOM } from '../../constants/menu';
-import { isActive } from '../../utils/acrtiveMenu';
 import Link from 'next/link';
-import Slider from '../Slider';
 import styles from '../../styles/header.module.scss';
+import HeaderBottom from '../HeaderBottom';
 
 const Header = (props) => {
   const { categories } = props;
@@ -66,7 +64,7 @@ const Header = (props) => {
                 </Link>
               </div>
               <div className={styles.ec_header_acount}>
-                <Link href="/auth/register">
+                <Link href="/user/register">
                   <a className="item">
                     <Icon.User size={20} />
                   </a>
@@ -76,7 +74,7 @@ const Header = (props) => {
           </div>
         </Container>
       </div>
-      <div id="ec_header_middle" style={{ display: 'none' }}>
+      {/* <div id="ec_header_middle" style={{ display: 'none' }}>
         <Container>
           <Menu secondary>
             <ul className={styles.menu_items}>
@@ -110,39 +108,8 @@ const Header = (props) => {
             </ul>
           </Menu>
         </Container>
-      </div>
-      <div id="ec_header_bottom" className={styles.ec_header_bottom}>
-        <Container>
-          <Slider autoPlay spacing={30} itemScroll={2} duration={8000}>
-            {categories.map((item, index) => (
-              <Slider.Item key={index}>
-                <div className="ec__cat--item">
-                  <Link href={`/product-cat/${item.slug}`}>
-                    <a className="ec__cat--link">
-                      <div className="ec__cat--thumbnail">
-                        <Image
-                          src={
-                            item.image !== null
-                              ? item.image.src
-                              : '/assets/images/image.svg'
-                          }
-                          alt={item.name}
-                          width={100}
-                          height={100}
-                          layout="responsive"
-                          priority
-                        />
-                      </div>
-
-                      <p className="sub--text">{item.name}</p>
-                    </a>
-                  </Link>
-                </div>
-              </Slider.Item>
-            ))}
-          </Slider>
-        </Container>
-      </div>
+      </div> */}
+      <HeaderBottom items={categories} />
     </header>
   );
 };

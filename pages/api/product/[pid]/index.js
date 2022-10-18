@@ -1,4 +1,4 @@
-import { wcApi } from '../../../api/woo';
+import { wcApi } from '../../../../api/woo';
 
 const singleProductHandler = async (req, res) => {
   const { pid } = req.query;

@@ -5,7 +5,9 @@ import 'semantic-ui-css/semantic.min.css';
 import '../styles/global.scss';
 import 'swiper/css/bundle';
 import { getCategories } from '../api/product';
-function MyApp({ Component, pageProps, appData }) {
+function MyApp(props) {
+  const { Component, pageProps, appData } = props;
+
   return (
     <AppProvider>
       <Layout {...appData}>

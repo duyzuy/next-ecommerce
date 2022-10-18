@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import Price from '../Price';
 import Rating from '../Rating';
+import Link from 'next/link';
 const Card = (props) => {
   const { type, isLoading, data } = props;
 
@@ -40,7 +41,10 @@ const Card = (props) => {
           </div>
         </>
       ) : (
-        <div className={`ec__card ${type}`} onClick={() => goToPage(data.slug)}>
+        <div
+          className={`ec__card ${type}`}
+          // onClick={() => goToPage(data.slug)}
+        >
           <div className="ec__card--inner">
             <div className="ec__card--image">
               <CustomImage
@@ -51,7 +55,11 @@ const Card = (props) => {
               />
             </div>
             <div className="ec__card--bottom">
-              <h3 className="ec__card--title">{data.name}</h3>
+              <h3 className="ec__card--title">
+                <Link href={`/product/${data.slug}`}>
+                  <a>{data.name}</a>
+                </Link>
+              </h3>
 
               <Price
                 price={data.price}

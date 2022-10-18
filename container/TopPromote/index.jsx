@@ -1,8 +1,15 @@
-import Slider from '../../components/Slider';
 import { Container, Grid } from 'semantic-ui-react';
-import styles from '../../styles/top_promote.module.scss';
+
 import Image from 'next/image';
 
+import Link from 'next/link';
+
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/free-mode';
+import 'swiper/css/pagination';
+import { FreeMode, Pagination } from 'swiper';
+import styles from '../../styles/top_promote.module.scss';
 const TopPromote = (props) => {
   const { banner } = props;
   return (
@@ -15,7 +22,7 @@ const TopPromote = (props) => {
             computer={10}
             className="ec__promote--slide"
           >
-            <Slider
+            {/* <Slider
               asMain
               autoPlay={true}
               slidesToShow={1}
@@ -36,7 +43,28 @@ const TopPromote = (props) => {
                   />
                 </Slider.Item>
               ))}
-            </Slider>
+            </Slider> */}
+            <Swiper
+              spaceBetween={20}
+              slidesPerView={1}
+              loop={false}
+              // freeMode={true}
+              modules={[FreeMode, Pagination]}
+              className="cat_list"
+            >
+              {banner.map((item, index) => (
+                <SwiperSlide key={index}>
+                  <div className="top-slide">
+                    <Image
+                      src={item.src}
+                      layout="intrinsic"
+                      width={900}
+                      height={450}
+                    />
+                  </div>
+                </SwiperSlide>
+              ))}
+            </Swiper>
           </Grid.Column>
           <Grid.Column
             mobile={16}

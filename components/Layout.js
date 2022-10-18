@@ -3,6 +3,7 @@ import Footer from './common/Footer';
 
 const Layout = (props) => {
   const { categories } = props;
+
   return (
     <>
       <Header categories={categories} />

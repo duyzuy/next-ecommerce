@@ -131,7 +131,11 @@ const Footer = () => {
                 <div className="box">
                   <div className="box-inner">
                     <span className="box-icon">
-                      <Image src={'/assets/images/sgh-fb.svg'} layout="fill" />
+                      <Image
+                        src={'/assets/images/sgh-fb.svg'}
+                        layout="fill"
+                        alt="facebook"
+                      />
                     </span>
                     <p>Facebook</p>
                   </div>
@@ -139,7 +143,11 @@ const Footer = () => {
                 <div className="box">
                   <div className="box-inner">
                     <span className="box-icon">
-                      <Image src={'/assets/images/sgh-yt.svg'} layout="fill" />
+                      <Image
+                        src={'/assets/images/sgh-yt.svg'}
+                        layout="fill"
+                        alt="youtube"
+                      />
                     </span>
                     <p>Youtube</p>
                   </div>
@@ -150,6 +158,7 @@ const Footer = () => {
                       <Image
                         src={'/assets/images/sgh-zalo.png'}
                         layout="fill"
+                        alt="zalo"
                       />
                     </span>
                     <p>Zalo</p>
@@ -164,6 +173,7 @@ const Footer = () => {
                 src={`/assets/images/saigon-director.jpeg`}
                 layout="fill"
                 priority
+                alt="director SGH"
               />
             </div>
           </div>
@@ -181,6 +191,7 @@ const Footer = () => {
                     width={100}
                     height={30}
                     layout="responsive"
+                    alt="saigonhome"
                   />
                 </div>
                 <div className="ft__content">
@@ -211,12 +222,18 @@ const Footer = () => {
                       </Link>
                     </li>
                     <li>
+                      <Link href="/about">
+                        <a>about</a>
+                      </Link>
+                    </li>
+                    <li>
                       <Link href="/">
                         <a style={{ maxWidth: 100, display: 'block' }}>
                           <Image
                             src={'/assets/images/bct.png'}
                             width={120}
                             height={45}
+                            alt="bct"
                             layout="responsive"
                           />
                         </a>
@@ -228,7 +245,11 @@ const Footer = () => {
             </Grid.Column>
             <Grid.Column>
               <div className="image">
-                <Image src={'/assets/images/showroom.jpeg'} layout="fill" />
+                <Image
+                  src={'/assets/images/showroom.jpeg'}
+                  layout="fill"
+                  alt="showroom"
+                />
               </div>
             </Grid.Column>
           </Grid>

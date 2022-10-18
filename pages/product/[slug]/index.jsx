@@ -73,7 +73,7 @@ const ProductDetail = (props) => {
         current: true
       }
     ];
-  }, [productReviews]);
+  }, [data, breadItems]);
 
   const handleSubmitReview = async (reviewsData, callback) => {
     if (

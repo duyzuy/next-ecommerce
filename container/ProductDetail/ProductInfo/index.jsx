@@ -2,7 +2,6 @@ import { memo } from 'react';
 import { Header } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
 const ProductInfo = ({ title, informations }) => {
-  console.log('infor');
   return (
     <>
       <Header as="h4" className="ec__product--body--title">

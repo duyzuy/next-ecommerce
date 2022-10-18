@@ -52,7 +52,7 @@ const Home = (props) => {
   );
 };
 
-export async function getServerSideProps(ctx) {
+export async function getStaticProps(ctx) {
   const prdHongNgoai = await getProductByCategoryId(19, { perPage: 10 });
   const prdGas = await getProductByCategoryId(18, { perPage: 10 });
   const prdBeptu = await getProductByCategoryId(16, { perPage: 10 });

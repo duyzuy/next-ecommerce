@@ -4,10 +4,30 @@ export const getCategories = async (url, params) => {
     .get(url, {
       ...params
     })
-    .then((response) => response.data)
+    .then((response) => {
+      return response.data;
+    })
     .catch((error) => error.data);
 
-  return categories;
+  const keys = [
+    'id',
+    'image',
+    'name',
+    'parent',
+    'slug',
+    'count',
+    'description',
+    'display'
+  ];
+
+  const cats = categories.map((cat) => ({
+    id: cat.id,
+    image: cat.image,
+    name: cat.name,
+    slug: cat.slug
+  }));
+
+  return cats;
 };
 
 export const getCategory = async (url, params) => {

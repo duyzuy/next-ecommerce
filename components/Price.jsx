@@ -13,7 +13,7 @@ const Price = ({ price, salePrice, regularPrice, asSingle }) => {
     }
 
     return classes;
-  }, [asSingle, regularPrice, salePrice, price]);
+  }, [asSingle, salePrice]);
   return (
     <div className={classNames}>
       {salePrice !== '' ? (

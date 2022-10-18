@@ -311,7 +311,7 @@ const Slider = ({
     }
 
     return className;
-  }, []);
+  }, [asMain, pagination]);
   return (
     <div className={slideClass} ref={sliderRef}>
       <div className="ec__slide--list">

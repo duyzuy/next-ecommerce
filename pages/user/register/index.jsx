@@ -1,17 +1,22 @@
 import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { Container } from 'semantic-ui-react';
 import { wpClient } from '../../../api/client';
-const Register = () => {
+const Register = (props) => {
   const [user, setUser] = useState({});
-
-  const handleRegister = async (e) => {
-    e.preventDefault();
-    console.log(user);
-    const response = await wpClient.post(`user/register`, {
-      username: '112311@gmai.com',
-      email: '3333123@gmail.com',
-      password: '123123123'
-    });
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors }
+  } = useForm();
+  const handleRegister = async (data) => {
+    console.log(data);
+    // const response = await wpClient.post(`user/register`, {
+    //   username: user.userName,
+    //   email: user.email,
+    //   password: user.password
+    // });
     console.log(response);
   };
 
@@ -21,9 +26,10 @@ const Register = () => {
       [key]: value
     }));
   };
+  console.log(errors);
   return (
     <Container>
-      <form className="ui form" onSubmit={handleRegister}>
+      <form className="ui form" onSubmit={handleSubmit(handleRegister)}>
         <div className="equal width fields">
           <div className="field">
             <label>Tên tài khoản</label>
@@ -32,6 +38,7 @@ const Register = () => {
                 type="text"
                 placeholder="Tên tài khoản"
                 onChange={(e) => handleChange('userName', e.target.value)}
+                {...register('userName', { maxLength: 20 })}
               />
             </div>
           </div>
@@ -79,4 +86,9 @@ const Register = () => {
   );
 };
 
+export async function getStaticProps(ctx) {
+  return {
+    props: {}
+  };
+}
 export default Register;
