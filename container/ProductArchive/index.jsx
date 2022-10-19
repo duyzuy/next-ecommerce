@@ -57,8 +57,8 @@ const ProductArchive = (props) => {
         ...breadItems,
         {
           id: 'productCat',
-          path: `/product-cat/${category.slug}`,
-          name: category.name
+          path: `/product-cat/${category?.slug}`,
+          name: category?.name
         }
       ];
     }
@@ -70,7 +70,7 @@ const ProductArchive = (props) => {
   return (
     <div className="layout has-sidebar">
       <SEO
-        title={`${(isCategory && category.name) || 'Bếp từ nhập khẩu'}`}
+        title={`${(isCategory && category?.name) || 'Bếp từ nhập khẩu'}`}
         description="bep tu nhap khau chinh hang"
       />
       <Breadcrumb items={breadcrumbs} />
@@ -79,7 +79,7 @@ const ProductArchive = (props) => {
           <Container>
             <div className="ec__product--header">
               <Header as="h1">
-                {(isCategory && category.name) || 'Sản phẩm'}
+                {(isCategory && category?.name) || 'Sản phẩm'}
               </Header>
             </div>
             <div className="ec__product--container">

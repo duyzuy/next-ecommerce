@@ -3,7 +3,11 @@ import { queryParams, defaultValue } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
 
 import ProductArchive from '../../container/ProductArchive';
-import { getProductByCategory, getCategories } from '../../api/product';
+import {
+  getProductListByCatId,
+  getCategories,
+  getCategoryBySlug
+} from '../../api/product';
 import { useRouter } from 'next/router';
 
 const ProductCategory = (props) => {
@@ -39,17 +43,27 @@ export async function getStaticPaths() {
 
   return {
     paths: paths,
-    fallback: true // can also be true or 'blocking'
+    fallback: 'blocking' // can also be true or 'blocking'
   };
 }
 
 export async function getStaticProps(ctx) {
   const { params, locales, locale } = ctx;
 
-  const data = await getProductByCategory(params.slug, { ...defaultValue });
+  const category = await getCategoryBySlug(params.slug);
+
+  if (category.statusCode === 404) {
+    return {
+      notFound: true
+    };
+  }
+
+  const productList = await getProductListByCatId(category.data[0].id, {
+    ...defaultValue
+  });
 
   return {
-    props: { category: data.category, products: data.products },
+    props: { category: category.data[0], products: productList },
     revalidate: 10
   };
 }

@@ -8,7 +8,7 @@ export const getCategories = async (params) => {
       return response.data;
     })
     .catch((error) => {
-      return error.response.data;
+      return error.response;
     });
 };
 
@@ -21,60 +21,43 @@ export const getCategory = async (url, params) => {
   return category;
 };
 
-export const getProductByCategory = async (slug, queryObject) => {
+export const getProductListByCatId = async (catId, queryObject) => {
+  return await wcApi
+    .get(`products`, {
+      ...queryObject,
+      category: catId
+    })
+    .then((res) => ({
+      data: res.data,
+      totalItems: res.headers['x-wp-total'],
+      totalPage: res.headers['x-wp-totalpages']
+    }))
+    .catch((error) => {
+      console.log(error);
+      return error.response.data;
+    });
+};
+export const getCategoryBySlug = async (slug) => {
   return await wcApi
     .get(`products/categories`, { slug: slug })
     .then((res) => {
       console.log(res);
-      if (res.data.length > 0) {
-        return res.data[0];
-        const prods = await getProductOfCatBySlug();
-        
-      } else {
-        return res.data;
+      if (res.data.length === 0) {
+        return {
+          statusCode: 404,
+          message: 'cat is not exists'
+        };
       }
+      return {
+        statusCode: res.status,
+        data: res.data
+      };
     })
-    .catch((error) => {
-      console.log(error);
-      return error.response;
+    .catch((err) => {
+      console.log(err);
+      return err.response;
     });
-
-  // const products = await wcApi
-  //   .get(`products`, {
-  //     ...queryObject,
-  //     category: category.id
-  //   })
-  //   .then((res) => ({
-  //     data: res.data,
-  //     totalItems: res.headers['x-wp-total'],
-  //     totalPage: res.headers['x-wp-totalpages']
-  //   }))
-  //   .catch((error) => {
-  //     console.log(error);
-  //     return error.response.data;
-  //   });
-
-  // return {
-  //   category: category,
-  //   products: products
-  // };
 };
-const getProductOfCatBySlug = async () => {
-  return await wcApi
-  .get(`products`, {
-    ...queryObject,
-    category: category.id
-  })
-  .then((res) => ({
-    data: res.data,
-    totalItems: res.headers['x-wp-total'],
-    totalPage: res.headers['x-wp-totalpages']
-  }))
-  .catch((error) => {
-    return error.response;
-  });
-
-}
 
 export const getProductList = async (url, params) => {
   const products = await wcApi
