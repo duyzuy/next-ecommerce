@@ -1,12 +1,39 @@
 @use './foundation/variables' as *;
 
 .ec__pagination{
+    &.right{
+        .ec__pagination--inner{
+            justify-content: flex-end;
+        }
+        
+    }
+    &.left{
+        .ec__pagination--inner{
+            justify-content: flex-start;
+        }
+        
+    }
+    &--inner{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
     &--items{
         display: flex;
         list-style-type: none;
         padding-block-start: 0;
         padding-inline-start: 0;
         justify-content: center;
+        margin-left: 10px;
+        margin-right: 10px;
+        box-shadow: 0px 0px 12px rgb(0 0 0 / 6%);
+        background-color: #fff;
+        border-radius: 30px;
+        padding: 5px;
+        &:hover .ec__pagination--item{
+            background-color: inherit;
+            color: inherit
+        }
     }
 
     &--item{
@@ -21,17 +48,24 @@
         font-size: 13px;
         cursor: pointer;
         border-radius: 5px;
+        border-radius: 50%;
+        border: 1px solid transparent;
+
         &.active{
-            background-color: #C93939;;
+            // background-color: #C93939;
+            background-color: #4167c3;
             color: #fff;
+        } &:hover{
+            background-color: #4167c3 !important;
+            color: #fff !important;
         }
 
-        &.next, &.prev{
-            border-color: #C93939;
-        }
+        // &.next, &.prev{
+        //     border-color: #C93939;
+        // }
     }
   
-    &--item + &--item{
-        margin-left: 10px;
-    }
+    // &--item + &--item{
+    //     margin-left: 10px;
+    // }
 }

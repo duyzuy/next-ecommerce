@@ -1,11 +1,18 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { usePagination } from '../../hooks/usePagination';
 import * as Icon from 'react-feather';
 import { DOT, paginateAction } from '../../constants/constants';
 
 const Pagination = (props) => {
-  const { type, totalPage, totalItem, current, onChangePage, isLoading } =
-    props;
+  const {
+    type,
+    totalPage,
+    totalItem,
+    current,
+    onChangePage,
+    isLoading,
+    position
+  } = props;
   const [currentPage, setCurrentPage] = useState(current);
   const [firstLoad, setFirstLoad] = useState(true);
   const paginations = usePagination({
@@ -35,56 +42,74 @@ const Pagination = (props) => {
     }
     setFirstLoad(false);
   };
+  const classes = useMemo(() => {
+    let cls = 'ec__pagination';
+    if (position && position === 'left') {
+      cls = cls.concat(' ', 'left');
+    }
+
+    if (position && position === 'right') {
+      cls = cls.concat(' ', 'right');
+    }
+
+    return cls;
+  }, [position]);
+
   useEffect(() => {
     if (firstLoad) return;
     onChangePage(currentPage);
   }, [currentPage]);
+  if (paginations.length <= 1) {
+    return <></>;
+  }
   return (
-    <div className="ec__pagination">
-      <ul className="ec__pagination--items">
-        <li
+    <div className={classes}>
+      <div className="ec__pagination--inner">
+        <div
           className="ec__pagination--item prev"
           onClick={() => handleSelectPage(paginateAction.PREV)}
         >
           <Icon.ArrowLeft size={14} />
-        </li>
-        {paginations.map((page, index) => {
-          if (page === DOT) {
-            return (
-              <li
-                key={index}
-                className={
-                  currentPage === page
-                    ? 'ec__pagination--item active'
-                    : 'ec__pagination--item'
-                }
-              >
-                <span key={page}>{page}</span>
-              </li>
-            );
-          } else {
-            return (
-              <li
-                key={index}
-                className={
-                  currentPage === page
-                    ? 'ec__pagination--item active'
-                    : 'ec__pagination--item'
-                }
-                onClick={() => handleSelectPage(paginateAction.SELECT, page)}
-              >
-                <span key={page}>{page}</span>
-              </li>
-            );
-          }
-        })}
-        <li
+        </div>
+        <ul className="ec__pagination--items">
+          {paginations.map((page, index) => {
+            if (page === DOT) {
+              return (
+                <li
+                  key={index}
+                  className={
+                    currentPage === page
+                      ? 'ec__pagination--item active'
+                      : 'ec__pagination--item'
+                  }
+                >
+                  <span key={page}>{page}</span>
+                </li>
+              );
+            } else {
+              return (
+                <li
+                  key={index}
+                  className={
+                    currentPage === page
+                      ? 'ec__pagination--item active'
+                      : 'ec__pagination--item'
+                  }
+                  onClick={() => handleSelectPage(paginateAction.SELECT, page)}
+                >
+                  <span key={page}>{page}</span>
+                </li>
+              );
+            }
+          })}
+        </ul>
+        <div
           className="ec__pagination--item next"
           onClick={() => handleSelectPage(paginateAction.NEXT)}
         >
           <Icon.ArrowRight size={14} />
-        </li>
-      </ul>
+        </div>
+      </div>
     </div>
   );
 };

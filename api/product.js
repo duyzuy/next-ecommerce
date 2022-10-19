@@ -1,33 +1,15 @@
 import { wcApi } from './woo';
-export const getCategories = async (url, params) => {
-  const categories = await wcApi
-    .get(url, {
+export const getCategories = async (params) => {
+  return await wcApi
+    .get(`products/categories`, {
       ...params
     })
     .then((response) => {
       return response.data;
     })
-    .catch((error) => error.data);
-
-  const keys = [
-    'id',
-    'image',
-    'name',
-    'parent',
-    'slug',
-    'count',
-    'description',
-    'display'
-  ];
-
-  const cats = categories.map((cat) => ({
-    id: cat.id,
-    image: cat.image,
-    name: cat.name,
-    slug: cat.slug
-  }));
-
-  return cats;
+    .catch((error) => {
+      return error.response.data;
+    });
 };
 
 export const getCategory = async (url, params) => {
@@ -40,28 +22,59 @@ export const getCategory = async (url, params) => {
 };
 
 export const getProductByCategory = async (slug, queryObject) => {
-  const category = await wcApi
+  return await wcApi
     .get(`products/categories`, { slug: slug })
-    .then((res) => res.data[0])
-    .catch((error) => error.data);
-
-  const products = await wcApi
-    .get(`products`, {
-      ...queryObject,
-      category: category.id
+    .then((res) => {
+      console.log(res);
+      if (res.data.length > 0) {
+        return res.data[0];
+        const prods = await getProductOfCatBySlug();
+        
+      } else {
+        return res.data;
+      }
     })
-    .then((res) => ({
-      data: res.data,
-      totalItems: res.headers['x-wp-total'],
-      totalPage: res.headers['x-wp-totalpages']
-    }))
-    .catch((error) => error.data);
+    .catch((error) => {
+      console.log(error);
+      return error.response;
+    });
 
-  return {
-    category: category,
-    products: products
-  };
+  // const products = await wcApi
+  //   .get(`products`, {
+  //     ...queryObject,
+  //     category: category.id
+  //   })
+  //   .then((res) => ({
+  //     data: res.data,
+  //     totalItems: res.headers['x-wp-total'],
+  //     totalPage: res.headers['x-wp-totalpages']
+  //   }))
+  //   .catch((error) => {
+  //     console.log(error);
+  //     return error.response.data;
+  //   });
+
+  // return {
+  //   category: category,
+  //   products: products
+  // };
 };
+const getProductOfCatBySlug = async () => {
+  return await wcApi
+  .get(`products`, {
+    ...queryObject,
+    category: category.id
+  })
+  .then((res) => ({
+    data: res.data,
+    totalItems: res.headers['x-wp-total'],
+    totalPage: res.headers['x-wp-totalpages']
+  }))
+  .catch((error) => {
+    return error.response;
+  });
+
+}
 
 export const getProductList = async (url, params) => {
   const products = await wcApi

@@ -15,11 +15,10 @@ import Breadcrumb from '../../components/BreadCrumb';
 import SEO from '../../components/common/Seo';
 import { useBreadcrumb } from '../../hooks/useBreadcrumb';
 const ProductArchive = (props) => {
-  const { products, isCategory, category } = props;
+  const { products, isCategory, category, router } = props;
 
-  const router = useRouter();
   const [filter, setFilter] = useState(defaultValue);
-  console.log(filter);
+
   const { query } = router;
   const { breadItems } = useBreadcrumb(router);
 
@@ -113,6 +112,7 @@ const ProductArchive = (props) => {
                   current={currentPage}
                   onChangePage={onChangePage}
                   isLoading={isLoading}
+                  position="right"
                 />
               </div>
             </div>

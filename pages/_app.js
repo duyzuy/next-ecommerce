@@ -18,7 +18,7 @@ function MyApp(props) {
 }
 
 MyApp.getInitialProps = async (ctx) => {
-  const categories = await getCategories('products/categories', {
+  const categories = await getCategories({
     per_page: 20,
     hide_empty: true
   });
