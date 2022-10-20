@@ -1,0 +1,20 @@
+.register__wrapper{
+    background-color: #fff;
+    padding: 60px;
+    border-radius: 20px;
+    :global .register-form{
+        
+    }
+    :global .register-header{
+        text-align: center;
+        text-transform: uppercase;
+        font-weight: bold;
+        .icon{
+            display: inline-block;
+            margin-bottom: 30px;
+            background-color: #f1f1f1;
+            padding: 20px;
+            border-radius: 50%;
+        }
+    }
+}

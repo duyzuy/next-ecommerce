@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useForm } from 'react-hook-form';
-import { Container, Header } from 'semantic-ui-react';
+import { Container, Header, Form, Button } from 'semantic-ui-react';
 import { wpClient } from '../../../api/client';
 import { customerSchema } from '../../../utils/validate';
 import * as Icon from 'react-feather';
+import styles from '../../../styles/register.module.scss';
+import Link from 'next/link';
 const Register = (props) => {
   const [userData, setUserData] = useState({});
   const [errors, setErrors] = useState([]);
   const handleSubmitForm = async (e) => {
     e.preventDefault();
-    // console.log(customerSchema._nodes);
+
     try {
       await customerSchema.validate({ ...userData });
 
@@ -18,8 +19,7 @@ const Register = (props) => {
       //   email: user.email,
       //   password: user.password
       // });
-
-      console.log('response');
+      console.log('oke');
     } catch (err) {
       setErrors(err.errors);
     }
@@ -35,66 +35,62 @@ const Register = (props) => {
   console.log(errors);
   return (
     <Container>
-      <div className="register-wrapper">
-        <Header style={{ textAlign: 'center' }}>
+      <div className={styles.register__wrapper}>
+        <Header className="register-header">
           <span className="icon">
             <Icon.User size={30} />
-            Tạo tài khoản
           </span>
+          <p>Đăng ký tài khoản</p>
         </Header>
+        <div classname="social-account">
+          <div className="acc-google"></div>
+          <div className="acc-facebook"></div>
+        </div>
         <div className="register-form">
           <form className="ui form" onSubmit={handleSubmitForm}>
-            <div className="equal width fields">
-              <div className="field">
-                <label>Tên tài khoản</label>
-                <div className="ui fluid input">
-                  <input
-                    type="text"
-                    placeholder="Tên tài khoản"
-                    onChange={(e) => handleChange('userName', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="field">
-                <label>Email</label>
-                <div className="ui fluid input">
-                  <input
-                    type="text"
-                    placeholder="Email"
-                    onChange={(e) => handleChange('email', e.target.value)}
-                  />
-                </div>
-              </div>
-            </div>
+            <Form.Input
+              fluid
+              label="Tên tài khoản"
+              placeholder="Tên tài khoản"
+              icon="user outline"
+              iconPosition="left"
+              onChange={(e) => handleChange('userName', e.target.value)}
+            />
 
-            <div className="equal width fields">
-              <div className="field">
-                <label>Mật khẩu</label>
-                <div className="ui fluid input">
-                  <input
-                    type="password"
-                    placeholder="Mật khẩu"
-                    onChange={(e) => handleChange('password', e.target.value)}
-                  />
-                </div>
-              </div>
-              <div className="field">
-                <label>Xác nhận mật khẩu</label>
-                <div className="ui fluid input">
-                  <input
-                    type="password"
-                    placeholder="Xác nhận mật khẩu"
-                    onChange={(e) =>
-                      handleChange('passwordConFirm', e.target.value)
-                    }
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="field">
-              <button className="ui button">Submit</button>
-            </div>
+            <Form.Input
+              fluid
+              label="Email"
+              placeholder="Email"
+              icon="mail outline"
+              iconPosition="left"
+              onChange={(e) => handleChange('email', e.target.value)}
+            />
+            <Form.Input
+              fluid
+              label="Mật khẩu"
+              placeholder="Mật khẩu"
+              icon="key"
+              type="password"
+              iconPosition="left"
+              onChange={(e) => handleChange('password', e.target.value)}
+            />
+            <Form.Input
+              fluid
+              label="Xác nhận mật khẩu"
+              placeholder="Xác nhận mật khẩu"
+              icon="key"
+              type="password"
+              iconPosition="left"
+              onChange={(e) => handleChange('passwordConFirm', e.target.value)}
+            />
+            <Button color="blue">Đăng ký</Button>
           </form>
+          <p>
+            Đã có tài khoản?{' '}
+            <Link href="/">
+              <a>Đăng nhập ngay</a>
+            </Link>
+          </p>
         </div>
       </div>
     </Container>
