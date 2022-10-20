@@ -208,7 +208,7 @@ export const createProductReview = async (prdId, data) => {
 
 export const getProductByCategoryId = async (catId, params) => {
   //check categoryID avaiable
-  console.log(params);
+
   const cat = await wcApi
     .get(`products/categories/${catId}`)
     .then((res) => {

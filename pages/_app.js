@@ -33,7 +33,6 @@ MyApp.getInitialProps = async (ctx) => {
     hide_empty: true
   });
 
-  console.log(ctx);
   return {
     appData: {
       categories: categories
