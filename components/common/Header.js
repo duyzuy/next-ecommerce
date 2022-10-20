@@ -22,6 +22,8 @@ const Header = (props) => {
                     alt="logo"
                     width={340}
                     height={90}
+                    placeholder="blur"
+                    blurDataURL="/assets/images/logo-saigonhome-original.svg"
                   />
                 </a>
               </Link>

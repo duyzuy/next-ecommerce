@@ -135,6 +135,8 @@ const Footer = () => {
                         src={'/assets/images/sgh-fb.svg'}
                         layout="fill"
                         alt="facebook"
+                        placeholder="blur"
+                        blurDataURL={'/assets/images/sgh-fb.svg'}
                       />
                     </span>
                     <p>Facebook</p>
@@ -147,6 +149,8 @@ const Footer = () => {
                         src={'/assets/images/sgh-yt.svg'}
                         layout="fill"
                         alt="youtube"
+                        placeholder="blur"
+                        blurDataURL={'/assets/images/sgh-yt.svg'}
                       />
                     </span>
                     <p>Youtube</p>
@@ -159,6 +163,8 @@ const Footer = () => {
                         src={'/assets/images/sgh-zalo.png'}
                         layout="fill"
                         alt="zalo"
+                        placeholder="blur"
+                        blurDataURL={'/assets/images/sgh-zalo.png'}
                       />
                     </span>
                     <p>Zalo</p>
@@ -174,6 +180,8 @@ const Footer = () => {
                 layout="fill"
                 priority
                 alt="director SGH"
+                placeholder="blur"
+                blurDataURL={`/assets/images/saigon-director.jpeg`}
               />
             </div>
           </div>
@@ -192,6 +200,8 @@ const Footer = () => {
                     height={30}
                     layout="responsive"
                     alt="saigonhome"
+                    placeholder="blur"
+                    blurDataURL={`/assets/images/logo-saigonhome-red.svg`}
                   />
                 </div>
                 <div className="ft__content">
@@ -235,6 +245,8 @@ const Footer = () => {
                             height={45}
                             alt="bct"
                             layout="responsive"
+                            placeholder="blur"
+                            blurDataURL={'/assets/images/bct.png'}
                           />
                         </a>
                       </Link>
@@ -249,6 +261,8 @@ const Footer = () => {
                   src={'/assets/images/showroom.jpeg'}
                   layout="fill"
                   alt="showroom"
+                  placeholder="blur"
+                  blurDataURL={'/assets/images/showroom.jpeg'}
                 />
               </div>
             </Grid.Column>

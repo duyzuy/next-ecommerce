@@ -1,7 +1,7 @@
 import { contentType } from '../../constants/constants';
 import { queryParams, defaultValue } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
-
+import { Loader } from 'semantic-ui-react';
 import ProductArchive from '../../container/ProductArchive';
 import {
   getProductListByCatId,
@@ -14,8 +14,9 @@ const ProductCategory = (props) => {
   const { category, products } = props;
   const router = useRouter();
   if (router.isFallback) {
-    return <div>Loading...</div>;
+    return <Loader active inline="centered" />;
   }
+
   return (
     <ProductArchive
       products={products}
@@ -43,7 +44,7 @@ export async function getStaticPaths() {
 
   return {
     paths: paths,
-    fallback: 'blocking' // can also be true or 'blocking'
+    fallback: true // can also be true or 'blocking'
   };
 }
 

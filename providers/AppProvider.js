@@ -2,9 +2,11 @@ import { useEffect, useState } from 'react';
 import { AppContext } from '../contexts';
 import { client } from '../api/client';
 import { wooSetting } from '../constants/settings';
+
 const AppProvider = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currency, setCurrency] = useState();
+
   useEffect(() => {
     (async () => {
       setIsLoading(true);

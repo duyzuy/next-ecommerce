@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import CustomImage from '../CustomImage';
 import * as Icon from 'react-feather';
@@ -19,11 +19,16 @@ const Card = (props) => {
     }
   }, [images]);
 
-  const goToPage = (slug) => {
-    router.push({
-      pathname: `/product/${slug}`
-    });
-  };
+  const goToPage = useCallback(
+    (slug) => {
+      router.push(`/product/[slug]`, `/product/${slug}`);
+    },
+    [router]
+  );
+
+  useEffect(() => {
+    router.prefetch(`/product/[slug]`, `/product/${data.slug}`);
+  }, [router, data.slug]);
   return (
     <>
       {isLoading === true ? (
@@ -41,10 +46,7 @@ const Card = (props) => {
           </div>
         </>
       ) : (
-        <div
-          className={`ec__card ${type}`}
-          // onClick={() => goToPage(data.slug)}
-        >
+        <div className={`ec__card ${type}`} onClick={() => goToPage(data.slug)}>
           <div className="ec__card--inner">
             <div className="ec__card--image">
               <CustomImage
@@ -52,14 +54,12 @@ const Card = (props) => {
                 alt={data.name}
                 width={500}
                 height={500}
+                placeholder="blur"
+                blurDataURL={thumbnailUrl}
               />
             </div>
             <div className="ec__card--bottom">
-              <h3 className="ec__card--title">
-                <Link href={`/product/${data.slug}`}>
-                  <a>{data.name}</a>
-                </Link>
-              </h3>
+              <h3 className="ec__card--title">{data.name}</h3>
 
               <Price
                 price={data.price}

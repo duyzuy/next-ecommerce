@@ -19,7 +19,7 @@ const ProductReview = (props) => {
   const ratingResults = useMemo(() => {
     const reviewKeys = [5, 4, 3, 2, 1];
 
-    let reviewList = reviews.reviews.reduce(
+    let reviewList = reviews?.reviews?.reduce(
       (obj, review) => ({
         ...obj,
         [review.rating]: {
@@ -40,7 +40,7 @@ const ProductReview = (props) => {
           Math.abs(reviewList[key].count / ratingCount).toFixed(2)) ||
         0
     }));
-  }, [reviews.reviews, ratingCount]);
+  }, [reviews?.reviews, ratingCount]);
 
   const averageRate = useMemo(() => {
     return Number(averageRating).toFixed(1);

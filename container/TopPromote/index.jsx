@@ -22,28 +22,6 @@ const TopPromote = (props) => {
             computer={10}
             className="ec__promote--slide"
           >
-            {/* <Slider
-              asMain
-              autoPlay={true}
-              slidesToShow={1}
-              slidesToScroll={1}
-              spacing={15}
-              duration={5000}
-              pagination={4}
-              infinite={true}
-              dots={true}
-            >
-              {banner.map((item, index) => (
-                <Slider.Item key={`topsl-${index}`} className="top-slide">
-                  <Image
-                    src={item.src}
-                    layout="intrinsic"
-                    width={900}
-                    height={450}
-                  />
-                </Slider.Item>
-              ))}
-            </Slider> */}
             <Swiper
               spaceBetween={20}
               slidesPerView={1}
@@ -60,6 +38,9 @@ const TopPromote = (props) => {
                       layout="intrinsic"
                       width={900}
                       height={450}
+                      placeholder="blur"
+                      blurDataURL={item.src}
+                      objectFit="cover"
                     />
                   </div>
                 </SwiperSlide>

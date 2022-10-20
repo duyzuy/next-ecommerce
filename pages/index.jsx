@@ -1,17 +1,15 @@
 import { useState, useEffect, useContext } from 'react';
-import { Container } from 'semantic-ui-react';
 
 import SEO from '../components/common/Seo';
 import { TOP_PROMOTIONS } from '../constants/menu';
 import Brands from '../container/Brands';
 import { data } from '../constants/brandsData.js';
 import TopPromote from '../container/TopPromote';
-import styles from '../styles/home.module.scss';
 import { AppContext } from '../contexts';
 import { getProductByCategoryId, getCategires } from '../api/product';
 import ProductCatList from '../container/ProductCatList';
 const Home = (props) => {
-  const { brand, categories, hutmui, hongngoai, gas, beptu } = props;
+  const { brand, hutmui, hongngoai, gas, beptu } = props;
 
   const { currency } = useContext(AppContext);
 
@@ -47,15 +45,27 @@ const Home = (props) => {
           image={gas.image}
           products={gas.lists}
         />
+
+        <ProductCatList
+          slider
+          id={beptu.id}
+          name={beptu.name}
+          slug={beptu.slug}
+          image={beptu.image}
+          products={beptu.lists}
+        />
       </div>
     </>
   );
 };
 
 export async function getStaticProps(ctx) {
+  console.log('regeneration home page');
   const prdHongNgoai = await getProductByCategoryId(19, { perPage: 10 });
   const prdGas = await getProductByCategoryId(18, { perPage: 10 });
-  const prdBeptu = await getProductByCategoryId(16, { perPage: 10 });
+  const prdBeptu = await getProductByCategoryId(16, {
+    perPage: 10
+  });
   const prdHutmui = await getProductByCategoryId(20, { perPage: 10 });
 
   return {
@@ -66,7 +76,8 @@ export async function getStaticProps(ctx) {
       gas: prdGas,
       beptu: prdBeptu
       // categories: categories
-    }
+    },
+    revalidate: 10
   };
 }
 export default Home;

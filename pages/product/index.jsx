@@ -1,14 +1,20 @@
 import { contentType } from '../../constants/constants';
 import { queryParams, defaultValue } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
-
 import { getProductList } from '../../api/product';
 import ProductArchive from '../../container/ProductArchive';
-
+import { useRouter } from 'next/router';
 const Product = (props) => {
   const { products } = props;
 
-  return <ProductArchive products={products} type={contentType.PRODUCT} />;
+  const router = useRouter();
+  return (
+    <ProductArchive
+      products={products}
+      type={contentType.PRODUCT}
+      router={router}
+    />
+  );
 };
 
 export default Product;
@@ -42,6 +48,8 @@ export async function getServerSideProps(ctx) {
   const products = await getProductList('products', {
     ...queryObject
   });
+
+  console.log(products);
   return {
     props: {
       products: products,

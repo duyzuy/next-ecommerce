@@ -1,7 +1,7 @@
 import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
-  getProductDetail,
+  getProductBySlug,
   getProductsByIds,
   getReviewsByProductId
 } from '../../../api/product';
@@ -19,11 +19,12 @@ import ProductInfo from '../../../container/ProductDetail/ProductInfo';
 import RightSidebar from '../../../container/ProductDetail/RightSidebar';
 import { isValidEmail } from '../../../utils/validate';
 import styles from '../../../styles/singleproduct.module.scss';
+import { getProductList, getSlugFromProducts } from '../../../api/product';
 
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
-  console.log(data);
+
   const { breadItems } = useBreadcrumb(router);
 
   const [productReviews, setProductReviews] = useState(reviews);
@@ -122,6 +123,9 @@ const ProductDetail = (props) => {
   //     console.log(reviewList);
   //   })();
   // }, [data.id]);
+  if (router.isFallback) {
+    return <div>Loading...</div>;
+  }
   return (
     <div className={styles.ec__product__single}>
       <SEO title={data?.name} description="bep tu nhap khau chinh hang" />
@@ -144,14 +148,14 @@ const ProductDetail = (props) => {
               <div className="ec__product--content product-description">
                 <ProductDescriptions
                   title="Thông tin sản phẩm"
-                  description={data.description}
+                  description={data?.description}
                 />
                 <div className="divider"></div>
                 <ProductReview
                   title="Nhận xét & đánh giá"
                   reviews={productReviews}
-                  ratingCount={data.rating_count}
-                  averageRating={data.average_rating}
+                  ratingCount={data?.rating_count}
+                  averageRating={data?.average_rating}
                   product={data}
                   onSubmitReview={handleSubmitReview}
                   onLoadMore={loadMoreReviews}
@@ -191,23 +195,47 @@ const ProductDetail = (props) => {
 
 export default ProductDetail;
 
-export async function getServerSideProps(ctx) {
-  const { params } = ctx;
-
-  const response = await getProductDetail({
-    slug: params.slug
+export async function getStaticPaths() {
+  const products = await getSlugFromProducts('products', {
+    page: 1,
+    per_page: 5,
+    order: 'desc',
+    status: 'publish',
+    orderby: 'date',
+    type: 'simple',
+    stock_status: 'instock',
+    featured: false
   });
 
-  const reviews = await getReviewsByProductId(response.product.id);
+  let paths = products.data.map((prd) => ({
+    params: { slug: prd.slug }
+  }));
+  return {
+    paths: paths,
+    fallback: true
+  };
+}
 
-  const { related_ids, upsell_ids } = response.product;
+export async function getStaticProps(ctx) {
+  const { params, locales, locale } = ctx;
+  console.log(`regenerate product detail ${params.slug}`);
+  const response = await getProductBySlug(params.slug);
+  if (response.statusCode === 404) {
+    return {
+      notFound: true
+    };
+  }
+  const reviews = await getReviewsByProductId(response.data.id);
+
+  const { related_ids, upsell_ids } = response.data;
   const productRelated = await getProductsByIds(related_ids);
 
   return {
     props: {
-      data: response.product,
+      data: response.data,
       reviews: reviews,
       productRelated: productRelated
-    }
+    },
+    revalidate: 10
   };
 }

@@ -5,7 +5,12 @@ export const getCategories = async (params) => {
       ...params
     })
     .then((response) => {
-      return response.data;
+      return response.data.map((cat) => ({
+        id: cat.id,
+        slug: cat.slug,
+        image: cat.image,
+        name: cat.name
+      }));
     })
     .catch((error) => {
       return error.response;
@@ -27,13 +32,28 @@ export const getProductListByCatId = async (catId, queryObject) => {
       ...queryObject,
       category: catId
     })
-    .then((res) => ({
-      data: res.data,
-      totalItems: res.headers['x-wp-total'],
-      totalPage: res.headers['x-wp-totalpages']
-    }))
+    .then((res) => {
+      const prds = res.data.map((prd) => ({
+        id: prd.id,
+        name: prd.name,
+        slug: prd.slug,
+        type: prd.type,
+        status: prd.status,
+        price: prd.price,
+        regular_price: prd.regular_price,
+        sale_price: prd.sale_price,
+        average_rating: prd.average_rating,
+        images: prd.images,
+        attributes: prd.attributes,
+        stock_status: prd.stock_status
+      }));
+      return {
+        data: prds,
+        totalItems: res.headers['x-wp-total'],
+        totalPage: res.headers['x-wp-totalpages']
+      };
+    })
     .catch((error) => {
-      console.log(error);
       return error.response.data;
     });
 };
@@ -41,7 +61,6 @@ export const getCategoryBySlug = async (slug) => {
   return await wcApi
     .get(`products/categories`, { slug: slug })
     .then((res) => {
-      console.log(res);
       if (res.data.length === 0) {
         return {
           statusCode: 404,
@@ -54,8 +73,7 @@ export const getCategoryBySlug = async (slug) => {
       };
     })
     .catch((err) => {
-      console.log(err);
-      return err.response;
+      return err.response.data;
     });
 };
 
@@ -67,9 +85,26 @@ export const getProductList = async (url, params) => {
       totalItems: res.headers['x-wp-total'],
       totalPage: res.headers['x-wp-totalpages']
     }))
-    .catch((error) => error.data);
+    .catch((error) => error.response);
 
   return products;
+};
+
+export const getSlugFromProducts = async (url, params) => {
+  return await wcApi
+    .get(`products`, { ...params })
+    .then((res) => {
+      const prds = res.data.map((prd) => ({
+        id: prd.id,
+        slug: prd.slug
+      }));
+      return {
+        data: prds,
+        totalItems: res.headers['x-wp-total'],
+        totalPage: res.headers['x-wp-totalpages']
+      };
+    })
+    .catch((error) => error.response);
 };
 
 export const getProductByIds = async (ids) => {
@@ -78,20 +113,29 @@ export const getProductByIds = async (ids) => {
     .then((res) => {
       return res.data;
     })
-    .catch((error) => error.data);
+    .catch((error) => error.response.data);
 
   return products;
 };
 
-export const getProductDetail = async (params) => {
-  const productDetail = await wcApi
-    .get(`products`, { ...params })
-    .then((res) => res.data[0])
-    .catch((error) => error.data);
+export const getProductBySlug = async (slug) => {
+  return await wcApi
+    .get(`products`, { slug: slug })
+    .then((res) => {
+      if (res.data.length === 0) {
+        return {
+          statusCode: 404,
+          data: res.data,
+          message: 'no product found'
+        };
+      }
 
-  return {
-    product: productDetail
-  };
+      return {
+        statusCode: res.status,
+        data: res.data[0]
+      };
+    })
+    .catch((error) => error.response.data);
 };
 
 export const getReviewsByProductId = async (
@@ -110,7 +154,7 @@ export const getReviewsByProductId = async (
       return res.data;
     })
     .catch((error) => {
-      return error.data;
+      return error.response.data;
     });
 
   return {
@@ -122,7 +166,23 @@ export const getReviewsByProductId = async (
 export const getProductsByIds = async (ids) => {
   const products = await wcApi
     .get('products', { include: [...ids] })
-    .then((res) => res.data)
+    .then((res) => {
+      const prds = res.data.map((prd) => ({
+        id: prd.id,
+        name: prd.name,
+        slug: prd.slug,
+        type: prd.type,
+        status: prd.status,
+        price: prd.price,
+        regular_price: prd.regular_price,
+        sale_price: prd.sale_price,
+        average_rating: prd.average_rating,
+        images: prd.images,
+        attributes: prd.attributes,
+        stock_status: prd.stock_status
+      }));
+      return prds;
+    })
     .catch((error) => error.data);
 
   return products;
@@ -146,12 +206,9 @@ export const createProductReview = async (prdId, data) => {
   return response;
 };
 
-export const getProductByCategoryId = async (
-  catId,
-  params = { perPage: 16 }
-) => {
+export const getProductByCategoryId = async (catId, params) => {
   //check categoryID avaiable
-
+  console.log(params);
   const cat = await wcApi
     .get(`products/categories/${catId}`)
     .then((res) => {
@@ -172,12 +229,29 @@ export const getProductByCategoryId = async (
     const prdData = await wcApi
       .get(`products`, {
         category: catId,
-        per_page: params.perPage,
-        page: (params.page && params.page) || 1
+        per_page: (params.perPage && params.perPage) || 4,
+        page: (params.page && params.page) || 1,
+        status: 'publish',
+        type: 'simple',
+        stock_status: 'instock'
       })
       .then((res) => {
+        const prds = res.data.map((prd) => ({
+          id: prd.id,
+          name: prd.name,
+          slug: prd.slug,
+          type: prd.type,
+          status: prd.status,
+          price: prd.price,
+          regular_price: prd.regular_price,
+          sale_price: prd.sale_price,
+          average_rating: prd.average_rating,
+          images: prd.images,
+          attributes: prd.attributes,
+          stock_status: prd.stock_status
+        }));
         return {
-          data: res.data,
+          data: prds,
           total: res.headers['x-wp-total'],
           totalPages: res.headers['x-wp-totalpages'],
           page: (params.page && params.page) || 1
@@ -202,19 +276,4 @@ export const getProductByCategoryId = async (
     status: cat.status,
     data: cat.data
   };
-};
-
-export const getCategires = async (params) => {
-  const response = await wcApi
-    .get(`products/categories`, {
-      ...params
-    })
-    .then((res) => {
-      return res.data;
-    })
-    .catch((error) => {
-      return error.response.data;
-    });
-
-  return response;
 };

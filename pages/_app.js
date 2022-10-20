@@ -5,12 +5,22 @@ import 'semantic-ui-css/semantic.min.css';
 import '../styles/global.scss';
 import 'swiper/css/bundle';
 import { getCategories } from '../api/product';
+import useDevice from '../hooks/useDevice';
 function MyApp(props) {
   const { Component, pageProps, appData } = props;
 
+  // if (device.isMobile()) {
+  //   return (
+  //     <AppProvider>
+  //       <Layout {...appData} device="mobile">
+  //         <Component {...pageProps} />
+  //       </Layout>
+  //     </AppProvider>
+  //   );
+  // }
   return (
     <AppProvider>
-      <Layout {...appData}>
+      <Layout {...appData} device="desktop">
         <Component {...pageProps} />
       </Layout>
     </AppProvider>
@@ -23,6 +33,7 @@ MyApp.getInitialProps = async (ctx) => {
     hide_empty: true
   });
 
+  console.log(ctx);
   return {
     appData: {
       categories: categories

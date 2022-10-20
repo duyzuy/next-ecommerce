@@ -1,0 +1,10 @@
+.page__404{
+    text-align: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+
+    :global .number-404{
+        font-size: 40px;
+        line-height: 60px;
+    }
+}

@@ -18,7 +18,7 @@ const ProductInfo = ({ title, informations }) => {
       </Header>
       <div className="ec__product--infor">
         <div className="ec__product--attr">
-          {informations.map((attr, index) => (
+          {informations?.map((attr, index) => (
             <div className="attr-item" key={`attr-item-${index}`}>
               <p className="attr-label">{attr.name}</p>
               <p className="arrr-names">
