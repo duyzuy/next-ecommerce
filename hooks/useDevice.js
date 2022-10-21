@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 const getMobileDetect = (userAgent) => {
   const isAndroid = () => Boolean(userAgent.match(/Android/i));
@@ -18,7 +18,17 @@ const getMobileDetect = (userAgent) => {
   };
 };
 const useDevice = () => {
-  // useEffect(() => {}, []);
+  // const [device, setDevice] = useState({});
+  // const userAgent =
+  //   typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
+  // useEffect(() => {
+  //   const detect = getMobileDetect(userAgent);
+
+  //   setDevice({
+  //     ...detect
+  //   });
+  // }, []);
+  // console.log(device);
   const userAgent =
     typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
   return getMobileDetect(userAgent);
