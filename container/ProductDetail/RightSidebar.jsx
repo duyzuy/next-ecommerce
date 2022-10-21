@@ -2,6 +2,7 @@ import Link from 'next/link';
 import * as Icon from 'react-feather';
 import Rating from '../../components/Rating';
 import Price from '../../components/Price';
+import Button from '../../components/Button';
 const RightSidebar = (props) => {
   const { data, addToCart } = props;
   return (
@@ -64,13 +65,15 @@ const RightSidebar = (props) => {
               salePrice={data?.sale_price}
             />
             <div className="ec__product--action">
-              <button
+              <Button
+                fluid
+                color="primary"
+                icon={() => <Icon.ShoppingCart size={20} />}
                 onClick={() => addToCart(data.id, data)}
-                className="ec__product--addToCard"
               >
-                <Icon.ShoppingCart size={16} />
+                {' '}
                 Thêm vào giỏ hàng
-              </button>
+              </Button>
             </div>
           </div>
         </div>

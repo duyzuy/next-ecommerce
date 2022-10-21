@@ -1,0 +1,13 @@
+.home__leadr{
+    padding-top: 30px;
+    padding-bottom: 30px;
+    background-color: #fff;
+    margin-bottom: 30px;
+    :global .ec__section{
+        margin-bottom: 30px;
+        &:last-child{
+            margin-bottom: 0;
+        }
+      }
+      
+}

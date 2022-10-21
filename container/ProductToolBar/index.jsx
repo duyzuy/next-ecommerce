@@ -4,24 +4,47 @@ import {
   productQueryParam,
   productQueryValue
 } from '../../constants/queryParams';
+import { Select } from 'semantic-ui-react';
 const ProductToolBar = ({ onFilterChangeRoute, filter, isLoading }) => {
   const onFilter = (key, value) => {
     if (isLoading) return;
     onFilterChangeRoute(key, value);
   };
+
+  const countryOptions = [
+    { key: 'af', value: 'af', text: 'Afghanistan' },
+    { key: 'ax', value: 'ax', text: 'Aland Islands' },
+    { key: 'al', value: 'al', text: 'Albania' },
+    { key: 'dz', value: 'dz', text: 'Algeria' },
+    { key: 'as', value: 'as', text: 'American Samoa' },
+    { key: 'ad', value: 'ad', text: 'Andorra' },
+    { key: 'ao', value: 'ao', text: 'Angola' },
+    { key: 'ai', value: 'ai', text: 'Anguilla' },
+    { key: 'ag', value: 'ag', text: 'Antigua' },
+    { key: 'ar', value: 'ar', text: 'Argentina' },
+    { key: 'am', value: 'am', text: 'Armenia' },
+    { key: 'aw', value: 'aw', text: 'Aruba' },
+    { key: 'au', value: 'au', text: 'Australia' },
+    { key: 'at', value: 'at', text: 'Austria' },
+    { key: 'az', value: 'az', text: 'Azerbaijan' },
+    { key: 'bs', value: 'bs', text: 'Bahamas' },
+    { key: 'bh', value: 'bh', text: 'Bahrain' },
+    { key: 'bd', value: 'bd', text: 'Bangladesh' },
+    { key: 'bb', value: 'bb', text: 'Barbados' },
+    { key: 'by', value: 'by', text: 'Belarus' },
+    { key: 'be', value: 'be', text: 'Belgium' },
+    { key: 'bz', value: 'bz', text: 'Belize' },
+    { key: 'bj', value: 'bj', text: 'Benin' }
+  ];
   return (
     <div className="ec__product--tools">
       <div className="tool-inner">
-        <div className="tool-filter">
-          <span className="ec__icon">
-            <Icon.Filter size={16} />
-          </span>
-          Lọc Sản phẩm
-        </div>
-        <div className="tool-sort desc">
+        <div className="tool-filter">Sắp xếp sản phẩm theo</div>
+        <Select placeholder="Select your country" options={countryOptions} />
+        {/* <div className="tool-sort desc">
           <Input
             asCheckbox
-            content="Mới nhất"
+            label="Mới nhất"
             icon={() => <Icon.Star size={10} />}
             name="productOrderBy"
             value="date"
@@ -35,7 +58,7 @@ const ProductToolBar = ({ onFilterChangeRoute, filter, isLoading }) => {
         <div className="tool-sort desc">
           <Input
             asCheckbox
-            content="Đánh giá"
+            label="Đánh giá"
             icon={() => <Icon.Star size={10} />}
             name="productOrderBy"
             value="rating"
@@ -49,7 +72,7 @@ const ProductToolBar = ({ onFilterChangeRoute, filter, isLoading }) => {
         <div className="tool-sort desc">
           <Input
             asCheckbox
-            content="Giá"
+            label="Giá"
             icon={() => <Icon.Star size={10} />}
             name="productOrderBy"
             value="price"
@@ -63,7 +86,7 @@ const ProductToolBar = ({ onFilterChangeRoute, filter, isLoading }) => {
         <div className="tool-sort desc">
           <Input
             asRadio
-            content="Giá từ cao - thấp"
+            label="Giá từ cao - thấp"
             icon={() => <Icon.ArrowDown size={10} />}
             name="productPrice"
             value="desc"
@@ -77,7 +100,7 @@ const ProductToolBar = ({ onFilterChangeRoute, filter, isLoading }) => {
         <div className="tool-sort asc">
           <Input
             asRadio
-            content="Giá từ thấp - cao"
+            label="Giá từ thấp - cao"
             icon={() => <Icon.ArrowUp size={10} />}
             id="priceAsc"
             value="asc"
@@ -87,7 +110,7 @@ const ProductToolBar = ({ onFilterChangeRoute, filter, isLoading }) => {
               onFilter(productQueryParam.ORDER, productQueryValue.ASC)
             }
           />
-        </div>
+        </div> */}
       </div>
     </div>
   );

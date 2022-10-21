@@ -8,6 +8,8 @@ import TopPromote from '../container/TopPromote';
 import { AppContext } from '../contexts';
 import { getProductByCategoryId, getCategires } from '../api/product';
 import ProductCatList from '../container/ProductCatList';
+import SingleBanner from '../container/SingleBanner';
+import styles from '../styles/home.module.scss';
 const Home = (props) => {
   const { brand, hutmui, hongngoai, gas, beptu } = props;
 
@@ -17,8 +19,11 @@ const Home = (props) => {
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
       <div className="home__wrap">
-        <TopPromote banner={TOP_PROMOTIONS} />
-        {/* <Brands data={brand} /> */}
+        <div className={styles.home__leadr}>
+          <TopPromote banner={TOP_PROMOTIONS} />
+          <SingleBanner />
+          <Brands data={brand} />
+        </div>
         <ProductCatList
           slider
           id={hutmui.id}

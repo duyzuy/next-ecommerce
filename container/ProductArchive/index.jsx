@@ -14,11 +14,14 @@ import { productQueryParam } from '../../constants/queryParams';
 import Breadcrumb from '../../components/BreadCrumb';
 import SEO from '../../components/common/Seo';
 import { useBreadcrumb } from '../../hooks/useBreadcrumb';
+import { client } from '../../api/client';
+
 const ProductArchive = (props) => {
   const { products, isCategory, category, router } = props;
-
+  console.log(productQueryParam);
+  const [productData, setProductData] = useState(products.data);
   const [filter, setFilter] = useState(defaultValue);
-
+  console.log(filter);
   const { query } = router;
   const { breadItems } = useBreadcrumb(router);
 
@@ -30,8 +33,18 @@ const ProductArchive = (props) => {
     return 1;
   }, [query]);
 
-  const onChangePage = (page) => {
-    onFilterChangeRoute(productQueryParam.PAGE, page);
+  const handleChangePage = async (page) => {
+    setIsLoading(true);
+    if (isCategory) {
+      const data = await client.get(`/product`, {
+        category: category.id,
+        page: page,
+        per_page: defaultValue.per_page
+      });
+      setProductData(data.data);
+      setIsLoading(false);
+    }
+    // onFilterChangeRoute(productQueryParam.PAGE, page);
   };
   const onFilterChangeRoute = (key, value) => {
     setIsLoading(true);
@@ -85,15 +98,15 @@ const ProductArchive = (props) => {
             <div className="ec__product--container">
               <SideBar type="category" />
               <div className="ec__product--list">
-                <ProductToolBar
+                {/* <ProductToolBar
                   onFilterChangeRoute={onFilterChangeRoute}
                   filter={filter}
                   isLoading={isLoading}
-                />
+                /> */}
                 <div className="ec__product--items">
                   <Grid columns={3}>
                     <Grid.Row>
-                      {products?.data?.map((prd) => (
+                      {productData.map((prd) => (
                         <Grid.Column key={prd.id}>
                           <Card
                             type={contentType.PRODUCT}
@@ -110,7 +123,7 @@ const ProductArchive = (props) => {
                   totalPage={products?.totalPage}
                   totalItem={products?.totalItem}
                   current={currentPage}
-                  onChangePage={onChangePage}
+                  onChangePage={handleChangePage}
                   isLoading={isLoading}
                   position="right"
                 />

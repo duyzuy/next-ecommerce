@@ -1,20 +1,75 @@
 .register__wrapper{
     background-color: #fff;
-    padding: 60px;
+    margin-top: 30px;
     border-radius: 20px;
+    overflow: hidden;
+    display: flex;
+    :global .col-left{
+        width: 320px;
+        background-color: #fec500;
+    }
+    :global .col-right{
+        padding: 30px;
+        max-width: 450px;
+        margin: auto;
+        flex: 1
+    }
     :global .register-form{
         
     }
     :global .register-header{
         text-align: center;
-        text-transform: uppercase;
+      
         font-weight: bold;
+        margin-bottom: 30px;
         .icon{
             display: inline-block;
-            margin-bottom: 30px;
-            background-color: #f1f1f1;
+            margin-bottom: 20px;
+            // background-color: #f1f1f1;
+            border: 1px solid #f1f1f1;
             padding: 20px;
             border-radius: 50%;
+            line-height: 0;
         }
+    }
+
+    :global .social-account{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 20px;
+        cursor: pointer;
+        .icon{
+            position: relative;
+            width: 24px;
+            height: 24px;
+            display: inline-block;
+          
+        }
+        .acc-facebook, .acc-google{
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            border: 1px solid;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            width: 48%;
+            .text{
+                flex: 1;
+                display: block;
+                text-align: center;
+                font-weight: bold;
+            }
+        }
+        .acc-facebook{
+            border-color: #4460a0;
+            color: #4460a0;
+            
+        }
+        .acc-google{
+            border-color: #e93800;
+            color: #e93800;
+        }
+        
     }
 }

@@ -2,14 +2,23 @@
 .ec__brand{
     background-color: #fff;
 
-    :global .ec__brand--item{
+    :global .brand-item{
         border: 1px solid #f1f1f1;
         text-align: center;
-        color: #3c3c3c;
         border-radius: 10px;
         position: relative;
-        margin-bottom: 30px;
+        text-align: center;
+        padding: 10px;
+
+        .slide-btn{
+            color: #000
+        }
+        .brand-image{
+            width: 80px;
+            margin-left: auto;
+            margin-right: auto;
      
+        }
         .ec__brand--thumbnail{
             width: 100%;
             padding: 10px 20px;

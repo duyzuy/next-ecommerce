@@ -3,6 +3,11 @@ import Slider from '../../components/Slider';
 import { Container, Header } from 'semantic-ui-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import 'swiper/css';
+import 'swiper/css/scrollbar';
+import { Scrollbar } from 'swiper';
+
 import styles from '../../styles/brand.module.scss';
 
 const breakPoint = {
@@ -27,11 +32,43 @@ const Brands = (props) => {
   return (
     <div className={`ec__section ${styles.ec__brand}`}>
       <Container>
-        <Header as="h2" className="ec__title">
+        <Header as="h3" className="ec__title">
           Thương hiệu nổi bật
         </Header>
         <div className="ec__brand--list">
-          <Slider
+          <Swiper
+            spaceBetween={20}
+            slidesPerView={6}
+            scrollbar={{
+              hide: true
+            }}
+            modules={[Scrollbar]}
+            className="cat_list"
+          >
+            {data.map((brand, index) => (
+              <SwiperSlide key={index}>
+                <div className="brand-item">
+                  <div className="brand-image">
+                    <Image
+                      src={brand.src}
+                      layout="responsive"
+                      width={900}
+                      height={450}
+                      placeholder="blur"
+                      blurDataURL={brand.src}
+                      objectFit="contain"
+                    />
+                  </div>
+                  <div className="slide-box">
+                    <Link href={brand.path}>
+                      <a className="slide-btn">{brand.name}</a>
+                    </Link>
+                  </div>
+                </div>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+          {/* <Slider
             itemScroll={2}
             itemView={6}
             asMain
@@ -62,7 +99,7 @@ const Brands = (props) => {
                   </div>
                 </Slider.Item>
               ))}
-          </Slider>
+          </Slider> */}
         </div>
       </Container>
     </div>

@@ -1,19 +1,17 @@
-import { Container, Grid } from 'semantic-ui-react';
-
+import { Container, Grid, Header, Icon } from 'semantic-ui-react';
 import Image from 'next/image';
-
 import Link from 'next/link';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
-import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
-import { FreeMode, Pagination } from 'swiper';
+import { Autoplay, Pagination } from 'swiper';
 import styles from '../../styles/top_promote.module.scss';
+import * as Icons from 'react-feather';
+
 const TopPromote = (props) => {
   const { banner } = props;
   return (
-    <div className={`ec__section ${styles.ec__promote}`}>
+    <div className={`ec__section ${styles.ec_promote}`}>
       <Container>
         <Grid>
           <Grid.Column
@@ -23,11 +21,16 @@ const TopPromote = (props) => {
             className="ec__promote--slide"
           >
             <Swiper
-              spaceBetween={20}
+              spaceBetween={0}
               slidesPerView={1}
-              loop={false}
-              // freeMode={true}
-              modules={[FreeMode, Pagination]}
+              pagination={{
+                dynamicBullets: true
+              }}
+              autoplay={{
+                delay: 5000,
+                disableOnInteraction: false
+              }}
+              modules={[Autoplay, Pagination]}
               className="cat_list"
             >
               {banner.map((item, index) => (
@@ -42,6 +45,17 @@ const TopPromote = (props) => {
                       blurDataURL={item.src}
                       objectFit="cover"
                     />
+                    <div className="slide-box">
+                      <p className="title">{item.name}</p>
+                      <Link href={item.path}>
+                        <a className="slide-btn">
+                          Xem ngay
+                          <span className="icon">
+                            <Icons.ArrowRight size={12} />
+                          </span>
+                        </a>
+                      </Link>
+                    </div>
                   </div>
                 </SwiperSlide>
               ))}

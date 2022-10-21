@@ -2,7 +2,6 @@ import { useMemo, useState } from 'react';
 import { Header } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
 import CommentList from './CommentList';
-import NoRating from './NoRating';
 import ReviewSummary from './ReviewSummary';
 import ReviewForm from './ReviewForm';
 const ProductReview = (props) => {
@@ -15,6 +14,7 @@ const ProductReview = (props) => {
     onSubmitReview,
     onLoadMore
   } = props;
+
   const [isShowForm, setIsShowForm] = useState(false);
   const ratingResults = useMemo(() => {
     const reviewKeys = [5, 4, 3, 2, 1];
@@ -53,6 +53,7 @@ const ProductReview = (props) => {
   const onCloseModal = () => {
     setIsShowForm(false);
   };
+
   return (
     <>
       <Header as="h4" className="ec__product--body--title">
