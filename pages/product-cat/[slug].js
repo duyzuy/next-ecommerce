@@ -68,22 +68,3 @@ export async function getStaticProps(ctx) {
     revalidate: 10
   };
 }
-
-// export async function getServerSideProps(ctx) {
-//   const { query, req, res } = ctx;
-
-//   let queryObject = {};
-//   Object.keys(queryParams).forEach((key) => {
-//     Object.assign(queryObject, {
-//       [queryParams[key]]: isExists(query, queryParams[key])
-//         ? query[queryParams[key]]
-//         : defaultValue[queryParams[key]]
-//     });
-//   });
-
-//   const data = await getProductByCategory(query.slug, { ...queryObject });
-
-//   return {
-//     props: { category: data.category, products: data.products }
-//   };
-// }

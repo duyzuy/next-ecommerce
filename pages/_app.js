@@ -9,14 +9,23 @@ import '../styles/global.scss';
 
 function MyApp(props) {
   const { Component, pageProps, appData } = props;
-  const clDevice = useDevice();
-  console.log({
-    SSR: clDevice.isSSR(),
-    MB: clDevice.isMobile(),
-    DESK: clDevice.isDesktop()
-  });
-  console.log(appData);
-  // if (device.isMobile()) {
+  const { device, ...rest } = appData;
+
+  const getLayout =
+    Component.getLayout ||
+    ((page) => (
+      <Layout {...rest} device={device}>
+        {page}
+      </Layout>
+    ));
+  // const clDevice = useDevice();
+  // console.log({
+  //   SSR: clDevice.isSSR(),
+  //   MB: clDevice.isMobile(),
+  //   DESK: clDevice.isDesktop()
+  // });
+  // console.log(appData);
+  // if (device.isMobile) {
   //   return (
   //     <AppProvider>
   //       <Layout {...appData} device="mobile">
@@ -25,13 +34,7 @@ function MyApp(props) {
   //     </AppProvider>
   //   );
   // }
-  return (
-    <AppProvider>
-      <Layout {...appData} device="desktop">
-        <Component {...pageProps} />
-      </Layout>
-    </AppProvider>
-  );
+  return <AppProvider>{getLayout(<Component {...pageProps} />)}</AppProvider>;
 }
 
 MyApp.getInitialProps = async (ctx) => {

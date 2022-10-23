@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState, useMemo, memo } from 'react';
 import { usePagination } from '../../hooks/usePagination';
 import * as Icon from 'react-feather';
 import { DOT, paginateAction } from '../../constants/constants';
@@ -20,7 +20,7 @@ const Pagination = (props) => {
     currentPage: currentPage,
     pageRange: 3
   });
-
+  console.log('paginate', currentPage);
   const handleSelectPage = (action, page) => {
     switch (action) {
       case paginateAction.NEXT:
@@ -113,4 +113,4 @@ const Pagination = (props) => {
     </div>
   );
 };
-export default Pagination;
+export default memo(Pagination);

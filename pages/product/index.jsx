@@ -49,7 +49,6 @@ export async function getServerSideProps(ctx) {
     ...queryObject
   });
 
-  console.log(products);
   return {
     props: {
       products: products,

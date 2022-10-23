@@ -63,7 +63,9 @@ const Home = (props) => {
     </>
   );
 };
-
+// Home.getLayout = function getLayout(comp) {
+//   return <>{comp}</>;
+// };
 export async function getStaticProps(ctx) {
   console.log('regeneration home page');
   const prdHongNgoai = await getProductByCategoryId(19, { perPage: 10 });

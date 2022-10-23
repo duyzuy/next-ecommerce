@@ -56,6 +56,7 @@ const Register = (props) => {
                   width={20}
                   height={20}
                   objectFit="cover"
+                  alt="google"
                 />
               </span>
               <span className="text">Google</span>
@@ -68,6 +69,7 @@ const Register = (props) => {
                   width={20}
                   height={20}
                   objectFit="contain"
+                  alt="facebook"
                 />
               </span>
               <span className="text">Facebook</span>

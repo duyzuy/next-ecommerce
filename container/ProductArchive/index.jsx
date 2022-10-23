@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { Container, Header, Grid } from 'semantic-ui-react';
 import Card from '../../components/Card';
@@ -18,22 +18,24 @@ import { client } from '../../api/client';
 
 const ProductArchive = (props) => {
   const { products, isCategory, category, router } = props;
-  console.log(productQueryParam);
+
   const [productData, setProductData] = useState(products.data);
   const [filter, setFilter] = useState(defaultValue);
-  console.log(filter);
+
   const { query } = router;
   const { breadItems } = useBreadcrumb(router);
 
   const [isLoading, setIsLoading] = useState(false);
-  const currentPage = useMemo(() => {
-    if (!isEmpty(query) && isExists(query, 'page')) {
-      return Number(query['page']);
-    }
-    return 1;
-  }, [query]);
+  const [currentPage, setCurrentPage] = useState(1);
+  // const currentPage = useMemo(() => {
+  //   if (!isEmpty(query) && isExists(query, 'page')) {
+  //     return Number(query['page']);
+  //   }
 
-  const handleChangePage = async (page) => {
+  //   return 1;
+  // }, [query, router.query.slug]);
+  console.log(currentPage);
+  const handleChangePage = useCallback(async (page) => {
     setIsLoading(true);
     if (isCategory) {
       const data = await client.get(`/product`, {
@@ -42,14 +44,14 @@ const ProductArchive = (props) => {
         per_page: defaultValue.per_page
       });
       setProductData(data.data);
-      setIsLoading(false);
+      setCurrentPage(page);
     }
-    // onFilterChangeRoute(productQueryParam.PAGE, page);
-  };
+    onFilterChangeRoute(productQueryParam.PAGE, page);
+    setIsLoading(false);
+  }, []);
   const onFilterChangeRoute = (key, value) => {
-    setIsLoading(true);
     let path = router.asPath;
-    const newQueryString = updateQueryFromString(path, {
+    const newPath = updateQueryFromString(path, {
       key,
       value
     });
@@ -60,8 +62,8 @@ const ProductArchive = (props) => {
         [key]: value
       };
     });
-    path = `${path}?${key}=${value}`;
-    router.push(newQueryString);
+
+    router.push(newPath);
   };
 
   const breadcrumbs = useMemo(() => {
@@ -79,7 +81,14 @@ const ProductArchive = (props) => {
   }, [breadItems, category]);
   useEffect(() => {
     setIsLoading(false);
-  }, [router.asPath]);
+
+    setProductData(products.data);
+    if (!isEmpty(query) && isExists(query, 'page')) {
+      setCurrentPage(Number(query['page']));
+    } else {
+      setCurrentPage(1);
+    }
+  }, [router.query.slug]);
   return (
     <div className="layout has-sidebar">
       <SEO
