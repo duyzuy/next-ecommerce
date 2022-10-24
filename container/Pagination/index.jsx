@@ -8,40 +8,40 @@ const Pagination = (props) => {
     type,
     totalPage,
     totalItem,
-    current,
+    currentPage,
+    onSetcurrentPage,
     onChangePage,
     isLoading,
     position
   } = props;
 
-  const [currentPage, setCurrentPage] = useState(current);
-  const [firstLoad, setFirstLoad] = useState(true);
+  // const [currentPage, setCurrentPage] = useState(current);
+
   const paginations = usePagination({
     totalPage: Number(totalPage),
     currentPage: currentPage,
     pageRange: 3
   });
-  // console.log('paginate', current);
+  console.log('paginate', currentPage);
   const handleSelectPage = (action, page) => {
     switch (action) {
       case paginateAction.NEXT:
         {
           if (currentPage === Number(totalPage) || isLoading === true) return;
-          setCurrentPage((prevState) => prevState + 1);
+          onSetcurrentPage((prevState) => prevState + 1);
         }
         break;
       case paginateAction.PREV:
         {
           if (currentPage <= 1 || isLoading === true) return;
-          setCurrentPage((prevState) => prevState - 1);
+          onSetcurrentPage((prevState) => prevState - 1);
         }
         break;
       default: {
         if (isLoading === true) return;
-        setCurrentPage(page);
+        onSetcurrentPage(page);
       }
     }
-    setFirstLoad(false);
   };
   const classes = useMemo(() => {
     let cls = 'ec__pagination';
@@ -56,10 +56,15 @@ const Pagination = (props) => {
     return cls;
   }, [position]);
 
-  useEffect(() => {
-    // if (firstLoad) return;
-    onChangePage(currentPage);
-  }, [currentPage]);
+  // useEffect(() => {
+  //   // if (firstLoad) return;
+  //   onChangePage(currentPage);
+  // }, [currentPage]);
+  // useEffect(() => {
+  //   // if (firstLoad) return;
+  //   onChangePage(currentPage);
+  // }, [current]);
+
   if (paginations.length <= 1) {
     return <></>;
   }
