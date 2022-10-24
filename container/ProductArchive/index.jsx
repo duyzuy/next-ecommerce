@@ -31,10 +31,19 @@ const ProductArchive = (props) => {
   //   if (!isEmpty(query) && isExists(query, 'page')) {
   //     return Number(query['page']);
   //   }
-
   //   return 1;
   // }, [query, router.query.slug]);
-  console.log(currentPage);
+  // console.log('archive', currentPage);
+  const queryParams = useMemo(() => {
+    if (isCategory) {
+      return {
+        slug: category.slug
+      };
+    }
+    return {};
+  }, [category]);
+  console.log(queryParams);
+  // console.log(router);
   const handleChangePage = useCallback(async (page) => {
     setIsLoading(true);
     if (isCategory) {
@@ -63,7 +72,17 @@ const ProductArchive = (props) => {
       };
     });
 
-    router.push(newPath);
+    // const asPath = isCategory ? `/product-cat/${category?.slug}` : '/product';
+    router.push(
+      {
+        pathname: router.pathname,
+        query: {
+          ...queryParams
+        }
+      },
+      newPath,
+      { shallow: true }
+    );
   };
 
   const breadcrumbs = useMemo(() => {
@@ -79,9 +98,8 @@ const ProductArchive = (props) => {
     }
     return breadItems;
   }, [breadItems, category]);
-  useEffect(() => {
-    setIsLoading(false);
 
+  useEffect(() => {
     setProductData(products.data);
     if (!isEmpty(query) && isExists(query, 'page')) {
       setCurrentPage(Number(query['page']));
@@ -89,6 +107,7 @@ const ProductArchive = (props) => {
       setCurrentPage(1);
     }
   }, [router.query.slug]);
+
   return (
     <div className="layout has-sidebar">
       <SEO

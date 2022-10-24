@@ -13,6 +13,7 @@ const Pagination = (props) => {
     isLoading,
     position
   } = props;
+
   const [currentPage, setCurrentPage] = useState(current);
   const [firstLoad, setFirstLoad] = useState(true);
   const paginations = usePagination({
@@ -20,7 +21,7 @@ const Pagination = (props) => {
     currentPage: currentPage,
     pageRange: 3
   });
-  console.log('paginate', currentPage);
+  // console.log('paginate', current);
   const handleSelectPage = (action, page) => {
     switch (action) {
       case paginateAction.NEXT:
@@ -56,7 +57,7 @@ const Pagination = (props) => {
   }, [position]);
 
   useEffect(() => {
-    if (firstLoad) return;
+    // if (firstLoad) return;
     onChangePage(currentPage);
   }, [currentPage]);
   if (paginations.length <= 1) {
