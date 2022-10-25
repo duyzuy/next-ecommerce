@@ -1,17 +1,31 @@
 @use './foundation/variables' as *;
 
 .ec__pagination{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &.is-between{
+        justify-content: space-between;
+    }
+
     &.right{
+        flex-direction: row;
         .ec__pagination--inner{
             justify-content: flex-end;
         }
-        
     }
     &.left{
+        flex-direction: row-reverse;
         .ec__pagination--inner{
             justify-content: flex-start;
         }
-        
+    }
+    &.is-loading{
+        .ec__pagination--item{
+            &.active{
+                opacity: 0.5;
+            }
+        }
     }
     &--inner{
         display: flex;
@@ -21,51 +35,36 @@
     &--items{
         display: flex;
         list-style-type: none;
-        padding-block-start: 0;
-        padding-inline-start: 0;
         justify-content: center;
-        margin-left: 10px;
-        margin-right: 10px;
+        margin: 0 10px;
         box-shadow: 0px 0px 12px rgb(0 0 0 / 6%);
         background-color: #fff;
-        border-radius: 30px;
+        border-radius: 60px;
         padding: 5px;
-        &:hover .ec__pagination--item{
-            background-color: inherit;
-            color: inherit
-        }
     }
 
     &--item{
-        display: inline-block;
-        width: 36px;
-        height: 36px;
-        border: 1px solid transparent;
-        background-color: transparent;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: 36px;
+        height: 36px;
+        background-color: transparent;
         font-size: 13px;
-        cursor: pointer;
-        border-radius: 5px;
         border-radius: 50%;
         border: 1px solid transparent;
-
         &.active{
-            // background-color: #C93939;
             background-color: #4167c3;
             color: #fff;
-        } &:hover{
-            background-color: #4167c3 !important;
-            color: #fff !important;
+            pointer-events: none;
         }
+        &:not(.active,.dot):hover {
+            background-color: #f4f8ff;
+            cursor: pointer;
 
-        // &.next, &.prev{
-        //     border-color: #C93939;
-        // }
+        }
     }
-  
-    // &--item + &--item{
-    //     margin-left: 10px;
-    // }
+    &--item + &--item{
+        margin-left: 5px;
+    }
 }

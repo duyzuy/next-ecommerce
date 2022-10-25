@@ -27,13 +27,7 @@ const ProductArchive = (props) => {
 
   const [isLoading, setIsLoading] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  // const currentPage = useMemo(() => {
-  //   if (!isEmpty(query) && isExists(query, 'page')) {
-  //     return Number(query['page']);
-  //   }
-  //   return 1;
-  // }, [query, router.query.slug]);
-  // console.log('archive', currentPage);
+
   const queryParams = useMemo(() => {
     if (isCategory) {
       return {
@@ -42,21 +36,24 @@ const ProductArchive = (props) => {
     }
     return {};
   }, [category]);
-  console.log('archive', currentPage);
-  const handleChangePage = useCallback(async (page) => {
-    setIsLoading(true);
-    if (isCategory) {
-      const data = await client.get(`/product`, {
-        category: category.id,
-        page: page,
-        per_page: defaultValue.per_page
-      });
-      setProductData(data.data);
-      setCurrentPage(page);
-    }
-    onFilterChangeRoute(productQueryParam.PAGE, page);
-    setIsLoading(false);
-  }, []);
+
+  const handleChangePage = useCallback(
+    async (page) => {
+      setIsLoading(true);
+      if (isCategory) {
+        const data = await client.get(`/product`, {
+          category: category.id,
+          page: page,
+          per_page: defaultValue.per_page
+        });
+        setProductData(data.data);
+        setCurrentPage(page);
+      }
+      onFilterChangeRoute(productQueryParam.PAGE, page);
+      setIsLoading(false);
+    },
+    [router.query.slug]
+  );
   const onFilterChangeRoute = (key, value) => {
     let path = router.asPath;
     const newPath = updateQueryFromString(path, {
@@ -124,11 +121,13 @@ const ProductArchive = (props) => {
             <div className="ec__product--container">
               <SideBar type="category" />
               <div className="ec__product--list">
-                {/* <ProductToolBar
+                <ProductToolBar
                   onFilterChangeRoute={onFilterChangeRoute}
                   filter={filter}
-                  isLoading={isLoading}
-                /> */}
+                  totalPage={products?.totalPage}
+                  totalItem={products?.totalItems}
+                  currentPage={currentPage}
+                />
                 <div className="ec__product--items">
                   <Grid columns={3}>
                     <Grid.Row>
@@ -147,7 +146,8 @@ const ProductArchive = (props) => {
                 <Pagination
                   type={contentType.PRODUCT}
                   totalPage={products?.totalPage}
-                  totalItem={products?.totalItem}
+                  totalItem={products?.totalItems}
+                  showStatus={true}
                   currentPage={currentPage}
                   onSetcurrentPage={handleChangePage}
                   isLoading={isLoading}

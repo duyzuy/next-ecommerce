@@ -17,27 +17,27 @@
             margin-bottom: 2rem;
         }
         .ec__product--tools{
-            padding: 10px 0;
-            margin-bottom: 20px;
-            .tool-inner{
-                display: flex;
-                align-items: center;
-                >div{
+            // padding: 10px 0;
+            // margin-bottom: 20px;
+            // .tool-inner{
+            //     display: flex;
+            //     align-items: center;
+            //     >div{
 
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-                .tool-sort {
-                    margin-left: auto;
-                }
-                .tool-sort  + .tool-sort {
-                    margin-left: 10px;
-                }
-            }
-            .tool-filter{
+            //         display: flex;
+            //         align-items: center;
+            //         justify-content: center;
+            //     }
+            //     .tool-sort {
+            //         margin-left: auto;
+            //     }
+            //     .tool-sort  + .tool-sort {
+            //         margin-left: 10px;
+            //     }
+            // }
+            // .tool-filter{
 
-            }
+            // }
         }
     }
   

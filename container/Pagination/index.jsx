@@ -10,12 +10,10 @@ const Pagination = (props) => {
     totalItem,
     currentPage,
     onSetcurrentPage,
-    onChangePage,
     isLoading,
-    position
+    position,
+    showStatus = false
   } = props;
-
-  // const [currentPage, setCurrentPage] = useState(current);
 
   const paginations = usePagination({
     totalPage: Number(totalPage),
@@ -52,24 +50,29 @@ const Pagination = (props) => {
     if (position && position === 'right') {
       cls = cls.concat(' ', 'right');
     }
-
+    if (isLoading) {
+      cls = cls.concat(' ', 'is-loading');
+    }
+    if (showStatus) {
+      cls = cls.concat(' ', 'is-between');
+    }
     return cls;
-  }, [position]);
-
-  // useEffect(() => {
-  //   // if (firstLoad) return;
-  //   onChangePage(currentPage);
-  // }, [currentPage]);
-  // useEffect(() => {
-  //   // if (firstLoad) return;
-  //   onChangePage(currentPage);
-  // }, [current]);
+  }, [position, isLoading]);
 
   if (paginations.length <= 1) {
     return <></>;
   }
   return (
     <div className={classes}>
+      {(showStatus && (
+        <div className="ec__pagination--note">
+          <div>
+            <span>
+              Trang {currentPage} / {totalPage} - {totalItem} sản phẩm
+            </span>
+          </div>
+        </div>
+      )) || <></>}
       <div className="ec__pagination--inner">
         <div
           className="ec__pagination--item prev"
@@ -81,14 +84,7 @@ const Pagination = (props) => {
           {paginations.map((page, index) => {
             if (page === DOT) {
               return (
-                <li
-                  key={index}
-                  className={
-                    currentPage === page
-                      ? 'ec__pagination--item active'
-                      : 'ec__pagination--item'
-                  }
-                >
+                <li key={index} className="ec__pagination--item dot">
                   <span key={page}>{page}</span>
                 </li>
               );

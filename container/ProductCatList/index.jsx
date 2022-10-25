@@ -9,9 +9,10 @@ const ProductCatList = (props) => {
   const { id, name, slug, image, products } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [prds, setPrds] = useState(products);
-
+  const [currentPage, setCurrentPage] = useState(1);
   const handleChangePage = async (page) => {
     setIsLoading(true);
+
     const response = await client.get(`category/${id}`, {
       page: page
     });
@@ -20,6 +21,7 @@ const ProductCatList = (props) => {
       data: response.lists.data,
       page: response.lists.page
     }));
+    setCurrentPage(page);
     setIsLoading(false);
   };
   return (
@@ -51,10 +53,10 @@ const ProductCatList = (props) => {
         <div className="section-footer">
           <Pagination
             totalPage={prds.totalPages}
-            current={prds.page}
             pageRange={3}
             isLoading={isLoading}
-            onChangePage={handleChangePage}
+            currentPage={currentPage}
+            onSetcurrentPage={handleChangePage}
           />
         </div>
       </Container>
