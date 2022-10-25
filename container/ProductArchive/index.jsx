@@ -72,7 +72,6 @@ const ProductArchive = (props) => {
       };
     });
 
-    // const asPath = isCategory ? `/product-cat/${category?.slug}` : '/product';
     router.push(
       {
         pathname: router.pathname,
