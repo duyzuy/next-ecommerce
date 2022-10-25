@@ -42,8 +42,7 @@ const ProductArchive = (props) => {
     }
     return {};
   }, [category]);
-  console.log(queryParams);
-  // console.log(router);
+  console.log('archive', currentPage);
   const handleChangePage = useCallback(async (page) => {
     setIsLoading(true);
     if (isCategory) {
@@ -149,8 +148,8 @@ const ProductArchive = (props) => {
                   type={contentType.PRODUCT}
                   totalPage={products?.totalPage}
                   totalItem={products?.totalItem}
-                  current={currentPage}
-                  onChangePage={handleChangePage}
+                  currentPage={currentPage}
+                  onSetcurrentPage={handleChangePage}
                   isLoading={isLoading}
                   position="right"
                 />
