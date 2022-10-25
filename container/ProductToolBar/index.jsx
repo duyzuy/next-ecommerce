@@ -1,41 +1,52 @@
-import * as Icon from 'react-feather';
-import Input from '../../components/Input';
-import {
-  productQueryParam,
-  productQueryValue
-} from '../../constants/queryParams';
 import Select from '../../components/Select';
+import { useMemo } from 'react';
 const ProductToolBar = ({
-  onFilterChangeRoute,
+  onFilter,
   filter,
   isLoading,
   totalPage,
   currentPage,
   totalItem
 }) => {
-  const onFilter = (key, value) => {
-    if (isLoading) return;
-    onFilterChangeRoute(key, value);
-  };
-
-  const handleSelection = (val) => {
-    console.log(val);
-  };
-  const countryOptions = [
-    { key: 'desc', value: 'date1', text: 'Mới nhất' },
-    { key: 'desc', value: 'rating1', text: 'Nổi bật nhất' },
-    { key: 'asc', value: 'price1', text: 'Giá từ thấp lên cao' },
-    { key: 'desc', value: 'date2', text: 'Mới nhất' },
-    { key: 'desc', value: 'rating2', text: 'Nổi bật nhất' },
-    { key: 'asc', value: 'price2', text: 'Giá từ thấp lên cao' },
-    { key: 'desc', value: 'date3', text: 'Mới nhất' },
-    { key: 'desc', value: 'rating3', text: 'Nổi bật nhất' },
-    { key: 'asc', value: 'price3', text: 'Giá từ thấp lên cao' },
-    { key: 'desc', value: 'date', text: 'Mới nhất' },
-    { key: 'desc', value: 'rating', text: 'Nổi bật nhất' },
-    { key: 'asc', value: 'price', text: 'Giá từ thấp lên cao' },
-    { key: 'desc', value: 'price', text: 'Giá từ cao xuống thấp' }
+  const filterOptions = [
+    {
+      key: '1',
+      value: 'order=desc&orderby=date',
+      text: 'Mới nhất'
+    },
+    {
+      key: '2',
+      value: 'order=desc&orderby=rating',
+      text: 'Nổi bật nhất'
+    },
+    {
+      key: '3',
+      value: 'order=asc&orderby=price',
+      text: 'Giá từ thấp lên cao'
+    },
+    {
+      key: '4',
+      value: 'order=desc&orderby=price',
+      text: 'Giá từ cao xuống thấp'
+    }
   ];
+
+  const handleSelection = (select) => {
+    let queries = select.value.split('&');
+    queries = queries.map((q) => {
+      return {
+        key: q.split('=')[0],
+        value: q.split('=')[1]
+      };
+    });
+    onFilter(queries);
+  };
+  const defaultSelect = useMemo(() => {
+    const filterString = `order=${filter.order}&orderby=${filter.orderby}`;
+
+    return filterOptions.find((filter) => filter.value === filterString);
+  }, [filter.order, filter.orderby]);
+  console.log(defaultSelect);
 
   return (
     <div className="ec__product--tools">
@@ -48,11 +59,13 @@ const ProductToolBar = ({
           </div>
         </div>
         <div className="tool-filter">Sắp xếp sản phẩm theo</div>
+
         <Select
           name="orderby"
           label="Sắp xếp sản phẩm theo"
-          options={countryOptions}
-          onSelection={handleSelection}
+          options={filterOptions}
+          selected={defaultSelect}
+          onSetSelected={handleSelection}
         />
         {/* <div className="tool-sort desc">
           <Input

@@ -2,16 +2,24 @@ import { useState, useRef, useEffect } from 'react';
 import * as Icon from 'react-feather';
 import { isEmpty } from '../../utils/helper';
 const Select = (props) => {
-  const { options, onSelection, label, defaultSelect, placeholder } = props;
+  const {
+    options,
+    onSelection,
+    selected = {},
+    onSetSelected,
+    label,
+    defaultSelect,
+    placeholder
+  } = props;
   const selectRef = useRef();
-  const [selected, setSelected] = useState({});
+  // const [selected, setSelected] = useState({});
   const onSelectionChange = (e, opt) => {
     e.stopPropagation();
-    if (onSelection !== undefined && typeof onSelection === 'function') {
-      onSelection(opt);
-    }
+    // if (onSelection !== undefined && typeof onSelection === 'function') {
+    //   onSelection(opt);
+    // }
 
-    setSelected(opt);
+    onSetSelected(opt);
     selectRef.current.classList.remove('open');
   };
 

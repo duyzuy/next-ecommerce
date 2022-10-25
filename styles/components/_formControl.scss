@@ -40,6 +40,20 @@
                 border: 1px solid #f1f1f1;
                 border-top-width: 0;
                 margin-top: -1px;
+                max-height: 200px;
+                overflow: auto;
+                scroll-snap-type: y mandatory;
+                > div{ 
+                    scroll-snap-stop: normal;
+                    scroll-snap-align: start;
+                }
+                &::-webkit-scrollbar-thumb{
+                    background-color: #4167c3;
+                }
+                &::-webkit-scrollbar {
+                    background-color: #fff;
+                    width: 5px;
+                }
             }
             .select-item{
                 display: flex;

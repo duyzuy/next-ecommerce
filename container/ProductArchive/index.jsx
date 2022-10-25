@@ -36,6 +36,27 @@ const ProductArchive = (props) => {
     }
     return {};
   }, [category]);
+  const onFilter = async (queries) => {
+    // setIsLoading(true);
+    // if (isCategory) {
+    //   const data = await client.get(`/product`, {
+    //     category: category.id,
+    //     page: page,
+    //     per_page: defaultValue.per_page
+    //   });
+    //   setProductData(data.data);
+    //   setCurrentPage(page);
+    // }
+    // onFilterChangeRoute(productQueryParam.PAGE, page);
+    // setIsLoading(false);
+
+    queries.forEach((el) => {
+      setFilter((prevState) => ({
+        ...prevState,
+        [el.key]: el.value
+      }));
+    });
+  };
 
   const handleChangePage = useCallback(
     async (page) => {
@@ -122,7 +143,7 @@ const ProductArchive = (props) => {
               <SideBar type="category" />
               <div className="ec__product--list">
                 <ProductToolBar
-                  onFilterChangeRoute={onFilterChangeRoute}
+                  onFilter={onFilter}
                   filter={filter}
                   totalPage={products?.totalPage}
                   totalItem={products?.totalItems}
