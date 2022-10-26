@@ -1,12 +1,12 @@
 import Select from '../../components/Select';
 import { useMemo } from 'react';
 const ProductToolBar = ({
-  onFilter,
   filter,
   isLoading,
   totalPage,
   currentPage,
-  totalItem
+  totalItem,
+  onSetSelected
 }) => {
   const filterOptions = [
     {
@@ -31,16 +31,16 @@ const ProductToolBar = ({
     }
   ];
 
-  const handleSelection = (select) => {
-    let queries = select.value.split('&');
-    queries = queries.map((q) => {
-      return {
-        key: q.split('=')[0],
-        value: q.split('=')[1]
-      };
-    });
-    onFilter(queries);
-  };
+  // const handleSelection = (select) => {
+  //   let queries = select.value.split('&');
+  //   queries = queries.map((q) => {
+  //     return {
+  //       key: q.split('=')[0],
+  //       value: q.split('=')[1]
+  //     };
+  //   });
+  //   onFilter(queries);
+  // };
   const defaultSelect = useMemo(() => {
     const filterString = `order=${filter.order}&orderby=${filter.orderby}`;
 
@@ -65,7 +65,7 @@ const ProductToolBar = ({
           label="Sắp xếp sản phẩm theo"
           options={filterOptions}
           selected={defaultSelect}
-          onSetSelected={handleSelection}
+          onSetSelected={onSetSelected}
         />
         {/* <div className="tool-sort desc">
           <Input

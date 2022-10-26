@@ -36,57 +36,52 @@ const ProductArchive = (props) => {
     }
     return {};
   }, [category]);
-  const onFilter = async (queries) => {
-    // setIsLoading(true);
-    // if (isCategory) {
-    //   const data = await client.get(`/product`, {
-    //     category: category.id,
-    //     page: page,
-    //     per_page: defaultValue.per_page
-    //   });
-    //   setProductData(data.data);
-    //   setCurrentPage(page);
-    // }
-    // onFilterChangeRoute(productQueryParam.PAGE, page);
-    // setIsLoading(false);
 
-    queries.forEach((el) => {
+  const handleSelection = (select) => {
+    let queries = select.value.split('&');
+    queries = queries.reduce((acm, item) => {
       setFilter((prevState) => ({
         ...prevState,
-        [el.key]: el.value
+        [item.split('=')[0]]: item.split('=')[1]
       }));
-    });
+
+      acm[item.split('=')[0]] = item.split('=')[1];
+
+      return acm;
+    }, {});
+
+    handleFetchData({ params: { ...queries }, action: 'filter' });
   };
 
-  const handleChangePage = useCallback(
-    async (page) => {
-      setIsLoading(true);
-      if (isCategory) {
-        const data = await client.get(`/product`, {
-          category: category.id,
-          page: page,
-          per_page: defaultValue.per_page
-        });
-        setProductData(data.data);
-        setCurrentPage(page);
-      }
-      onFilterChangeRoute(productQueryParam.PAGE, page);
-      setIsLoading(false);
-    },
-    [router.query.slug]
-  );
-  const onFilterChangeRoute = (key, value) => {
+  const handleFetchData = async (data) => {
+    const { params, action } = data;
+    setIsLoading(true);
+
+    //update filter
+    let newFilter = Object.assign(filter, { ...params });
+
+    if (isCategory) {
+      newFilter = {
+        ...newFilter,
+        category: category.id
+      };
+    }
+
+    const prds = await client.get(`/product`, {
+      ...newFilter
+    });
+    setProductData(prds.data);
+    setFilter(newFilter);
+
+    console.log(newFilter);
+    // onUpdateRoutePath(productQueryParam.PAGE, page);
+    setIsLoading(false);
+  };
+  const onUpdateRoutePath = (key, value) => {
     let path = router.asPath;
     const newPath = updateQueryFromString(path, {
       key,
       value
-    });
-
-    setFilter((prevState) => {
-      return {
-        ...prevState,
-        [key]: value
-      };
     });
 
     router.push(
@@ -143,11 +138,11 @@ const ProductArchive = (props) => {
               <SideBar type="category" />
               <div className="ec__product--list">
                 <ProductToolBar
-                  onFilter={onFilter}
                   filter={filter}
                   totalPage={products?.totalPage}
                   totalItem={products?.totalItems}
-                  currentPage={currentPage}
+                  currentPage={filter.page}
+                  onSetSelected={handleSelection}
                 />
                 <div className="ec__product--items">
                   <Grid columns={3}>
@@ -169,8 +164,13 @@ const ProductArchive = (props) => {
                   totalPage={products?.totalPage}
                   totalItem={products?.totalItems}
                   showStatus={true}
-                  currentPage={currentPage}
-                  onSetcurrentPage={handleChangePage}
+                  currentPage={filter.page}
+                  onSetcurrentPage={(page) =>
+                    handleFetchData({
+                      params: { page: page },
+                      action: 'paginate'
+                    })
+                  }
                   isLoading={isLoading}
                   position="right"
                 />
