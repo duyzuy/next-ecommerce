@@ -1,4 +1,4 @@
-export const queryParams = {
+export const productFilterKeys = {
   PAGE: 'page',
   PER_PAGE: 'per_page',
   ORDER: 'order',
@@ -14,18 +14,18 @@ export const queryParams = {
   FEATURED: 'featured'
 };
 
-export const defaultValue = {
-  [queryParams.PAGE]: 1,
-  [queryParams.PER_PAGE]: 24,
-  [queryParams.ORDER]: 'desc' || 'asc',
-  [queryParams.STATUS]: 'publish' || 'private' || 'any',
-  [queryParams.ORDER_BY]: 'date' || 'price' || 'rating',
-  [queryParams.TYPE]: 'simple',
-  [queryParams.ATTRIBUTE]: '',
-  [queryParams.ATTRIBUTE_TERM]: '',
-  // [queryParams.ON_SALE]: true,
-  [queryParams.MIN_PRICE]: 0,
-  [queryParams.MAX_PRICE]: 999999999,
-  [queryParams.STOCK_STATUS]: 'instock' || 'onbackorder' || 'outofstock',
-  [queryParams.FEATURED]: false
+export const productFilterValue = {
+  [productFilterKeys.PAGE]: 1,
+  [productFilterKeys.PER_PAGE]: 24,
+  [productFilterKeys.ORDER]: 'desc',
+  [productFilterKeys.STATUS]: 'publish',
+  [productFilterKeys.ORDER_BY]: 'date',
+  [productFilterKeys.TYPE]: 'simple',
+  [productFilterKeys.ATTRIBUTE]: '',
+  [productFilterKeys.ATTRIBUTE_TERM]: '',
+  // [productFilterKeys.ON_SALE]: true,
+  [productFilterKeys.MIN_PRICE]: 0,
+  [productFilterKeys.MAX_PRICE]: 999999999,
+  [productFilterKeys.STOCK_STATUS]: 'instock' || 'onbackorder' || 'outofstock',
+  [productFilterKeys.FEATURED]: false
 };

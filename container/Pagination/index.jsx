@@ -20,7 +20,7 @@ const Pagination = (props) => {
     currentPage: currentPage,
     pageRange: 3
   });
-  console.log('paginate', currentPage);
+
   const handleSelectPage = (action, page) => {
     switch (action) {
       case paginateAction.NEXT:

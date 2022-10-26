@@ -1,6 +1,5 @@
 import { contentType } from '../../constants/constants';
-import { queryParams, defaultValue } from '../../constants/product';
-import { isEmpty, isExists } from '../../utils/helper';
+import { productFilterValue } from '../../constants/product';
 import { Loader } from 'semantic-ui-react';
 import ProductArchive from '../../container/ProductArchive';
 import {
@@ -50,7 +49,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(ctx) {
   const { params, locales, locale } = ctx;
-
+  console.log(params);
   const category = await getCategoryBySlug(params.slug);
 
   if (category.statusCode === 404) {
@@ -60,7 +59,7 @@ export async function getStaticProps(ctx) {
   }
 
   const productList = await getProductListByCatId(category.data[0].id, {
-    ...defaultValue
+    ...productFilterValue
   });
 
   return {

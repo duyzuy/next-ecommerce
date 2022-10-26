@@ -6,11 +6,10 @@ import SideBar from '../../container/SideBar';
 import Pagination from '../../container/Pagination';
 import ProductToolBar from '../ProductToolBar';
 import { contentType } from '../../constants/constants';
-import { queryParams, defaultValue } from '../../constants/product';
+import { productFilterValue, productFilterKeys } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
 import { updateQueryFromString } from '../../utils';
 import styles from '../../styles/product.module.scss';
-import { productQueryParam } from '../../constants/queryParams';
 import Breadcrumb from '../../components/BreadCrumb';
 import SEO from '../../components/common/Seo';
 import { useBreadcrumb } from '../../hooks/useBreadcrumb';
@@ -20,23 +19,11 @@ const ProductArchive = (props) => {
   const { products, isCategory, category, router } = props;
 
   const [productData, setProductData] = useState(products.data);
-  const [filter, setFilter] = useState(defaultValue);
-
-  const { query } = router;
+  const [filter, setFilter] = useState(productFilterValue);
   const { breadItems } = useBreadcrumb(router);
-
   const [isLoading, setIsLoading] = useState(false);
-  const [currentPage, setCurrentPage] = useState(1);
 
-  const queryParams = useMemo(() => {
-    if (isCategory) {
-      return {
-        slug: category.slug
-      };
-    }
-    return {};
-  }, [category]);
-
+  console.log(filter);
   const handleSelection = (select) => {
     let queries = select.value.split('&');
     queries = queries.reduce((acm, item) => {
@@ -72,18 +59,23 @@ const ProductArchive = (props) => {
     });
     setProductData(prds.data);
     setFilter(newFilter);
+    if (action === 'paginate') {
+      onUpdateRoutePath(productFilterKeys.PAGE, params.page);
+    }
 
-    console.log(newFilter);
-    // onUpdateRoutePath(productQueryParam.PAGE, page);
     setIsLoading(false);
   };
+
   const onUpdateRoutePath = (key, value) => {
     let path = router.asPath;
+    let queryParams = {};
     const newPath = updateQueryFromString(path, {
       key,
       value
     });
-
+    if (isCategory) {
+      queryParams = Object.assign(queryParams, { slug: category.slug });
+    }
     router.push(
       {
         pathname: router.pathname,
@@ -112,11 +104,7 @@ const ProductArchive = (props) => {
 
   useEffect(() => {
     setProductData(products.data);
-    if (!isEmpty(query) && isExists(query, 'page')) {
-      setCurrentPage(Number(query['page']));
-    } else {
-      setCurrentPage(1);
-    }
+    setFilter(productFilterValue);
   }, [router.query.slug]);
 
   return (

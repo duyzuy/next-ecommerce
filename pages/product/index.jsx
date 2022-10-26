@@ -1,5 +1,5 @@
 import { contentType } from '../../constants/constants';
-import { queryParams, defaultValue } from '../../constants/product';
+import { productFilterKeys, productFilterValue } from '../../constants/product';
 import { isEmpty, isExists } from '../../utils/helper';
 import { getProductList } from '../../api/product';
 import ProductArchive from '../../container/ProductArchive';
@@ -28,31 +28,13 @@ export async function getServerSideProps(ctx) {
     'public, s-maxage=10, stale-while-revalidate=59'
   );
 
-  let queryObject = {};
-  Object.keys(queryParams).forEach((key) => {
-    Object.assign(queryObject, {
-      [queryParams[key]]: isExists(query, queryParams[key])
-        ? query[queryParams[key]]
-        : defaultValue[queryParams[key]]
-    });
-  });
-
-  /**
-   *
-   * get data from woocommerce
-   * @params
-   *
-   *
-   */
-
   const products = await getProductList('products', {
-    ...queryObject
+    ...productFilterValue
   });
 
   return {
     props: {
-      products: products,
-      query: { ...queryObject }
+      products: products
     }
   };
 }
