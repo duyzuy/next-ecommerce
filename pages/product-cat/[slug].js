@@ -43,13 +43,13 @@ export async function getStaticPaths() {
 
   return {
     paths: paths,
-    fallback: true // can also be true or 'blocking'
+    fallback: 'blocking' // can also be true or 'blocking'
   };
 }
 
 export async function getStaticProps(ctx) {
   const { params, locales, locale } = ctx;
-  console.log(params);
+
   const category = await getCategoryBySlug(params.slug);
 
   if (category.statusCode === 404) {

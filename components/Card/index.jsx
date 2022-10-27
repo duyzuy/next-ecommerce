@@ -28,7 +28,7 @@ const Card = (props) => {
 
   useEffect(() => {
     router.prefetch(`/product/[slug]`, `/product/${data.slug}`);
-  }, [router, data.slug]);
+  }, []);
   return (
     <>
       {isLoading === true ? (

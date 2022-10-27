@@ -31,16 +31,6 @@ const ProductToolBar = ({
     }
   ];
 
-  // const handleSelection = (select) => {
-  //   let queries = select.value.split('&');
-  //   queries = queries.map((q) => {
-  //     return {
-  //       key: q.split('=')[0],
-  //       value: q.split('=')[1]
-  //     };
-  //   });
-  //   onFilter(queries);
-  // };
   const defaultSelect = useMemo(() => {
     const filterString = `order=${filter.order}&orderby=${filter.orderby}`;
 
@@ -57,15 +47,17 @@ const ProductToolBar = ({
             </span>
           </div>
         </div>
-        <div className="tool-filter">Sắp xếp sản phẩm theo</div>
+        <div className="ec__product--sort">
+          <div className="tool-filter">Sắp xếp sản phẩm theo</div>
 
-        <Select
-          name="orderby"
-          label="Sắp xếp sản phẩm theo"
-          options={filterOptions}
-          selected={defaultSelect}
-          onSetSelected={onSetSelected}
-        />
+          <Select
+            name="orderby"
+            // label="Sắp xếp sản phẩm theo"
+            options={filterOptions}
+            selected={defaultSelect}
+            onSetSelected={onSetSelected}
+          />
+        </div>
       </div>
     </div>
   );

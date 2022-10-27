@@ -68,38 +68,6 @@ const Brands = (props) => {
               </SwiperSlide>
             ))}
           </Swiper>
-          {/* <Slider
-            itemScroll={2}
-            itemView={6}
-            asMain
-            itemSpacing={15}
-            breakPoint={breakPoint}
-          >
-            {data &&
-              data.map((brand, index) => (
-                <Slider.Item key={index}>
-                  <div className="ec__brand--item">
-                    <Link href={brand.path}>
-                      <a className="ec__brand--link">
-                        <div className="ec__brand--thumbnail">
-                          <Image
-                            src={brand.thumbnail}
-                            alt={brand.name}
-                            width={100}
-                            height={40}
-                            layout="responsive"
-                            priority
-                          />
-                        </div>
-                        <div className="ec__brand--text">
-                          <p className="sub--text">{brand.name}</p>
-                        </div>
-                      </a>
-                    </Link>
-                  </div>
-                </Slider.Item>
-              ))}
-          </Slider> */}
         </div>
       </Container>
     </div>

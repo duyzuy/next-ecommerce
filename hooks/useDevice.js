@@ -19,8 +19,8 @@ const getMobileDetect = (userAgent) => {
 };
 const useDevice = () => {
   // const [device, setDevice] = useState({});
-  // const userAgent =
-  //   typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
+  const userAgent =
+    typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
   // useEffect(() => {
   //   const detect = getMobileDetect(userAgent);
 
@@ -29,8 +29,7 @@ const useDevice = () => {
   //   });
   // }, []);
   // console.log(device);
-  const userAgent =
-    typeof navigator === 'undefined' ? 'SSR' : navigator.userAgent;
+
   return getMobileDetect(userAgent);
 };
 

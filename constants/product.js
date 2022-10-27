@@ -21,11 +21,11 @@ export const productFilterValue = {
   [productFilterKeys.STATUS]: 'publish',
   [productFilterKeys.ORDER_BY]: 'date',
   [productFilterKeys.TYPE]: 'simple',
-  [productFilterKeys.ATTRIBUTE]: '',
-  [productFilterKeys.ATTRIBUTE_TERM]: '',
+  // [productFilterKeys.ATTRIBUTE]: '',
+  // [productFilterKeys.ATTRIBUTE_TERM]: '',
   // [productFilterKeys.ON_SALE]: true,
   [productFilterKeys.MIN_PRICE]: 0,
   [productFilterKeys.MAX_PRICE]: 999999999,
-  [productFilterKeys.STOCK_STATUS]: 'instock' || 'onbackorder' || 'outofstock',
-  [productFilterKeys.FEATURED]: false
+  [productFilterKeys.STOCK_STATUS]: 'instock'
+  // [productFilterKeys.FEATURED]: false
 };

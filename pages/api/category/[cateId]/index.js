@@ -2,6 +2,7 @@ import { wcApi } from '../../../../api/woo';
 
 const handleCategoryById = async (req, res) => {
   const { query } = req;
+
   const cat = await wcApi
     .get(`products/categories/${query.cateId}`)
     .then((response) => {

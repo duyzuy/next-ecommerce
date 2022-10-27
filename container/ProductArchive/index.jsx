@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
-import { useRouter } from 'next/router';
 import { Container, Header, Grid } from 'semantic-ui-react';
 import Card from '../../components/Card';
 import SideBar from '../../container/SideBar';
@@ -19,11 +18,10 @@ const ProductArchive = (props) => {
   const { products, isCategory, category, router } = props;
 
   const [productData, setProductData] = useState(products.data);
-  const [filter, setFilter] = useState(productFilterValue);
+  const [filter, setFilter] = useState({});
   const { breadItems } = useBreadcrumb(router);
   const [isLoading, setIsLoading] = useState(false);
 
-  console.log(filter);
   const handleSelection = (select) => {
     let queries = select.value.split('&');
     queries = queries.reduce((acm, item) => {
@@ -59,9 +57,9 @@ const ProductArchive = (props) => {
     });
     setProductData(prds.data);
     setFilter(newFilter);
-    if (action === 'paginate') {
-      onUpdateRoutePath(productFilterKeys.PAGE, params.page);
-    }
+    // if (action === 'paginate') {
+    //   onUpdateRoutePath(productFilterKeys.PAGE, params.page);
+    // }
 
     setIsLoading(false);
   };
@@ -84,7 +82,7 @@ const ProductArchive = (props) => {
         }
       },
       newPath,
-      { shallow: true }
+      { shallow: true, scroll: false }
     );
   };
 
@@ -104,7 +102,7 @@ const ProductArchive = (props) => {
 
   useEffect(() => {
     setProductData(products.data);
-    setFilter(productFilterValue);
+    setFilter({ ...productFilterValue });
   }, [router.query.slug]);
 
   return (

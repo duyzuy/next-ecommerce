@@ -5,12 +5,14 @@ import Card from '../../components/Card';
 import { contentType } from '../../constants/constants';
 import Pagination from '../Pagination';
 import { client } from '../../api/client';
+// import useSWR from 'swr';
 const ProductCatList = (props) => {
   const { id, name, slug, image, products } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [prds, setPrds] = useState(products);
   const [currentPage, setCurrentPage] = useState(1);
-  const handleChangePage = async (page) => {
+
+  const handleLoadProducts = async (page) => {
     setIsLoading(true);
 
     const response = await client.get(`category/${id}`, {
@@ -24,6 +26,20 @@ const ProductCatList = (props) => {
     setCurrentPage(page);
     setIsLoading(false);
   };
+
+  // const { data, error } = useSWR(
+  //   `api/category/${id}?page=1&perPage=24`,
+  //   async (url) => {
+  //     console.log('swr', url);
+
+  //     const response = await fetch(url).then((res) => res.json());
+  //     console.log(response);
+  //     return response;
+  //   }
+  // );
+
+  // console.log(data);
+
   return (
     <div className={`section-product ${id}`}>
       <Container>
@@ -56,7 +72,7 @@ const ProductCatList = (props) => {
             pageRange={3}
             isLoading={isLoading}
             currentPage={currentPage}
-            onSetcurrentPage={handleChangePage}
+            onSetcurrentPage={handleLoadProducts}
           />
         </div>
       </Container>

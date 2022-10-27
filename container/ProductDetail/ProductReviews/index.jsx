@@ -16,6 +16,7 @@ const ProductReview = (props) => {
   } = props;
 
   const [isShowForm, setIsShowForm] = useState(false);
+
   const ratingResults = useMemo(() => {
     const reviewKeys = [5, 4, 3, 2, 1];
 

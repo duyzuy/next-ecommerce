@@ -135,7 +135,10 @@ export const getProductBySlug = async (slug) => {
         data: res.data[0]
       };
     })
-    .catch((error) => error.response.data);
+    .catch((error) => {
+      console.log(error);
+      return error.response.data;
+    });
 };
 
 export const getReviewsByProductId = async (

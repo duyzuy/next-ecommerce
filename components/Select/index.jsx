@@ -40,7 +40,7 @@ const Select = (props) => {
   }, []);
   return (
     <div className={`ec__form--control select`} ref={selectRef}>
-      <label className="select-label">{(label && label) || 'Select'}</label>
+      {(label && <label className="select-label">{label}</label>) || <></>}
       <div className="select-wrapper">
         <div className="select-item">
           <span className="text">

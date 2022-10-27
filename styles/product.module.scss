@@ -17,27 +17,22 @@
             margin-bottom: 2rem;
         }
         .ec__product--tools{
-            // padding: 10px 0;
-            // margin-bottom: 20px;
-            // .tool-inner{
-            //     display: flex;
-            //     align-items: center;
-            //     >div{
-
-            //         display: flex;
-            //         align-items: center;
-            //         justify-content: center;
-            //     }
-            //     .tool-sort {
-            //         margin-left: auto;
-            //     }
-            //     .tool-sort  + .tool-sort {
-            //         margin-left: 10px;
-            //     }
-            // }
-            // .tool-filter{
-
-            // }
+            .tool-inner{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: 30px;
+            }
+            .ec__product--sort{
+                display: flex;
+                align-items: center;
+                justify-content: flex-end;
+                .ec__form--control.select{
+                    margin-bottom: 0;
+                    min-width: 200px;
+                    margin-left: 10px;
+                }
+            }
         }
     }
   

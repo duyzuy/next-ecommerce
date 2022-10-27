@@ -32,59 +32,6 @@ export const MENUS = [
   }
 ];
 
-export const MENUS_BOTTOM = [
-  {
-    name: 'Bếp điện, bếp từ',
-    path: 'product/1',
-    src: '/assets/images/cat/beptu.png'
-  },
-  {
-    name: 'Bếp Ga',
-    path: 'product/2',
-    src: '/assets/images/cat/bepgas.png'
-  },
-  {
-    name: 'Máy rửa chén',
-    path: 'product/3',
-    src: '/assets/images/cat/mayrua.png'
-  },
-  {
-    name: 'Chậu rửa',
-    path: 'product/4',
-    src: '/assets/images/cat/chaurua.png'
-  },
-  {
-    name: 'Máy hút mùi',
-    path: 'product/5',
-    src: '/assets/images/cat/hutmui.png'
-  },
-  {
-    name: 'Vòi rửa',
-    path: 'product/6',
-    src: '/assets/images/cat/voirua.png'
-  },
-  {
-    name: 'Khoá điện tử',
-    path: 'product/7',
-    src: '/assets/images/cat/khoacua.png'
-  },
-  {
-    name: 'Máy lọc nước',
-    path: 'product/8',
-    src: '/assets/images/cat/locnuoc.png'
-  },
-  {
-    name: 'Lò nướng',
-    path: 'product/9',
-    src: '/assets/images/cat/lonuong.png'
-  },
-  {
-    name: 'Lò vi sóng',
-    path: 'product/10',
-    src: '/assets/images/cat/visong.png'
-  }
-];
-
 export const TOP_PROMOTIONS = [
   {
     name: 'Không gian bếp đẳng cấp và sang trọng mang phong cách châu âu',

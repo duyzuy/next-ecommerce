@@ -29,16 +29,6 @@ const ProductDetail = (props) => {
 
   const [productReviews, setProductReviews] = useState(reviews);
 
-  const images = useMemo(() => {
-    return data?.images?.map((img) => {
-      return {
-        id: img.id,
-        src: img.src,
-        name: img.name
-      };
-    });
-  }, [data?.images]);
-
   const onAddToCart = (id, product) => {
     console.log(id);
   };
@@ -135,7 +125,7 @@ const ProductDetail = (props) => {
         <div className={'ec__wrapper'}>
           <div className="ec__product--left">
             <div className="ec__product--featured">
-              <ProductGallery images={images} />
+              <ProductGallery images={data?.images} />
             </div>
 
             <div className="ec__product--body">
@@ -203,8 +193,7 @@ export async function getStaticPaths() {
     status: 'publish',
     orderby: 'date',
     type: 'simple',
-    stock_status: 'instock',
-    featured: false
+    stock_status: 'instock'
   });
 
   let paths = products.data.map((prd) => ({
@@ -218,6 +207,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(ctx) {
   const { params, locales, locale } = ctx;
+
   console.log(`regenerate product detail ${params.slug}`);
   const response = await getProductBySlug(params.slug);
   if (response.statusCode === 404) {
