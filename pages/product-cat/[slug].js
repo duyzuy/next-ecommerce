@@ -7,10 +7,14 @@ import {
   getCategories,
   getCategoryBySlug
 } from '../../api/product';
+import {
+  getProductAttributes,
+  getProductAttrTerms
+} from '../../api/ProductAttributes';
 import { useRouter } from 'next/router';
 
 const ProductCategory = (props) => {
-  const { category, products } = props;
+  const { category, products, attribures } = props;
   const router = useRouter();
   if (router.isFallback) {
     return <Loader active inline="centered" />;
@@ -23,6 +27,7 @@ const ProductCategory = (props) => {
       category={category}
       isCategory={true}
       router={router}
+      attribures={attribures}
     />
   );
 };
@@ -62,8 +67,25 @@ export async function getStaticProps(ctx) {
     ...productFilterValue
   });
 
+  const prdAttributes = await getProductAttributes();
+
+  const prdAttrWithTerms = await Promise.all(
+    prdAttributes.map(async (attr) => {
+      return await getProductAttrTerms(attr.id).then((response) => {
+        return {
+          ...attr,
+          attrTerms: response
+        };
+      });
+    })
+  );
+
   return {
-    props: { category: category.data[0], products: productList },
+    props: {
+      category: category.data[0],
+      products: productList,
+      attribures: prdAttrWithTerms
+    },
     revalidate: 10
   };
 }

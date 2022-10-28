@@ -15,7 +15,7 @@ import { useBreadcrumb } from '../../hooks/useBreadcrumb';
 import { client } from '../../api/client';
 
 const ProductArchive = (props) => {
-  const { products, isCategory, category, router } = props;
+  const { products, isCategory, category, attribures, router } = props;
 
   const [productData, setProductData] = useState(products.data);
   const [filter, setFilter] = useState({});
@@ -121,7 +121,7 @@ const ProductArchive = (props) => {
               </Header>
             </div>
             <div className="ec__product--container">
-              <SideBar type="category" />
+              <SideBar type="category" attribures={attribures} />
               <div className="ec__product--list">
                 <ProductToolBar
                   filter={filter}

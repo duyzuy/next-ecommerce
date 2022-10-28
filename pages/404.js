@@ -28,10 +28,3 @@ const Page404 = () => {
 };
 
 export default Page404;
-export function getServerSideProps(ctx) {
-  console.log(ctx);
-
-  return {
-    props: {}
-  };
-}

@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from 'react';
+import { useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import {
   getProductBySlug,
@@ -19,7 +19,7 @@ import ProductInfo from '../../../container/ProductDetail/ProductInfo';
 import RightSidebar from '../../../container/ProductDetail/RightSidebar';
 import { isValidEmail } from '../../../utils/validate';
 import styles from '../../../styles/singleproduct.module.scss';
-import { getProductList, getSlugFromProducts } from '../../../api/product';
+import { getSlugFromProducts } from '../../../api/product';
 
 const ProductDetail = (props) => {
   const router = useRouter();
