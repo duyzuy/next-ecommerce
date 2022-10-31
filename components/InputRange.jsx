@@ -7,17 +7,29 @@ import {
   useEffect
 } from 'react';
 const InputRange = (props, ref) => {
-  const { label, min, max, value, step, name, asRelative } = props;
-  const inputReft = useRef();
-  const [inputVal, setInputVal] = useState(value);
-  const onChange = (e) => {
-    if (asRelative !== undefined) {
-      const liMitValue = asRelative.current.getValue();
+  const {
+    label,
+    min = 0,
+    max = 100,
+    value = 0,
+    step,
+    name,
+    asRelative
+  } = props;
+  const inputRef = useRef();
+  const [inputVal, setInputVal] = useState({ min, max, value });
 
-      if (inputVal > liMitValue) return;
-    } else {
-      setInputVal(e.target.value);
-    }
+  const limitValue = useMemo(() => {
+    // const lmValue = asRelative?.current?.getValue();
+
+    return asRelative?.current?.getValue();
+  }, [asRelative, inputVal]);
+  console.log(limitValue);
+  const onChange = (e) => {
+    setInputVal((prevState) => ({
+      ...prevState,
+      value: e.target.value
+    }));
   };
   useImperativeHandle(ref, () => ({
     getValue: () => {
@@ -25,19 +37,21 @@ const InputRange = (props, ref) => {
     }
   }));
 
-  useEffect(() => {}, [inputVal]);
+  useEffect(() => {
+    setInputVal({ min, max, value });
+  }, [min, max, value]);
   return (
     <div className="ec__control--range">
       {(label && <label>{label}</label>) || <></>}
-      {inputVal}
+      {inputVal.value}
       <div className="ec__input">
         <input
-          ref={inputReft}
+          ref={inputRef}
           type="range"
           id={name}
-          min={min}
-          max={max}
-          value={inputVal}
+          min={inputVal.min}
+          max={inputVal.max}
+          value={inputVal.value}
           step={step}
           name={name}
           onChange={onChange}

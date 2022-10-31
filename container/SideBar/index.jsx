@@ -31,7 +31,7 @@ const SideBar = (props) => {
             asRelative={maxPriceRef}
             name="minPrice"
             min={0}
-            max={15000000}
+            max={maxPriceRef?.current?.getValue()?.max}
             step={200000}
             value={0}
             // onChange={onChangePrice}
@@ -42,7 +42,7 @@ const SideBar = (props) => {
             label="Giá cao nhất"
             name="maxPrice"
             asRelative={minPriceRef}
-            min={0}
+            min={minPriceRef?.current?.getValue()?.min}
             max={15000000}
             value={15000000}
             step={200000}
