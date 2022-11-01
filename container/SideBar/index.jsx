@@ -1,10 +1,29 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useState } from 'react';
 import InputRange from '../../components/InputRange';
 const SideBar = (props) => {
   const { attribures } = props;
   const minPriceRef = useRef();
   const maxPriceRef = useRef();
 
+  const [priceRange, setPriceRange] = useState({
+    minPrice: 0,
+    maxPrice: 15000000
+  });
+
+  const onChangePrice = (key, value) => {
+    if (
+      (key === 'minPrice' && priceRange.maxPrice < value) ||
+      (key === 'maxPrice' && priceRange.minPrice > value)
+    ) {
+      return;
+    }
+
+    setPriceRange((prevState) => ({
+      ...prevState,
+      [key]: Number(value)
+    }));
+  };
+  console.log(priceRange);
   return (
     <>
       <div className="ec__product--sidebar">
@@ -25,16 +44,17 @@ const SideBar = (props) => {
         })}
         <div className="ec__sidebar-attr">
           <div className="attr-name">Khoảng giá</div>
+
           <InputRange
             ref={minPriceRef}
             label="Giá thấp nhất"
             asRelative={maxPriceRef}
             name="minPrice"
             min={0}
-            max={maxPriceRef?.current?.getValue()?.max}
+            max={15000000}
             step={200000}
-            value={0}
-            // onChange={onChangePrice}
+            value={priceRange.minPrice}
+            onChange={(e) => onChangePrice('minPrice', e.target.value)}
           />
 
           <InputRange
@@ -42,12 +62,13 @@ const SideBar = (props) => {
             label="Giá cao nhất"
             name="maxPrice"
             asRelative={minPriceRef}
-            min={minPriceRef?.current?.getValue()?.min}
+            min={0}
             max={15000000}
-            value={15000000}
+            value={priceRange.maxPrice}
             step={200000}
-            // onChange={onChangePrice}
+            onChange={(e) => onChangePrice('maxPrice', e.target.value)}
           />
+          <button>Lọc</button>
         </div>
       </div>
     </>
