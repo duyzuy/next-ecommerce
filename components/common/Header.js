@@ -1,13 +1,13 @@
-import { useState } from 'react';
 import Image from 'next/image';
-import { Container, Menu, Input } from 'semantic-ui-react';
+import { Container, Input } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
-import MenuItem from '../MenuItem';
 import Link from 'next/link';
 import styles from '../../styles/header.module.scss';
 import HeaderBottom from '../HeaderBottom';
-
+import { useSession, signIn, signOut } from 'next-auth/react';
 const Header = (props) => {
+  const { data: session, status } = useSession();
+
   const { categories } = props;
   return (
     <header id="ec__header" className={styles.ec_header}>
@@ -66,51 +66,56 @@ const Header = (props) => {
                 </Link>
               </div>
               <div className={styles.ec_header_acount}>
-                <Link href="/user/register">
+                <Link
+                  href={`/user/${
+                    (status === 'authenticated' && 'profile') || 'login'
+                  }`}
+                >
                   <a className="item">
                     <Icon.User size={20} />
                   </a>
                 </Link>
+                {(status === 'authenticated' && (
+                  <div className="user--dropdown">
+                    <ul>
+                      <li>
+                        <Link href="/user/profile">
+                          <a className="item">
+                            <Icon.User size={20} /> Tài khoản
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/user/profile">
+                          <a className="item">
+                            <Icon.Inbox size={20} /> Đơn hàng
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <Link href="/user/profile">
+                          <a className="item">
+                            <Icon.Map size={20} /> Địa chỉ
+                          </a>
+                        </Link>
+                      </li>
+                      <li>
+                        <button
+                          className="item"
+                          onClick={() => signOut('credentials')}
+                        >
+                          <Icon.LogOut size={20} /> Đăng xuất
+                        </button>
+                      </li>
+                    </ul>
+                  </div>
+                )) ||
+                  null}
               </div>
             </div>
           </div>
         </Container>
       </div>
-      {/* <div id="ec_header_middle" style={{ display: 'none' }}>
-        <Container>
-          <Menu secondary>
-            <ul className={styles.menu_items}>
-              {MENUS &&
-                MENUS.map((item) => {
-                  return (
-                    <MenuItem
-                      key={item.path}
-                      name={item.name}
-                      path={item.path}
-                      icon={item.icon}
-                      active={isActive(item.path, 1)}
-                    >
-                      {item.hasChildren && (
-                        <ul className={styles.menu_child}>
-                          {item.childrens.map((childItem) => {
-                            return (
-                              <MenuItem
-                                key={childItem.path}
-                                name={childItem.name}
-                                path={childItem.path}
-                                icon={childItem.icon}
-                              />
-                            );
-                          })}
-                        </ul>
-                      )}
-                    </MenuItem>
-                  );
-                })}
-            </ul>
-          </Menu>
-        </Container>
-      </div> */}
       <HeaderBottom items={categories} />
     </header>
   );

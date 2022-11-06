@@ -1,8 +1,8 @@
 import dynamic from 'next/dynamic';
 import { Suspense } from 'react';
 import useClasses from '../hooks/useClasses';
-// import Header from './common/Header';
-// import Footer from './common/Footer';
+import Header from './common/Header';
+import Footer from './common/Footer';
 
 const DynamicHeader = dynamic(() => import('./common/Header'), {
   suspense: true,
@@ -19,30 +19,29 @@ const Layout = (props) => {
 
   const clss = useClasses();
 
+  // return (
+  //   <>
+  //     <Suspense fallback={`loading...`}>
+  //       <DynamicHeader categories={categories} />
+  //     </Suspense>
+  //     <main id="main" className={`ec_main ${clss}`}>
+  //       {props.children}
+  //     </main>
+  //     <Suspense fallback={`loading...`}>
+  //       <DynamicFooter />
+  //     </Suspense>
+  //   </>
+  // );
+
   return (
     <>
-      <Suspense fallback={`loading...`}>
-        <DynamicHeader categories={categories} />
-      </Suspense>
+      <Header categories={categories} />
       <main id="main" className={`ec_main ${clss}`}>
         {props.children}
       </main>
-      <Suspense fallback={`loading...`}>
-        <DynamicFooter />
-      </Suspense>
+      <Footer />
     </>
   );
-
-  // return (
-  //   <>
-  //     <Header categories={categories} />
-  //     <main id="main" className="ec_main">
-  //       <>{device}</>
-  //       {props.children}
-  //     </main>
-  //     <Footer />
-  //   </>
-  // );
 };
 
 export default Layout;

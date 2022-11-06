@@ -5,7 +5,8 @@ import ProductArchive from '../../container/ProductArchive';
 import {
   getProductListByCatId,
   getCategories,
-  getCategoryBySlug
+  getCategoryBySlug,
+  getProductIdsByCatId
 } from '../../api/product';
 import {
   getProductAttributes,
@@ -36,7 +37,7 @@ export default ProductCategory;
 
 export async function getStaticPaths() {
   const categories = await getCategories({
-    per_page: 2,
+    per_page: 24,
     hide_empty: true
   });
 
@@ -66,7 +67,21 @@ export async function getStaticProps(ctx) {
   const productList = await getProductListByCatId(category.data[0].id, {
     ...productFilterValue
   });
+  const totalPage = productList.totalPage;
+  let prdIdList = productList.data.map((prd) => prd.id);
+  for (let startPage = 2; startPage <= totalPage; startPage++) {
+    const newFilter = {
+      ...productFilterValue,
+      page: startPage
+    };
+    const prdIds = await getProductIdsByCatId(category.data[0].id, {
+      ...newFilter
+    });
 
+    prdIdList = prdIdList.concat(prdIds.data.map((prd) => prd.id));
+  }
+
+  // const prdIds = Promise.all();
   const prdAttributes = await getProductAttributes();
 
   const prdAttrWithTerms = await Promise.all(

@@ -57,6 +57,28 @@ export const getProductListByCatId = async (catId, queryObject) => {
       return error.response.data;
     });
 };
+
+export const getProductIdsByCatId = async (catId, queryObject) => {
+  return await wcApi
+    .get(`products`, {
+      ...queryObject,
+      category: catId
+    })
+    .then((res) => {
+      const prds = res.data.map((prd) => ({
+        id: prd.id
+      }));
+      return {
+        data: prds,
+        totalItems: res.headers['x-wp-total'],
+        totalPage: res.headers['x-wp-totalpages']
+      };
+    })
+    .catch((error) => {
+      return error.response.data;
+    });
+};
+
 export const getCategoryBySlug = async (slug) => {
   return await wcApi
     .get(`products/categories`, { slug: slug })

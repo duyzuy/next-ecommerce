@@ -22,3 +22,14 @@ export const isValidEmail = (email) => {
 
   return regex.test(String(email).toLocaleLowerCase());
 };
+
+export const loginSchema = yup.object().shape({
+  email: yup
+    .string()
+    .email('Email không đúng ')
+    .required('Email không bỏ trống'),
+  password: yup
+    .string()
+    .required('Mật khẩu không bỏ trống')
+    .min(8, 'Mật khẩu tối thiểu 8 ký tự')
+});

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import InputRange from '../../components/InputRange';
+import SliderRange from '../../components/SliderRange';
 const SideBar = (props) => {
   const { attribures } = props;
   const minPriceRef = useRef();
@@ -10,20 +11,9 @@ const SideBar = (props) => {
     maxPrice: 15000000
   });
 
-  const onChangePrice = (key, value) => {
-    if (
-      (key === 'minPrice' && priceRange.maxPrice < value) ||
-      (key === 'maxPrice' && priceRange.minPrice > value)
-    ) {
-      return;
-    }
-
-    setPriceRange((prevState) => ({
-      ...prevState,
-      [key]: Number(value)
-    }));
+  const onRange = (e) => {
+    console.log(e);
   };
-  console.log(priceRange);
   return (
     <>
       <div className="ec__product--sidebar">
@@ -44,31 +34,10 @@ const SideBar = (props) => {
         })}
         <div className="ec__sidebar-attr">
           <div className="attr-name">Khoảng giá</div>
-
-          <InputRange
-            ref={minPriceRef}
-            label="Giá thấp nhất"
-            asRelative={maxPriceRef}
-            name="minPrice"
-            min={0}
-            max={15000000}
-            step={200000}
-            value={priceRange.minPrice}
-            onChange={(e) => onChangePrice('minPrice', e.target.value)}
-          />
-
-          <InputRange
-            ref={maxPriceRef}
-            label="Giá cao nhất"
-            name="maxPrice"
-            asRelative={minPriceRef}
-            min={0}
-            max={15000000}
-            value={priceRange.maxPrice}
-            step={200000}
-            onChange={(e) => onChangePrice('maxPrice', e.target.value)}
-          />
-          <button>Lọc</button>
+          <SliderRange min={0} max={15000000} onRange={onRange} />
+          <button type="button" className="button">
+            Lọc
+          </button>
         </div>
       </div>
     </>
