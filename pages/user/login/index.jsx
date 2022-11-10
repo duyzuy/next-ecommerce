@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Container, Header } from 'semantic-ui-react';
-import { wpClient, client } from '../../../api/client';
 import { loginSchema } from '../../../utils/validate';
 import * as Icon from 'react-feather';
 import styles from '../../../styles/register.module.scss';
@@ -9,7 +8,7 @@ import Button from '../../../components/Button';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
-import { getProviders, getSession, signIn, useSession } from 'next-auth/react';
+import { getProviders, getSession, signIn } from 'next-auth/react';
 
 const LoginPage = (props) => {
   const [userData, setUserData] = useState({});
@@ -29,8 +28,7 @@ const LoginPage = (props) => {
         username: userData.email,
         password: userData.password,
         redirect: false,
-        callbackUrl,
-        account: { id: '123', name: 'duyzuy' }
+        callbackUrl
       });
 
       if (result.ok && result.status === 200) {
@@ -64,7 +62,7 @@ const LoginPage = (props) => {
             <p>Đăng nhập</p>
           </Header>
           <div className="social-account">
-            <div className="acc-google">
+            <div className="acc-google" onClick={handleSocialLogin}>
               <span className="icon">
                 <Image
                   src={'/assets/icons/ic-google.svg'}
