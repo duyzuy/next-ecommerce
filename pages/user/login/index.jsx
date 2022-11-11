@@ -64,7 +64,7 @@ const LoginPage = (props) => {
             <p>Đăng nhập</p>
           </Header>
           <div className="social-account">
-            <div className="acc-google">
+            <div className="acc-google" onClick={handleSocialLogin}>
               <span className="icon">
                 <Image
                   src={'/assets/icons/ic-google.svg'}
