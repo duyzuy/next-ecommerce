@@ -5,7 +5,7 @@ function Auth({ children }) {
   if (status === 'loading') {
     return <div>Auth Loading...</div>;
   }
-  console.log(status);
+
   return children;
 }
 

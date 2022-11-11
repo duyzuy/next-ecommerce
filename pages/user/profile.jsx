@@ -2,8 +2,8 @@ import { Container, Header } from 'semantic-ui-react';
 import { getSession, useSession } from 'next-auth/react';
 import styles from '../../styles/user.module.scss';
 
-const UserProfile = () => {
-  const { data: session, status } = useSession();
+const UserProfile = (props) => {
+  const { session } = props;
   console.log(session);
   return (
     <Container>

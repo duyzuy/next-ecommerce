@@ -2,6 +2,7 @@ import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import { getCustomerInfor } from '../../../api/customer';
+
 export const authOptions = {
   session: {
     strategy: 'jwt',
@@ -21,8 +22,8 @@ export const authOptions = {
   secret: process.env.SESSION_SECRET,
   providers: [
     CredentialsProvider({
-      // The name to display on the sign in form (e.g. 'Sign in with...')
-      name: 'Saigon Home',
+      // The name to display on the sign in form (e.g. 'Sign in with...').
+      name: 'SaigonHome',
       credentials: {
         username: { label: 'Username', type: 'text', placeholder: 'email' },
         password: { label: 'Password', type: 'password' }
@@ -32,15 +33,26 @@ export const authOptions = {
           `https://saigonhomekitchen.vn/wp-json/v1/user/login`,
           {
             method: 'POST',
-            credentials: 'same-origin', // include, *same-origin, omit
             headers: {
               'Content-Type': 'application/json'
             },
-            body: JSON.stringify(credentials)
+            body: JSON.stringify({
+              username: credentials.username,
+              password: credentials.password
+            })
           }
         )
-          .then((res) => res.json())
-          .then((data) => data);
+          .then((res) => {
+            console.log(res);
+            return res.json();
+          })
+          .then((data) => {
+            console.log(data);
+            return data;
+          })
+          .catch((error) => {
+            console.log(error);
+          });
 
         if (user.data) {
           return {
@@ -50,7 +62,7 @@ export const authOptions = {
             displayName: user.data.display_name
           };
         } else {
-          return null;
+          throw new Error('Password or email is in-correct');
         }
       }
     }),
@@ -60,32 +72,31 @@ export const authOptions = {
     })
   ],
   callbacks: {
-    async signIn({ user, account, profile, email, credentials }) {
-      console.log('signinnnn', { user, account, profile, email, credentials });
-      return true;
-    },
-    async session({ session, token, user }) {
-      // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken;
-      console.log('session', { session, token, user });
-      return session;
-    },
-    async jwt({ token, account }) {
-      // Persist the OAuth access_token to the token right after signin
-
-      if (account) {
-        token.accessToken = account.access_token;
-      }
-      console.log('jwt', { token, account });
-      return token;
-    }
+    // async signIn({ user, account, profile, email, credentials }) {
+    //   console.log('signinnnn', { user, account, profile, email, credentials });
+    //   return true;
+    // },
+    // async session({ session, token, user }) {
+    //   // Send properties to the client, like an access_token from a provider.
+    //   session.accessToken = token.accessToken;
+    //   console.log('session', { session, token, user });
+    //   return session;
+    // },
+    // async jwt({ token, account }) {
+    //   // Persist the OAuth access_token to the token right after signin
+    //   if (account) {
+    //     token.accessToken = account.access_token;
+    //   }
+    //   console.log('jwt', { token, account });
+    //   return token;
+    // }
   },
   pages: {
-    signIn: '/user/login'
+    signIn: '/user/login',
     // signOut: '/user/logout',
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (used for check email message)
-    // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
+    newUser: '/user/new-customer' // New users will be directed here on first sign in (leave the property out if not of interest)
   }
 };
 
