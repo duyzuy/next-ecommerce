@@ -24,7 +24,7 @@ import { getSlugFromProducts } from '../../../api/product';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
-  console.log(data);
+
   const { breadItems } = useBreadcrumb(router);
 
   const [productReviews, setProductReviews] = useState(reviews);

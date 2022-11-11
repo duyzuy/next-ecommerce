@@ -30,3 +30,21 @@ export const ROUTES = {
     path: '/page'
   }
 };
+
+export const PROFILE_ROUTES = [
+  {
+    id: 'account',
+    name: 'Tài khoản',
+    path: '/user/account'
+  },
+  {
+    id: 'order',
+    name: 'Đơn hàng',
+    path: '/user/account'
+  },
+  {
+    id: 'address',
+    name: 'Địa chỉ',
+    path: 'user/address'
+  }
+];

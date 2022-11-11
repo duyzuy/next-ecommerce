@@ -196,6 +196,12 @@
                 }
                 &:last-child{
                     border-top: 1px solid #f4f8ff;
+                    button{
+                        display: flex;
+                        padding: 15px 20px;
+                        align-items: center;
+                        width: 100%;
+                    }
                 }
             }
             

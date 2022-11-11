@@ -1,19 +1,21 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import { getCustomerInfor } from '../../../api/customer';
+import { create } from 'yup/lib/Reference';
+import {
+  getCustomerInfor,
+  getCustomerByEmail,
+  createCustomer
+} from '../../../api/customer';
 
 export const authOptions = {
   session: {
     strategy: 'jwt',
 
     // Seconds - How long until an idle session expires and is no longer valid.
-    maxAge: 30 * 24 * 60 * 60, // 30 days
+    maxAge: 1 * 24 * 60 * 60, // 30 days
 
-    // Seconds - Throttle how frequently to write to database to extend a session.
-    // Use it to limit write operations. Set to 0 to always update the database.
-    // Note: This option is ignored if using JSON Web Tokens
-    updateAge: 24 * 60 * 60, // 24 hours
+    updateAge: 1 * 60 * 60, // 24 hours
 
     generateSessionToken: () => {
       return randomUUID?.() ?? randomBytes(32).toString('hex');
@@ -43,11 +45,9 @@ export const authOptions = {
           }
         )
           .then((res) => {
-            console.log(res);
             return res.json();
           })
           .then((data) => {
-            console.log(data);
             return data;
           })
           .catch((error) => {
@@ -72,31 +72,44 @@ export const authOptions = {
     })
   ],
   callbacks: {
-    // async signIn({ user, account, profile, email, credentials }) {
-    //   console.log('signinnnn', { user, account, profile, email, credentials });
-    //   return true;
-    // },
-    // async session({ session, token, user }) {
-    //   // Send properties to the client, like an access_token from a provider.
-    //   session.accessToken = token.accessToken;
-    //   console.log('session', { session, token, user });
-    //   return session;
-    // },
-    // async jwt({ token, account }) {
-    //   // Persist the OAuth access_token to the token right after signin
-    //   if (account) {
-    //     token.accessToken = account.access_token;
-    //   }
-    //   console.log('jwt', { token, account });
-    //   return token;
-    // }
+    async signIn({ user, account, profile, email, credentials }) {
+      console.log('signinnnn', { user, account, profile, email, credentials });
+      return true;
+    },
+    async jwt({ token, user, account }) {
+      // Persist the OAuth access_token to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token;
+      }
+      token.role = 'customer';
+      console.log({ token, user, account });
+      return token;
+    },
+    async session({ session, token, user }) {
+      // Send properties to the client, like an access_token from a provider.
+      session.accessToken = token.accessToken;
+
+      //get information usser
+      // const customer = await getCustomerByEmail(session.user.email);
+
+      // console.log(customer);
+      // if (customer.length === 0) {
+      //   const data = await createCustomer({
+      //     email: session.user.email,
+      //     first_name: session.user.name,
+      //     last_name: '',
+      //     username: session.user.email,
+      //     password: '123123123123'
+      //   });
+
+      //   console.log(data);
+      // }
+      console.log({ session, token, user });
+      return session;
+    }
   },
   pages: {
-    signIn: '/user/login',
-    // signOut: '/user/logout',
-    // error: '/auth/error', // Error code passed in query string as ?error=
-    // verifyRequest: '/auth/verify-request', // (used for check email message)
-    newUser: '/user/new-customer' // New users will be directed here on first sign in (leave the property out if not of interest)
+    signIn: '/user/login'
   }
 };
 

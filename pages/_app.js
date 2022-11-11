@@ -23,11 +23,13 @@ function MyApp(props) {
   return (
     <AppProvider>
       <SessionProvider session={pageProps?.session}>
-        {Component.auth ? (
-          <Auth>{getLayout(<Component {...pageProps} />)}</Auth>
-        ) : (
-          getLayout(<Component {...pageProps} />)
-        )}
+        {Component.auth
+          ? getLayout(
+              <Auth>
+                <Component {...pageProps} />
+              </Auth>
+            )
+          : getLayout(<Component {...pageProps} />)}
       </SessionProvider>
     </AppProvider>
   );

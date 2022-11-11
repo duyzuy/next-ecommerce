@@ -14,12 +14,12 @@ const client = async (url, params = {}, method) => {
     // redirect: 'follow',
     // referrerPolicy: 'no-referrer'
   };
-  if (!isEmpty(params)) {
+  if (!isEmpty(params) && method === 'POST') {
     configs.body = JSON.stringify({ ...params });
   }
 
   let queryString = '';
-  if (!isEmpty(params)) {
+  if (!isEmpty(params) && method === 'GET') {
     queryString = objectToQueryString(params);
   }
 

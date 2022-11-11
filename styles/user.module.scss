@@ -3,4 +3,44 @@
     padding: 20px;
     border-radius: 15px;
     margin-top: 30px;
+    display: flex;
+
+    :global .auth--sidebar  {
+        .auth-avt{
+            text-align: center;
+            font-size: 1.6rem;
+            font-weight: bold;
+            line-height: 2.2rem;
+            text-transform: uppercase;
+        }
+        .auth--menu{
+            width: 220px;
+
+    
+            ul{
+                list-style: none;
+                padding: 0;
+                margin: 0;
+                li {
+
+                    a{
+                        display: block;
+                        padding: 10px 15px;
+                        color: #3c3c3c;
+                        border-radius: 5px;
+                        &:hover{
+                            background-color: #f4f8ff;
+                            
+                        }
+                    }
+                }
+            }
+        }
+    }
+    :global .auth--body{
+        width: calc(100% - 220px);
+        padding-left: 20px;
+    
+        
+    }
 }
