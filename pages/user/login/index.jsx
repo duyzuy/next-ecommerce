@@ -9,30 +9,37 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getProviders, getSession, signIn } from 'next-auth/react';
-
+import { Message } from 'semantic-ui-react';
 const LoginPage = (props) => {
   const [userData, setUserData] = useState({});
-
+  const { providers } = props;
   const [errors, setErrors] = useState([]);
   const router = useRouter();
 
-  const handleCredentialsLogin = async (e) => {
+  const handleLogin = async (e, provider) => {
     e.preventDefault();
-
+    let credentials = {};
     try {
       const callbackUrl = '/user/profile';
+      credentials = Object.assign({ callbackUrl }, credentials);
+      if (provider === 'credentials') {
+        await loginSchema.validate({ ...userData });
+        credentials = {
+          ...credentials,
+          username: userData.email,
+          password: userData.password,
+          redirect: false
+        };
+      }
 
-      await loginSchema.validate({ ...userData });
-
-      const result = await signIn('credentials', {
-        username: userData.email,
-        password: userData.password,
-        redirect: false,
-        callbackUrl
+      const result = await signIn(provider, {
+        ...credentials
       });
 
       if (result.ok && result.status === 200) {
         router.push('/user/profile', undefined, { shallow: false });
+      } else {
+        setErrors([result.error]);
       }
     } catch (err) {
       setErrors(err.errors);
@@ -43,6 +50,7 @@ const LoginPage = (props) => {
     const callbackUrl = '/user/profile';
     const result = await signIn('google', { callbackUrl });
   };
+
   const handleChange = (key, value) => {
     setUserData((prevState) => ({
       ...prevState,
@@ -62,7 +70,10 @@ const LoginPage = (props) => {
             <p>Đăng nhập</p>
           </Header>
           <div className="social-account">
-            <div className="acc-google" onClick={handleSocialLogin}>
+            <div
+              className="acc-google"
+              onClick={(e) => handleLogin(e, 'google')}
+            >
               <span className="icon">
                 <Image
                   src={'/assets/icons/ic-google.svg'}
@@ -90,7 +101,18 @@ const LoginPage = (props) => {
             </div>
           </div>
           <div className="register-form">
-            <form className="ec__form" onSubmit={handleCredentialsLogin}>
+            <div className="login-status">
+              {errors &&
+                errors.map((err, ind) => (
+                  <Message key={ind} color="red">
+                    {err}
+                  </Message>
+                ))}
+            </div>
+            <form
+              className="ec__form"
+              onSubmit={(e) => handleLogin(e, 'credentials')}
+            >
               <Input
                 label="Email"
                 placeholder="Email"

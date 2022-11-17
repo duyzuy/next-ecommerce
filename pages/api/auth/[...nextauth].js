@@ -7,7 +7,7 @@ import {
   getCustomerByEmail,
   createCustomer
 } from '../../../api/customer';
-
+import { USER_ROLES } from '../../../constants/roles';
 export const authOptions = {
   session: {
     strategy: 'jwt',
@@ -73,16 +73,40 @@ export const authOptions = {
   ],
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
-      console.log('signinnnn', { user, account, profile, email, credentials });
-      return true;
+      //handle user permission logedin or not
+
+      const { provider } = account;
+
+      let customer = {};
+      if (provider === 'credentials') {
+        customer = await getCustomerInfor(user.id);
+      }
+
+      if (provider === 'google') {
+        customer = await getCustomerByEmail(user.email);
+      }
+      if (
+        customer.role === USER_ROLES.administrator ||
+        customer.role === USER_ROLES.customer
+      ) {
+        return true;
+      }
+
+      return false;
     },
     async jwt({ token, user, account }) {
       // Persist the OAuth access_token to the token right after signin
-      if (account) {
+
+      if (account && account.provider === 'google') {
         token.accessToken = account.access_token;
       }
-      token.role = 'customer';
-      console.log({ token, user, account });
+
+      if (user) {
+        const profile = await getCustomerByEmail(user.email);
+        token.role = profile.role;
+      }
+
+      console.log('jwt', { token, user, account });
       return token;
     },
     async session({ session, token, user }) {
@@ -104,12 +128,13 @@ export const authOptions = {
 
       //   console.log(data);
       // }
-      console.log({ session, token, user });
+      console.log('session', { session, token, user });
       return session;
     }
   },
   pages: {
-    signIn: '/user/login'
+    signIn: '/user/login',
+    error: '/user/error'
   }
 };
 

@@ -13,10 +13,18 @@ export const getCustomerInfor = async (id) => {
 export const getCustomerByEmail = async (email) => {
   return await wcApi
     .get(`customers`, {
-      email: email
+      email,
+      role: 'all'
     })
     .then((response) => {
-      return response.data;
+      if (response.data.length > 0) {
+        return response.data[0];
+      } else {
+        return {
+          status: 404,
+          message: 'customer not found'
+        };
+      }
     })
     .catch((error) => {
       return error.response;

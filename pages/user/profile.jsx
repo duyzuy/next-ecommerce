@@ -5,6 +5,7 @@ import styles from '../../styles/user.module.scss';
 import { PROFILE_ROUTES } from '../../constants/route';
 const UserProfile = (props) => {
   const { session } = props;
+
   console.log(session);
   return (
     <Container>
