@@ -35,16 +35,16 @@ export const PROFILE_ROUTES = [
   {
     id: 'account',
     name: 'Tài khoản',
-    path: '/user/account'
+    path: '/user/profile?page=account'
   },
   {
     id: 'order',
     name: 'Đơn hàng',
-    path: '/user/account'
+    path: '/user/profile?page=order'
   },
   {
     id: 'address',
     name: 'Địa chỉ',
-    path: 'user/address'
+    path: '/user/profile?page=address'
   }
 ];

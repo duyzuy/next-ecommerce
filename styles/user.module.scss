@@ -8,10 +8,19 @@
     :global .auth--sidebar  {
         .auth-avt{
             text-align: center;
-            font-size: 1.6rem;
-            font-weight: bold;
+        
+  
             line-height: 2.2rem;
-            text-transform: uppercase;
+   
+
+            .auth-avt-image{
+                line-height: 0;
+                margin-bottom: 10px;
+                img{
+                    border-radius: 50%;
+                
+                }
+            }
         }
         .auth--menu{
             width: 220px;
@@ -22,25 +31,54 @@
                 padding: 0;
                 margin: 0;
                 li {
+                    margin-bottom: 10px;
 
                     a{
                         display: block;
                         padding: 10px 15px;
                         color: #3c3c3c;
                         border-radius: 5px;
-                        &:hover{
+                        &:hover, &.active{
                             background-color: #f4f8ff;
                             
                         }
                     }
                 }
             }
+            .signout-btn{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                width: 100%;
+                border: 1px solid #c83a3a;
+                color: #c83a3a;
+                border-radius: 5px;
+            }
         }
     }
     :global .auth--body{
         width: calc(100% - 220px);
         padding-left: 20px;
-    
         
+        .row{
+            display: flex;
+
+            .label{
+                font-weight: bold;
+                width: 120px;
+            }
+            .label, .value{
+                padding: 10px
+            }
+        }
+        .btn-action{
+            padding: 10px;
+            border-radius: 10px;
+            color: #c83a3a;
+            cursor: pointer;
+            svg{
+                margin-right: 5px;
+            }
+        }
     }
 }

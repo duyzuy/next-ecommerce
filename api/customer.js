@@ -18,6 +18,12 @@ export const getCustomerByEmail = async (email) => {
     })
     .then((response) => {
       if (response.data.length > 0) {
+        delete response.data[0].meta_data;
+        delete response.data[0]._links;
+        delete response.data[0].date_created;
+        delete response.data[0].date_created_gmt;
+        delete response.data[0].date_modified;
+        delete response.data[0].date_modified_gmt;
         return response.data[0];
       } else {
         return {

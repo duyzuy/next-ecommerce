@@ -77,7 +77,7 @@ export const authOptions = {
 
       const { provider } = account;
 
-      let customer = {};
+      let customer;
       if (provider === 'credentials') {
         customer = await getCustomerInfor(user.id);
       }
@@ -105,17 +105,15 @@ export const authOptions = {
         const profile = await getCustomerByEmail(user.email);
         token.role = profile.role;
       }
-
-      console.log('jwt', { token, user, account });
       return token;
     },
     async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
       session.accessToken = token.accessToken;
 
+      session.user.role = token.role;
       //get information usser
       // const customer = await getCustomerByEmail(session.user.email);
-
       // console.log(customer);
       // if (customer.length === 0) {
       //   const data = await createCustomer({
