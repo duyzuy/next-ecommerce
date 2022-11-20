@@ -6,9 +6,7 @@ const AccountPage = ({ data }) => {
   const [userData, setUserData] = useState({});
   const [isEdit, setIsEdit] = useState(false);
 
-  const handleChange = (value) => {
-    const data = {};
-  };
+  const handleChange = (key, value) => {};
   return (
     <div className="account-page">
       <div className="section-header">
