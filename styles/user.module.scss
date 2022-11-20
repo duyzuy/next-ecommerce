@@ -68,7 +68,8 @@
                 width: 120px;
             }
             .label, .value{
-                padding: 10px
+                padding: 10px;
+                position: relative;
             }
         }
         .btn-action{
@@ -76,9 +77,17 @@
             border-radius: 10px;
             color: #c83a3a;
             cursor: pointer;
+            display: inline-block;
             svg{
                 margin-right: 5px;
             }
+        }
+        .section-header{
+            margin-bottom: 30px
+        }
+        .section-content{
+            border: 1px soolid #f1f1f1;
+            border-radius: 10px;
         }
     }
 }

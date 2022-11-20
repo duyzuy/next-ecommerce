@@ -126,7 +126,7 @@ export const authOptions = {
 
       //   console.log(data);
       // }
-      console.log('session', { session, token, user });
+      // console.log('session', { session, token, user });
       return session;
     }
   },

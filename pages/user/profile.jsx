@@ -17,7 +17,6 @@ const UserProfile = (props) => {
   const router = useRouter();
   const { query } = router;
 
-  console.log(session, profile);
   return (
     <Container>
       <div className={styles.auth__wrapper}>
