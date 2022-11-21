@@ -36,6 +36,9 @@ client.get = async (url, params = {}) => {
 client.post = (url, params) => {
   return client(url, params, 'POST');
 };
+client.put = (url, params) => {
+  return client(url, params, 'PUT');
+};
 
 const wpClient = async (url, options = {}, method) => {
   const configs = {

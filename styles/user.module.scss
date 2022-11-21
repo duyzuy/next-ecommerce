@@ -81,6 +81,10 @@
             svg{
                 margin-right: 5px;
             }
+
+            &.btn-update{
+                background-color: red;
+            }
         }
         .section-header{
             margin-bottom: 30px
@@ -88,6 +92,28 @@
         .section-content{
             border: 1px soolid #f1f1f1;
             border-radius: 10px;
+        }
+        .page-actions {
+            padding-top: 30px;
+            button:first-child{
+                margin-right: 20px;
+            }
+        }
+        .inner-section{
+            .billing-address{
+                margin-bottom: 30px;
+            }
+            .shipping-address, 
+            .billing-address{
+                border: 1px solid #f1f1f1;
+                border-radius: 10px;
+                padding: 20px;
+                .section-header{
+                    display: flex;
+                    justify-content: space-between;
+                    margin-bottom: 10px;
+                }
+            }
         }
     }
 }

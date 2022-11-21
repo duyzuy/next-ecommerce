@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { Container, Header } from 'semantic-ui-react';
 import { getSession, useSession } from 'next-auth/react';
 import Link from 'next/link';
@@ -10,13 +11,28 @@ import SignOutButton from '../../components/SignOutButton';
 import OrderPage from '../../container/Profile/OrderPage';
 import Acccountpage from '../../container/Profile/AccountPage';
 import AddressPage from '../../container/Profile/AddressPage';
-
+import { client } from '../../api/client';
 import styles from '../../styles/user.module.scss';
 const UserProfile = (props) => {
   const { session, profile } = props;
   const router = useRouter();
   const { query } = router;
+  const [userProfile, setUserProfile] = useState(profile);
 
+  const handleUpdateUserInfor = async (type, data) => {
+    if (type === 'account') {
+      // const result = await updateCustomer(profile.id, { payload: data });
+      const result = await client.post(`/customer/${profile.id}/update`, {
+        ...data
+      });
+
+      if (result.status === 200) {
+        setUserProfile((prevState) => ({
+          ...result.data
+        }));
+      }
+    }
+  };
   return (
     <Container>
       <div className={styles.auth__wrapper}>
@@ -55,13 +71,17 @@ const UserProfile = (props) => {
         <div className="auth--body">
           <div className="auth--wrapper">
             {((query.page === 'account' || query.page === undefined) && (
-              <Acccountpage title="Thông tin tài khoản" data={profile} />
+              <Acccountpage
+                title="Thông tin tài khoản"
+                data={userProfile}
+                onUpdateUserInfor={handleUpdateUserInfor}
+              />
             )) || <></>}
             {(query.page === 'order' && (
-              <OrderPage title="Đơn hàng" data={profile} />
+              <OrderPage title="Đơn hàng" data={userProfile} />
             )) || <></>}
             {(query.page === 'address' && (
-              <AddressPage title="Đơn hàng" data={profile} />
+              <AddressPage title="Địa chỉ thông tin" data={userProfile} />
             )) || <></>}
           </div>
         </div>

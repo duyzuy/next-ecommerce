@@ -49,16 +49,3 @@ export const createCustomer = async (data) => {
       return error.response;
     });
 };
-
-export const updateCustomer = async (id, data) => {
-  return await wcApi
-    .put(`/customers/${id}`, {
-      ...data
-    })
-    .then((res) => {
-      console.log(res.data);
-    })
-    .catch((err) => {
-      console.log(err);
-    });
-};

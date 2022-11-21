@@ -13,6 +13,8 @@ const Button = (props) => {
     href = '/',
     icon,
     iconPosition,
+    className = '',
+    size = 'small' || 'medium' || 'large',
     ...rest
   } = props;
   const classes = useMemo(() => {
@@ -44,6 +46,12 @@ const Button = (props) => {
     }
     if (iconPosition === 'right') {
       clss = clss.concat(' ', 'icon-right');
+    }
+    if (className) {
+      clss = clss.concat(' ', className);
+    }
+    if (size !== undefined) {
+      clss = clss.concat(' ', size);
     }
     return clss;
   }, [color, fluid, outline, type, iconPosition]);

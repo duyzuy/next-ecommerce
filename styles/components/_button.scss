@@ -11,6 +11,9 @@
     justify-content: center;
     cursor: pointer;
     transition: all linear 240ms;
+    &.small{
+        height: 40px;
+    }
     .icon{
         line-height: 0;
     }
