@@ -20,17 +20,22 @@ const UserProfile = (props) => {
   const [userProfile, setUserProfile] = useState(profile);
 
   const handleUpdateUserInfor = async (type, data) => {
+    let result;
     if (type === 'account') {
       // const result = await updateCustomer(profile.id, { payload: data });
-      const result = await client.post(`/customer/${profile.id}/update`, {
+      result = await client.post(`/customer/${profile.id}/update`, {
         ...data
       });
+    } else {
+      result = await client.post(`/customer/${profile.id}/update`, {
+        [type]: { ...data }
+      });
+    }
 
-      if (result.status === 200) {
-        setUserProfile((prevState) => ({
-          ...result.data
-        }));
-      }
+    if (result.status === 200) {
+      setUserProfile(() => ({
+        ...result.data
+      }));
     }
   };
   return (
@@ -81,7 +86,11 @@ const UserProfile = (props) => {
               <OrderPage title="Đơn hàng" data={userProfile} />
             )) || <></>}
             {(query.page === 'address' && (
-              <AddressPage title="Địa chỉ thông tin" data={userProfile} />
+              <AddressPage
+                title="Địa chỉ thông tin"
+                data={userProfile}
+                onUpdateUserInfor={handleUpdateUserInfor}
+              />
             )) || <></>}
           </div>
         </div>

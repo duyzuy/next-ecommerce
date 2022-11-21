@@ -65,7 +65,10 @@
 
             .label{
                 font-weight: bold;
-                width: 120px;
+                width: 30%
+            }
+            .value{
+                width: 70%;
             }
             .label, .value{
                 padding: 10px;
@@ -95,8 +98,13 @@
         }
         .page-actions {
             padding-top: 30px;
-            button:first-child{
-                margin-right: 20px;
+            button{
+              
+                font-weight: normal;
+                min-width: 180px;
+            }
+            button + button{
+                margin-left: 20px;
             }
         }
         .inner-section{
@@ -111,7 +119,23 @@
                 .section-header{
                     display: flex;
                     justify-content: space-between;
-                    margin-bottom: 10px;
+                    align-items: center;
+                    margin-bottom: 15px;
+                    .title{
+                        margin-bottom: 0;
+                    }
+                }
+            }
+        }
+        .header-actions{
+            .ec__button{
+                background-color: transparent;
+                border-color: transparent;
+                font-weight: normal;
+                height: auto;
+                opacity: 0.6;
+                &:hover{
+                    opacity: 1;
                 }
             }
         }

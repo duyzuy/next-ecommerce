@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import * as Icon from 'react-feather';
 import Button from '../../components/Button';
 
@@ -8,20 +8,61 @@ const EDITS = {
 };
 const AddressPage = ({ title, data, onUpdateUserInfor }) => {
   const [userData, setUserData] = useState({
-    billing: data.billing,
-    shipping: data.shipping,
+    billing: {},
+    shipping: {},
     editting: ''
   });
   const { billing, shipping } = data;
-  console.log(shipping);
-  const onEditting = (action) => {
+
+  const onEditting = useCallback(
+    (action) => {
+      let formData = {};
+
+      if (
+        (userData.editting === EDITS.BILLING && action === EDITS.BILLING) ||
+        (userData.editting === EDITS.SHIPPING && action === EDITS.SHIPPING)
+      ) {
+        formData = {
+          editting: ''
+        };
+      } else {
+        formData = {
+          editting: action,
+          [action]: data[action]
+        };
+      }
+
+      setUserData(() => ({
+        ...formData
+      }));
+    },
+    [userData.editting]
+  );
+
+  const canUpdated = useMemo(() => {
+    if (
+      userData.billing &&
+      JSON.stringify(userData.billing) !== JSON.stringify(billing)
+    ) {
+      return 'billing';
+    } else if (
+      userData.shipping &&
+      JSON.stringify(userData.shipping) !== JSON.stringify(shipping)
+    ) {
+      return 'shipping';
+    }
+    return '';
+  }, [userData]);
+  const handleChange = (key, value) => {
     setUserData((prevState) => ({
       ...prevState,
-      editting: action
+      [userData.editting]: {
+        ...prevState[userData.editting],
+        [key]: value
+      }
     }));
   };
-  const handleUpdateUserData = () => {};
-  const onCancelEdit = () => {};
+
   return (
     <div className="account-page">
       <div className="section-header">
@@ -31,14 +72,21 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
         <div className="inner-section">
           <div className="billing-address">
             <div className="section-header">
-              <h4>Thông tin thanh toán</h4>
+              <h4 className="title">Thông tin thanh toán</h4>
               <div className="header-actions">
-                <span
-                  className="btn-edit"
+                <Button
                   onClick={() => onEditting(EDITS.BILLING)}
+                  icon={() =>
+                    userData.editting === EDITS.BILLING ? (
+                      <Icon.X size={11} />
+                    ) : (
+                      <Icon.Edit3 size={11} />
+                    )
+                  }
+                  size="small"
                 >
-                  <Icon.Edit3 size={11} /> Chỉnh sửa
-                </span>
+                  {userData.editting === EDITS.BILLING ? 'Huỷ bỏ' : 'Chỉnh sửa'}
+                </Button>
               </div>
             </div>
             <div className="section-content">
@@ -46,7 +94,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                 <div className="label">Họ</div>
                 <div className="value">
                   {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input">
+                    <div className="ui small input fluid">
                       <input
                         type="text"
                         value={userData.billing.first_name}
@@ -65,11 +113,11 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                 <div className="label">Tên đệm và tên</div>
                 <div className="value">
                   {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input">
+                    <div className="ui small input fluid">
                       <input
                         type="text"
                         value={userData.billing.last_name}
-                        placeholder="Họ"
+                        placeholder="Tên đệm và tên"
                         onChange={(e) =>
                           handleChange('last_name', e.target.value)
                         }
@@ -84,7 +132,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                 <div className="label">Điện thoại</div>
                 <div className="value">
                   {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input">
+                    <div className="ui small input fluid">
                       <input
                         type="text"
                         value={userData.billing.phone}
@@ -101,7 +149,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                 <div className="label">Email</div>
                 <div className="value">
                   {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input">
+                    <div className="ui small input fluid">
                       <input
                         type="text"
                         value={userData.billing.email}
@@ -115,7 +163,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                 </div>
               </div>
               <div className="row">
-                <div className="label">Khu vực</div>
+                <div className="label">Quốc gia/Khu vực</div>
                 <div className="value">
                   <p>{billing.country || '--'}</p>
                 </div>
@@ -135,60 +183,91 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
               <div className="row">
                 <div className="label">Địa chỉ 1</div>
                 <div className="value">
-                  <p>{billing.address_1 || '--'}</p>
+                  {userData.editting === EDITS.BILLING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.billing.address_1}
+                        placeholder="Địa chỉ 1"
+                        onChange={(e) =>
+                          handleChange('address_1', e.target.value)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <p>{billing.address_1 || '--'}</p>
+                  )}
                 </div>
               </div>
               <div className="row">
                 <div className="label">Địa chỉ 2</div>
                 <div className="value">
-                  <p>{billing.address_2 || '--'}</p>
+                  {userData.editting === EDITS.BILLING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.billing.address_2}
+                        placeholder="Địa chỉ 2"
+                        onChange={(e) =>
+                          handleChange('address_2', e.target.value)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <p>{billing.address_2 || '--'}</p>
+                  )}
                 </div>
               </div>
-              <div className="page-actions buttons">
-                {userData.editting === EDITS.BILLING && (
-                  <>
-                    <Button color="light" size="small" onClick={onCancelEdit}>
-                      Huỷ bỏ
-                    </Button>
-                    <Button
-                      color={'primary'}
-                      size="small"
-                      onClick={() =>
-                        handleUpdateUserData({
-                          action:
-                            (userData.isEdit && ACTIONS.UPDATE) || ACTIONS.EDIT
-                        })
-                      }
-                    >
-                      Cập nhật
-                    </Button>
-                  </>
-                )}
-              </div>
+
+              {(userData.editting === EDITS.BILLING && (
+                <div className="page-actions">
+                  <Button
+                    disabled={canUpdated === EDITS.BILLING ? false : true}
+                    color={'primary'}
+                    size="small"
+                    onClick={() =>
+                      onUpdateUserInfor(EDITS.BILLING, {
+                        ...userData.billing
+                      })
+                    }
+                  >
+                    Cập nhật
+                  </Button>
+                </div>
+              )) || <></>}
             </div>
           </div>
 
           <div className="shipping-address">
             <div className="section-header">
-              <h4>Thông tin người nhận</h4>
+              <h4 className="title">Thông tin người nhận</h4>
               <div className="header-actions">
-                <span
-                  className="btn-edit"
+                <Button
                   onClick={() => onEditting(EDITS.SHIPPING)}
+                  icon={() =>
+                    userData.editting === EDITS.SHIPPING ? (
+                      <Icon.X size={11} />
+                    ) : (
+                      <Icon.Edit3 size={11} />
+                    )
+                  }
+                  size="small"
                 >
-                  <Icon.Edit3 size={11} /> Chỉnh sửa
-                </span>
+                  {userData.editting === EDITS.SHIPPING
+                    ? 'Huỷ bỏ'
+                    : 'Chỉnh sửa'}
+                </Button>
               </div>
             </div>
             <div className="section-content">
               <div className="row">
                 <div className="label">Họ</div>
                 <div className="value">
-                  {userData.isEdit ? (
-                    <div className="ui small input">
+                  {userData.editting === EDITS.SHIPPING ? (
+                    <div className="ui small input fluid">
                       <input
                         type="text"
-                        value={userData.profile.first_name}
+                        value={userData.shipping.first_name}
                         placeholder="Họ"
                         onChange={(e) =>
                           handleChange('first_name', e.target.value)
@@ -203,11 +282,11 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
               <div className="row">
                 <div className="label">Tên đệm và tên</div>
                 <div className="value">
-                  {userData.isEdit ? (
-                    <div className="ui small input">
+                  {userData.editting === EDITS.SHIPPING ? (
+                    <div className="ui small input fluid">
                       <input
                         type="text"
-                        value={userData.profile.last_name}
+                        value={userData.shipping.last_name}
                         placeholder="Họ"
                         onChange={(e) =>
                           handleChange('last_name', e.target.value)
@@ -222,17 +301,39 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
               <div className="row">
                 <div className="label">Điện thoại</div>
                 <div className="value">
-                  <p>{shipping.phone || '--'}</p>
+                  {userData.editting === EDITS.SHIPPING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.shipping.phone}
+                        placeholder="Điện thoại"
+                        onChange={(e) => handleChange('phone', e.target.value)}
+                      />
+                    </div>
+                  ) : (
+                    <p>{shipping.phone || '--'}</p>
+                  )}
                 </div>
               </div>
               <div className="row">
                 <div className="label">Email</div>
                 <div className="value">
-                  <p>{shipping.email || '--'}</p>
+                  {userData.editting === EDITS.SHIPPING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.shipping.email}
+                        placeholder="Email"
+                        onChange={(e) => handleChange('email', e.target.value)}
+                      />
+                    </div>
+                  ) : (
+                    <p>{shipping.email || '--'}</p>
+                  )}
                 </div>
               </div>
               <div className="row">
-                <div className="label">Khu vực</div>
+                <div className="label">Quốc gia/Khu vực</div>
                 <div className="value">
                   <p>{shipping.country || '--'}</p>
                 </div>
@@ -240,48 +341,93 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
               <div className="row">
                 <div className="label">Thành phố</div>
                 <div className="value">
-                  <p>{shipping.city || '--'}</p>
+                  {userData.editting === EDITS.SHIPPING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.shipping.city}
+                        placeholder="Thành phố"
+                        onChange={(e) => handleChange('city', e.target.value)}
+                      />
+                    </div>
+                  ) : (
+                    <p>{shipping.city || '--'}</p>
+                  )}
                 </div>
               </div>
               <div className="row">
                 <div className="label">Mã tỉnh thành</div>
                 <div className="value">
-                  <p>{shipping.postcode || '--'}</p>
+                  {userData.editting === EDITS.SHIPPING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.shipping.postcode}
+                        placeholder="Mã tỉnh thành"
+                        onChange={(e) =>
+                          handleChange('postcode', e.target.value)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <p>{shipping.postcode || '--'}</p>
+                  )}
                 </div>
               </div>
               <div className="row">
                 <div className="label">Địa chỉ 1</div>
                 <div className="value">
-                  <p>{shipping.address_1 || '--'}</p>
+                  {userData.editting === EDITS.SHIPPING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.shipping.address_1}
+                        placeholder="Địa chỉ 1"
+                        onChange={(e) =>
+                          handleChange('address_1', e.target.value)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <p>{shipping.address_1 || '--'}</p>
+                  )}
                 </div>
               </div>
               <div className="row">
                 <div className="label">Địa chỉ 2</div>
                 <div className="value">
-                  <p>{shipping.address_2 || '--'}</p>
+                  {userData.editting === EDITS.SHIPPING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.shipping.address_2}
+                        placeholder="Địa chỉ 2"
+                        onChange={(e) =>
+                          handleChange('address_2', e.target.value)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <p>{shipping.address_2 || '--'}</p>
+                  )}
                 </div>
               </div>
-              <div className="page-actions buttons">
-                {userData.editting === EDITS.SHIPPING && (
-                  <>
-                    <Button color="light" size="small" onClick={onCancelEdit}>
-                      Huỷ bỏ
-                    </Button>
-                    <Button
-                      color={'primary'}
-                      size="small"
-                      onClick={() =>
-                        handleUpdateUserData({
-                          action:
-                            (userData.isEdit && ACTIONS.UPDATE) || ACTIONS.EDIT
-                        })
-                      }
-                    >
-                      Cập nhật
-                    </Button>
-                  </>
-                )}
-              </div>
+
+              {(userData.editting === EDITS.SHIPPING && (
+                <div className="page-actions">
+                  <Button
+                    color={'primary'}
+                    size="small"
+                    onClick={() =>
+                      onUpdateUserInfor(EDITS.SHIPPING, {
+                        ...userData.shipping
+                      })
+                    }
+                  >
+                    Cập nhật
+                  </Button>
+                </div>
+              )) || <></>}
             </div>
           </div>
         </div>

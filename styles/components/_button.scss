@@ -11,21 +11,27 @@
     justify-content: center;
     cursor: pointer;
     transition: all linear 240ms;
+    &:disabled{
+        opacity: 0.6;
+        cursor: not-allowed
+    }
     &.small{
-        height: 40px;
+        height: 35px;
+        font-size: 13px;
+        padding: 5px 10px !important;
     }
     .icon{
         line-height: 0;
     }
     &:not(.icon-right){
         .icon{
-            margin-right: 10px;
+            margin-right: 5px;
         }
        
     }
     &.icon-right{
         .icon{
-            margin-left: 10px;
+            margin-left: 5px;
         }
       
     }
