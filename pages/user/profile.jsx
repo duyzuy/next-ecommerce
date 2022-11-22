@@ -18,8 +18,9 @@ const UserProfile = (props) => {
   const router = useRouter();
   const { query } = router;
   const [userProfile, setUserProfile] = useState(profile);
-
-  const handleUpdateUserInfor = async (type, data) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleUpdateUserInfor = async (type, data, callback) => {
+    setIsLoading(true);
     let result;
     if (type === 'account') {
       // const result = await updateCustomer(profile.id, { payload: data });
@@ -37,7 +38,12 @@ const UserProfile = (props) => {
         ...result.data
       }));
     }
+    setIsLoading(false);
+    if (typeof callback === 'function' && callback !== undefined) {
+      callback();
+    }
   };
+
   return (
     <Container>
       <div className={styles.auth__wrapper}>
@@ -78,17 +84,23 @@ const UserProfile = (props) => {
             {((query.page === 'account' || query.page === undefined) && (
               <Acccountpage
                 title="Thông tin tài khoản"
+                isLoading={isLoading}
                 data={userProfile}
                 onUpdateUserInfor={handleUpdateUserInfor}
               />
             )) || <></>}
             {(query.page === 'order' && (
-              <OrderPage title="Đơn hàng" data={userProfile} />
+              <OrderPage
+                title="Đơn hàng"
+                data={userProfile}
+                isLoading={isLoading}
+              />
             )) || <></>}
             {(query.page === 'address' && (
               <AddressPage
                 title="Địa chỉ thông tin"
                 data={userProfile}
+                isLoading={isLoading}
                 onUpdateUserInfor={handleUpdateUserInfor}
               />
             )) || <></>}

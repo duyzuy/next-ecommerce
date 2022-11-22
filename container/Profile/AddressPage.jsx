@@ -1,12 +1,12 @@
 import { useState, useCallback, useMemo } from 'react';
 import * as Icon from 'react-feather';
 import Button from '../../components/Button';
-
+import { Loader } from 'semantic-ui-react';
 const EDITS = {
   BILLING: 'billing',
   SHIPPING: 'shipping'
 };
-const AddressPage = ({ title, data, onUpdateUserInfor }) => {
+const AddressPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
   const [userData, setUserData] = useState({
     billing: {},
     shipping: {},
@@ -36,7 +36,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
         ...formData
       }));
     },
-    [userData.editting]
+    [userData, data]
   );
 
   const canUpdated = useMemo(() => {
@@ -62,7 +62,21 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
       }
     }));
   };
-
+  const onUpdateUserData = (action) => {
+    onUpdateUserInfor(
+      action,
+      {
+        ...userData[action]
+      },
+      () => {
+        setUserData(() => ({
+          billing: {},
+          shipping: {},
+          editting: ''
+        }));
+      }
+    );
+  };
   return (
     <div className="account-page">
       <div className="section-header">
@@ -98,6 +112,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.billing.first_name}
+                        disabled={(isLoading && true) || false}
                         placeholder="Họ"
                         onChange={(e) =>
                           handleChange('first_name', e.target.value)
@@ -117,6 +132,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.billing.last_name}
+                        disabled={(isLoading && true) || false}
                         placeholder="Tên đệm và tên"
                         onChange={(e) =>
                           handleChange('last_name', e.target.value)
@@ -136,6 +152,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.billing.phone}
+                        disabled={(isLoading && true) || false}
                         placeholder="Điện thoại"
                         onChange={(e) => handleChange('phone', e.target.value)}
                       />
@@ -153,6 +170,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.billing.email}
+                        disabled={(isLoading && true) || false}
                         placeholder="Email"
                         onChange={(e) => handleChange('email', e.target.value)}
                       />
@@ -177,7 +195,21 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
               <div className="row">
                 <div className="label">Mã tỉnh thành</div>
                 <div className="value">
-                  <p>{billing.postcode || '--'}</p>
+                  {userData.editting === EDITS.BILLING ? (
+                    <div className="ui small input fluid">
+                      <input
+                        type="text"
+                        value={userData.billing.postcode}
+                        disabled={(isLoading && true) || false}
+                        placeholder="Mã tỉnh thành"
+                        onChange={(e) =>
+                          handleChange('postcode', e.target.value)
+                        }
+                      />
+                    </div>
+                  ) : (
+                    <p>{billing.postcode || '--'}</p>
+                  )}
                 </div>
               </div>
               <div className="row">
@@ -188,6 +220,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.billing.address_1}
+                        disabled={(isLoading && true) || false}
                         placeholder="Địa chỉ 1"
                         onChange={(e) =>
                           handleChange('address_1', e.target.value)
@@ -207,6 +240,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.billing.address_2}
+                        disabled={(isLoading && true) || false}
                         placeholder="Địa chỉ 2"
                         onChange={(e) =>
                           handleChange('address_2', e.target.value)
@@ -225,13 +259,9 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                     disabled={canUpdated === EDITS.BILLING ? false : true}
                     color={'primary'}
                     size="small"
-                    onClick={() =>
-                      onUpdateUserInfor(EDITS.BILLING, {
-                        ...userData.billing
-                      })
-                    }
+                    onClick={() => onUpdateUserData(EDITS.BILLING)}
                   >
-                    Cập nhật
+                    {(isLoading && 'Loading...') || 'Cập nhật'}
                   </Button>
                 </div>
               )) || <></>}
@@ -268,6 +298,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.shipping.first_name}
+                        disabled={(isLoading && true) || false}
                         placeholder="Họ"
                         onChange={(e) =>
                           handleChange('first_name', e.target.value)
@@ -287,6 +318,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.shipping.last_name}
+                        disabled={(isLoading && true) || false}
                         placeholder="Họ"
                         onChange={(e) =>
                           handleChange('last_name', e.target.value)
@@ -306,29 +338,13 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.shipping.phone}
+                        disabled={(isLoading && true) || false}
                         placeholder="Điện thoại"
                         onChange={(e) => handleChange('phone', e.target.value)}
                       />
                     </div>
                   ) : (
                     <p>{shipping.phone || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Email</div>
-                <div className="value">
-                  {userData.editting === EDITS.SHIPPING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.shipping.email}
-                        placeholder="Email"
-                        onChange={(e) => handleChange('email', e.target.value)}
-                      />
-                    </div>
-                  ) : (
-                    <p>{shipping.email || '--'}</p>
                   )}
                 </div>
               </div>
@@ -346,6 +362,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.shipping.city}
+                        disabled={(isLoading && true) || false}
                         placeholder="Thành phố"
                         onChange={(e) => handleChange('city', e.target.value)}
                       />
@@ -363,6 +380,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                       <input
                         type="text"
                         value={userData.shipping.postcode}
+                        disabled={(isLoading && true) || false}
                         placeholder="Mã tỉnh thành"
                         onChange={(e) =>
                           handleChange('postcode', e.target.value)
@@ -381,6 +399,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                     <div className="ui small input fluid">
                       <input
                         type="text"
+                        disabled={(isLoading && true) || false}
                         value={userData.shipping.address_1}
                         placeholder="Địa chỉ 1"
                         onChange={(e) =>
@@ -400,6 +419,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                     <div className="ui small input fluid">
                       <input
                         type="text"
+                        disabled={(isLoading && true) || false}
                         value={userData.shipping.address_2}
                         placeholder="Địa chỉ 2"
                         onChange={(e) =>
@@ -418,13 +438,9 @@ const AddressPage = ({ title, data, onUpdateUserInfor }) => {
                   <Button
                     color={'primary'}
                     size="small"
-                    onClick={() =>
-                      onUpdateUserInfor(EDITS.SHIPPING, {
-                        ...userData.shipping
-                      })
-                    }
+                    onClick={() => onUpdateUserData(EDITS.SHIPPING)}
                   >
-                    Cập nhật
+                    {(isLoading && 'Loading...') || 'Cập nhật'}
                   </Button>
                 </div>
               )) || <></>}

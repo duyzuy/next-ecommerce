@@ -10,7 +10,6 @@ const handleUpdateCustomer = async (req, res) => {
       ...body
     })
     .then((response) => {
-      console.log(response);
       res.status(200).json({
         status: response.status,
         statusText: response.statusText,
@@ -18,8 +17,12 @@ const handleUpdateCustomer = async (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
-      res.status(400).json(err);
+      const { data } = err.response;
+      res.status(400).json({
+        status: data.data.status,
+        statusText: data.message,
+        data: data.data.details
+      });
     });
 };
 

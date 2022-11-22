@@ -5,7 +5,7 @@ const ACTIONS = {
   UPDATE: 'update',
   EDIT: 'edit'
 };
-const AccountPage = ({ data, onUpdateUserInfor }) => {
+const AccountPage = ({ data, onUpdateUserInfor, isLoading }) => {
   const [userData, setUserData] = useState({ profile: {}, isEdit: false });
 
   const handleChange = (key, value) => {
@@ -18,7 +18,7 @@ const AccountPage = ({ data, onUpdateUserInfor }) => {
     }));
   };
 
-  const handleUpdateUserData = ({ action }) => {
+  const onUpdateUserData = ({ action }) => {
     if (action === ACTIONS.EDIT) {
       setUserData((prevState) => ({
         ...prevState,
@@ -29,12 +29,12 @@ const AccountPage = ({ data, onUpdateUserInfor }) => {
         }
       }));
     } else {
-      setUserData((prevState) => ({
-        ...prevState,
-        isEdit: false
-      }));
-
-      onUpdateUserInfor('account', { ...userData.profile });
+      onUpdateUserInfor('account', { ...userData.profile }, () => {
+        setUserData((prevState) => ({
+          ...prevState,
+          isEdit: false
+        }));
+      });
     }
   };
   const onCancelEdit = () => {
@@ -59,6 +59,7 @@ const AccountPage = ({ data, onUpdateUserInfor }) => {
                   <input
                     type="text"
                     value={userData.profile.first_name}
+                    disabled={(isLoading && true) || false}
                     placeholder="Họ"
                     onChange={(e) => handleChange('first_name', e.target.value)}
                   />
@@ -76,6 +77,7 @@ const AccountPage = ({ data, onUpdateUserInfor }) => {
                   <input
                     type="text"
                     value={userData.profile.last_name}
+                    disabled={(isLoading && true) || false}
                     placeholder="Họ"
                     onChange={(e) => handleChange('last_name', e.target.value)}
                   />
@@ -117,7 +119,7 @@ const AccountPage = ({ data, onUpdateUserInfor }) => {
               color={userData.isEdit ? 'primary' : 'secondary'}
               size="small"
               onClick={() =>
-                handleUpdateUserData({
+                onUpdateUserData({
                   action: (userData.isEdit && ACTIONS.UPDATE) || ACTIONS.EDIT
                 })
               }
