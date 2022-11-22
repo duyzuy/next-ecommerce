@@ -5,7 +5,7 @@ const ACTIONS = {
   UPDATE: 'update',
   EDIT: 'edit'
 };
-const AccountPage = ({ data, onUpdateUserInfor, isLoading }) => {
+const AccountPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
   const [userData, setUserData] = useState({ profile: {}, isEdit: false });
 
   const handleChange = (key, value) => {
@@ -47,7 +47,7 @@ const AccountPage = ({ data, onUpdateUserInfor, isLoading }) => {
   return (
     <div className="account-page">
       <div className="section-header">
-        <h3>Thông tin tài khoản</h3>
+        <h3>{title}</h3>
       </div>
       <div className="section-content">
         <div className="inner-section">
@@ -114,7 +114,6 @@ const AccountPage = ({ data, onUpdateUserInfor, isLoading }) => {
                 Cancel
               </Button>
             )}
-
             <Button
               color={userData.isEdit ? 'primary' : 'secondary'}
               size="small"
@@ -124,7 +123,6 @@ const AccountPage = ({ data, onUpdateUserInfor, isLoading }) => {
                 })
               }
             >
-              {' '}
               {userData.isEdit ? 'Cập nhật' : 'Chỉnh sửa'}
             </Button>
           </div>

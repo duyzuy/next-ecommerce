@@ -98,7 +98,7 @@ const UserProfile = (props) => {
             )) || <></>}
             {(query.page === 'address' && (
               <AddressPage
-                title="Địa chỉ thông tin"
+                title="Địa chỉ"
                 data={userProfile}
                 isLoading={isLoading}
                 onUpdateUserInfor={handleUpdateUserInfor}
