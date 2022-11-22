@@ -49,3 +49,16 @@ export const createCustomer = async (data) => {
       return error.response;
     });
 };
+
+export const getOrders = async (payload) => {
+  return await wcApi
+    .get('orders', {
+      ...payload
+    })
+    .then((response) => {
+      return response.data;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};

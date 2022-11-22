@@ -1,20 +1,19 @@
 import { useState } from 'react';
-import { Container, Header } from 'semantic-ui-react';
-import { getSession, useSession } from 'next-auth/react';
-import Link from 'next/link';
+import { Container } from 'semantic-ui-react';
+import { getSession } from 'next-auth/react';
 
-import { PROFILE_ROUTES } from '../../constants/route';
-import { getCustomerByEmail } from '../../api/customer';
+import { getCustomerByEmail, getOrders } from '../../api/customer';
 import { useRouter } from 'next/router';
-import SignOutButton from '../../components/SignOutButton';
 
 import OrderPage from '../../container/Profile/OrderPage';
 import Acccountpage from '../../container/Profile/AccountPage';
 import AddressPage from '../../container/Profile/AddressPage';
 import { client } from '../../api/client';
 import styles from '../../styles/user.module.scss';
+import UserSidebar from '../../container/Profile/UserSideBar';
 const UserProfile = (props) => {
-  const { session, profile } = props;
+  const { session, profile, orders } = props;
+  console.log(orders);
   const router = useRouter();
   const { query } = router;
   const [userProfile, setUserProfile] = useState(profile);
@@ -47,38 +46,7 @@ const UserProfile = (props) => {
   return (
     <Container>
       <div className={styles.auth__wrapper}>
-        <div className="auth--sidebar">
-          <div className="auth-avt">
-            <div className="auth-avt-image">
-              <img src={profile.avatar_url} width={60} height={60} />
-            </div>
-            <div className="auth-account"> {session?.user?.name}</div>
-          </div>
-          <div className="auth--menu">
-            <ul>
-              {PROFILE_ROUTES.map((route) => (
-                <li key={route.id}>
-                  <Link href={route.path}>
-                    <a
-                      className={`
-                    ${
-                      router.asPath === route.path
-                        ? 'nav-link active'
-                        : 'nav-link'
-                    }`}
-                    >
-                      {route.name}
-                    </a>
-                  </Link>
-                </li>
-              ))}
-              <li>
-                <SignOutButton classes="item"></SignOutButton>
-              </li>
-            </ul>
-          </div>
-        </div>
-
+        <UserSidebar profile={profile} router={router} session={session} />
         <div className="auth--body">
           <div className="auth--wrapper">
             {((query.page === 'account' || query.page === undefined) && (
@@ -87,13 +55,6 @@ const UserProfile = (props) => {
                 isLoading={isLoading}
                 data={userProfile}
                 onUpdateUserInfor={handleUpdateUserInfor}
-              />
-            )) || <></>}
-            {(query.page === 'order' && (
-              <OrderPage
-                title="Đơn hàng"
-                data={userProfile}
-                isLoading={isLoading}
               />
             )) || <></>}
             {(query.page === 'address' && (
@@ -126,8 +87,12 @@ export async function getServerSideProps(ctx) {
 
   const profile = await getCustomerByEmail(session.user.email);
 
+  const orders = await getOrders({
+    customer: profile.id
+  });
+
   return {
-    props: { session, profile }
+    props: { session, profile, orders }
   };
 }
 UserProfile.auth = {

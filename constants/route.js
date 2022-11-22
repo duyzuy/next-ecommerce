@@ -40,7 +40,7 @@ export const PROFILE_ROUTES = [
   {
     id: 'order',
     name: 'Đơn hàng',
-    path: '/user/profile?page=order'
+    path: '/user/order'
   },
   {
     id: 'address',
