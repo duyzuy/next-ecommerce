@@ -8,7 +8,7 @@ const UserSidebar = ({ session, profile, router }) => {
         <div className="auth-avt-image">
           <img src={profile.avatar_url} width={60} height={60} />
         </div>
-        <div className="auth-account"> {session?.user?.name}</div>
+        <div className="auth-account">{session?.user?.name}</div>
       </div>
       <div className="auth--menu">
         <ul>
