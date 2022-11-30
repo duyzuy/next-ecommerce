@@ -13,6 +13,9 @@ const UserProfile = (props) => {
   console.log(orders);
   const router = useRouter();
 
+  const viewOrderDetail = async (id) => {
+    alert(`view detail ${id}`);
+  };
   return (
     <Container>
       <div className={styles.auth__wrapper}>
@@ -26,7 +29,13 @@ const UserProfile = (props) => {
               <div className="section-content">
                 <div className="inner-section">
                   {orders &&
-                    orders.map((order) => <ProductItem item={order} />)}
+                    orders.map((order) => (
+                      <ProductItem
+                        key={order.id}
+                        item={order}
+                        viewOrderDetail={viewOrderDetail}
+                      />
+                    ))}
                 </div>
               </div>
             </div>
