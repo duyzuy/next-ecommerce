@@ -38,7 +38,7 @@ const LoginPage = (props) => {
       });
 
       if (result.ok && result.status === 200) {
-        router.push('/user/profilee', undefined, { shallow: false });
+        router.push('/user/profile', undefined, { shallow: false });
       } else {
         setErrors([result.error]);
       }

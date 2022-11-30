@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import { wpClient } from '../api/client';
-const useAuth = () => {
+import { getSession } from 'next-auth/react';
+const useAuth = (req) => {
   const [isLogedIn, setIsLogedIn] = useState(false);
 
   useEffect(() => {
