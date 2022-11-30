@@ -21,6 +21,7 @@ const LoginPage = (props) => {
     let credentials = {};
     try {
       const callbackUrl = '/user/profile';
+
       credentials = Object.assign({ callbackUrl }, credentials);
       if (provider === 'credentials') {
         await loginSchema.validate({ ...userData });
@@ -37,18 +38,13 @@ const LoginPage = (props) => {
       });
 
       if (result.ok && result.status === 200) {
-        router.push('/user/profile', undefined, { shallow: false });
+        router.push('/user/profilee', undefined, { shallow: false });
       } else {
         setErrors([result.error]);
       }
     } catch (err) {
       setErrors(err.errors);
     }
-  };
-
-  const handleSocialLogin = async () => {
-    const callbackUrl = '/user/profile';
-    const result = await signIn('google', { callbackUrl });
   };
 
   const handleChange = (key, value) => {

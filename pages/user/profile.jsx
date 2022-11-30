@@ -5,7 +5,6 @@ import { getSession } from 'next-auth/react';
 import { getCustomerByEmail, getOrders } from '../../api/customer';
 import { useRouter } from 'next/router';
 
-import OrderPage from '../../container/Profile/OrderPage';
 import Acccountpage from '../../container/Profile/AccountPage';
 import AddressPage from '../../container/Profile/AddressPage';
 import { client } from '../../api/client';
@@ -18,6 +17,12 @@ const UserProfile = (props) => {
   const { query } = router;
   const [userProfile, setUserProfile] = useState(profile);
   const [isLoading, setIsLoading] = useState(false);
+
+  /**
+   * 9SnkzAQKUbKRuvWjTIo#gG(M
+   * update user data infor
+   *
+   */
   const handleUpdateUserInfor = async (type, data, callback) => {
     setIsLoading(true);
     let result;
@@ -92,7 +97,7 @@ export async function getServerSideProps(ctx) {
   });
 
   return {
-    props: { session, profile, orders }
+    props: { session, profile }
   };
 }
 UserProfile.auth = {

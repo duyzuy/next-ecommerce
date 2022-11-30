@@ -25,7 +25,7 @@ function MyApp(props) {
       <SessionProvider session={pageProps?.session}>
         {Component.auth
           ? getLayout(
-              <Auth>
+              <Auth auth={Component.auth}>
                 <Component {...pageProps} />
               </Auth>
             )

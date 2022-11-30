@@ -51,7 +51,7 @@ export const authOptions = {
             return data;
           })
           .catch((error) => {
-            console.log(error);
+            return error;
           });
 
         if (user.data) {
@@ -112,21 +112,7 @@ export const authOptions = {
       session.accessToken = token.accessToken;
 
       session.user.role = token.role;
-      //get information usser
-      // const customer = await getCustomerByEmail(session.user.email);
-      // console.log(customer);
-      // if (customer.length === 0) {
-      //   const data = await createCustomer({
-      //     email: session.user.email,
-      //     first_name: session.user.name,
-      //     last_name: '',
-      //     username: session.user.email,
-      //     password: '123123123123'
-      //   });
 
-      //   console.log(data);
-      // }
-      // console.log('session', { session, token, user });
       return session;
     }
   },

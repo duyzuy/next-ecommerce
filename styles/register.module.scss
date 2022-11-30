@@ -30,6 +30,7 @@
             padding: 20px;
             border-radius: 50%;
             line-height: 0;
+         
         }
     }
 
@@ -41,15 +42,17 @@
         cursor: pointer;
         .icon{
             position: relative;
-            width: 24px;
-            height: 24px;
+            width: 30px;
+            height: 30px;
             display: inline-block;
-          
+            background-color: #fff;
+            border-radius: 50%;
+            padding: 5px;
         }
         .acc-facebook, .acc-google{
             display: flex;
             align-items: center;
-            padding: 10px 15px;
+            padding: 5px 15px;
             border: 1px solid;
             border-radius: 5px;
             margin-bottom: 10px;
@@ -64,11 +67,19 @@
         .acc-facebook{
             border-color: #4460a0;
             color: #4460a0;
+            &:hover{
+                background-color: #4460a0;
+                color: #fff
+            }
             
         }
         .acc-google{
             border-color: #e93800;
             color: #e93800;
+            &:hover{
+                background-color: #e93800;
+                color: #fff
+            }
         }
         
     }

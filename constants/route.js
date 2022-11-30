@@ -39,7 +39,7 @@ export const PROFILE_ROUTES = [
   },
   {
     id: 'order',
-    name: 'Đơn hàng',
+    name: 'Lịch sử mua hàng',
     path: '/user/order'
   },
   {

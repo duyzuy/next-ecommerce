@@ -1,10 +1,43 @@
+import { useState } from 'react';
+import { Container } from 'semantic-ui-react';
 import { getSession } from 'next-auth/react';
-import { getOrders } from '../../../api/customer';
-const OrderPage = () => {
-  return <>order page</>;
+
+import { getCustomerByEmail, getOrders } from '../../../api/customer';
+import { useRouter } from 'next/router';
+
+import styles from '../../../styles/user.module.scss';
+import UserSidebar from '../../../container/Profile/UserSideBar';
+import ProductItem from '../../../components/ProductItem';
+const UserProfile = (props) => {
+  const { session, profile, orders } = props;
+  console.log(orders);
+  const router = useRouter();
+
+  return (
+    <Container>
+      <div className={styles.auth__wrapper}>
+        <UserSidebar profile={profile} router={router} session={session} />
+        <div className="auth--body">
+          <div className="auth--wrapper">
+            <div className="account-page">
+              <div className="section-header">
+                <h3>Lịch sử mua hàng</h3>
+              </div>
+              <div className="section-content">
+                <div className="inner-section">
+                  {orders &&
+                    orders.map((order) => <ProductItem item={order} />)}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </Container>
+  );
 };
 
-export default OrderPage;
+export default UserProfile;
 export async function getServerSideProps(ctx) {
   const session = await getSession({ req: ctx.req });
 
@@ -27,8 +60,7 @@ export async function getServerSideProps(ctx) {
     props: { session, profile, orders }
   };
 }
-
-OrderPage.auth = {
+UserProfile.auth = {
   role: 'customer',
   loading: 'loading...',
   unauthorized: '/user/login' // redirect to this url
