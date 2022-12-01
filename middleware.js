@@ -3,8 +3,6 @@ import { NextResponse } from 'next/server';
 // This function can be marked `async` if using `await` inside
 export function middleware(req) {
   // checklogedin to allow view order detail
-  const isAuthenticated = false;
-
   // if (!isAuthenticated) {
   //   // Respond with JSON indicating an error message
   //   return new NextResponse(

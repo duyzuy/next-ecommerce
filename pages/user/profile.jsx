@@ -12,7 +12,7 @@ import styles from '../../styles/user.module.scss';
 import UserSidebar from '../../container/Profile/UserSideBar';
 const UserProfile = (props) => {
   const { session, profile, orders } = props;
-  console.log(orders);
+  console.log({ session, profile });
   const router = useRouter();
   const { query } = router;
   const [userProfile, setUserProfile] = useState(profile);

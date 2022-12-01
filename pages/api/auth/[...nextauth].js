@@ -1,19 +1,20 @@
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import { create } from 'yup/lib/Reference';
 import {
   getCustomerInfor,
   getCustomerByEmail,
   createCustomer
 } from '../../../api/customer';
 import { USER_ROLES } from '../../../constants/roles';
+
 export const authOptions = {
   session: {
     strategy: 'jwt',
 
     // Seconds - How long until an idle session expires and is no longer valid.
-    maxAge: 1 * 24 * 60 * 60, // 30 days
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+    // maxAge: 1 * 60, // 30 days
 
     updateAge: 1 * 60 * 60, // 24 hours
 
@@ -112,6 +113,7 @@ export const authOptions = {
       session.accessToken = token.accessToken;
 
       session.user.role = token.role;
+      session.error = token.error;
 
       return session;
     }
