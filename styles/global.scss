@@ -6,6 +6,7 @@
 @use 'components/productSlide';
 @use 'components/inputRange';
 @use 'components/sliderRange';
+@use 'components/modal';
 
 @use 'foundation/variables' as *;
 @font-face {
@@ -84,4 +85,7 @@ button{
   .section-products{
     padding-bottom: 30px;
   }
+}
+img{
+  max-width: 100%;
 }

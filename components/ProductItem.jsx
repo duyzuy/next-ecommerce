@@ -1,5 +1,5 @@
 import { formatPrice } from '../helpers/product';
-const ProductItem = ({ item, viewOrderDetail }) => {
+const ProductItem = ({ item, onViewOrderDetail }) => {
   return (
     <>
       <div className="box order">
@@ -17,7 +17,7 @@ const ProductItem = ({ item, viewOrderDetail }) => {
             </div>
           </div>
           <div className="box-footer">
-            <button onClick={() => viewOrderDetail(item.id)}>
+            <button onClick={() => onViewOrderDetail(item.id)}>
               Xem chi tiết
             </button>
           </div>

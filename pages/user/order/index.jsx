@@ -8,14 +8,24 @@ import { useRouter } from 'next/router';
 import styles from '../../../styles/user.module.scss';
 import UserSidebar from '../../../container/Profile/UserSideBar';
 import ProductItem from '../../../components/ProductItem';
-const UserProfile = (props) => {
+import { client } from '../../../api/client';
+import EcModal from '../../../components/Modal';
+import OrderDetail from '../../../components/OrderDetail';
+const OrderPage = (props) => {
   const { session, profile, orders } = props;
-  console.log(orders);
+  const [orderDetail, setOrderDetail] = useState({});
+  const [isShowModal, setIsShowModal] = useState(false);
   const router = useRouter();
 
-  const viewOrderDetail = async (id) => {
-    alert(`view detail ${id}`);
+  const onViewOrderDetail = async (id) => {
+    const response = await client.get(`order/${id}`);
+    console.log(response);
+    if (response.status === 'oke') {
+      setIsShowModal(true);
+      setOrderDetail(response.data);
+    }
   };
+
   return (
     <Container>
       <div className={styles.auth__wrapper}>
@@ -33,9 +43,16 @@ const UserProfile = (props) => {
                       <ProductItem
                         key={order.id}
                         item={order}
-                        viewOrderDetail={viewOrderDetail}
+                        onViewOrderDetail={onViewOrderDetail}
                       />
                     ))}
+
+                  <EcModal
+                    title={`Chi tiết đơn hàng #${orderDetail.orderId}`}
+                    render={() => <OrderDetail data={orderDetail} />}
+                    isShow={isShowModal}
+                    onClose={() => setIsShowModal(false)}
+                  />
                 </div>
               </div>
             </div>
@@ -46,7 +63,7 @@ const UserProfile = (props) => {
   );
 };
 
-export default UserProfile;
+export default OrderPage;
 export async function getServerSideProps(ctx) {
   const session = await getSession({ req: ctx.req });
 
@@ -69,7 +86,7 @@ export async function getServerSideProps(ctx) {
     props: { session, profile, orders }
   };
 }
-UserProfile.auth = {
+OrderPage.auth = {
   role: 'customer',
   loading: 'loading...',
   unauthorized: '/user/login' // redirect to this url

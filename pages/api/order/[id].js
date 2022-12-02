@@ -11,7 +11,23 @@ const orderDetailHandler = async (req, res) => {
       .get(`orders/${query.id}`)
       .then((response) => {
         res.status(200).json({
-          data: response.data
+          status: 'oke',
+          stattusCode: 200,
+          data: {
+            orderId: response.data.id,
+            items: response.data.line_items,
+            billing: response.data.billing,
+            shipping: response.data.shipping,
+            taxLines: response.data.tax_lines,
+            status: response.data.status,
+            total: response.data.total,
+            totalTax: response.data.total_tax,
+            currency: response.data.currency,
+            paymentMethodCode: response.data.payment_method,
+            paymentMethodTitle: response.data.payment_method_title,
+            shippingTax: response.data.shipping_tax,
+            shippingTotal: response.data.shipping_total
+          }
         });
       })
       .catch((error) => {
