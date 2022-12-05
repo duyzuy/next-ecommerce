@@ -20,7 +20,9 @@ import RightSidebar from '../../../container/ProductDetail/RightSidebar';
 import { isValidEmail } from '../../../utils/validate';
 import styles from '../../../styles/singleproduct.module.scss';
 import { getSlugFromProducts } from '../../../api/product';
-
+import { useDispatch } from '../../../providers/hooks';
+import { ADD_TO_CART } from '../../../constants/actions';
+import useLocalStorage from '../../../hooks/useLocalstorage';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
@@ -29,8 +31,52 @@ const ProductDetail = (props) => {
 
   const [productReviews, setProductReviews] = useState(reviews);
 
-  const onAddToCart = (id, product) => {
-    console.log(id);
+  const dispatch = useDispatch();
+
+  const storage = useLocalStorage('cart');
+
+  const onAddToCart = (prd, quantity) => {
+    const { price, sale_price, id, regular_price, name, images } = prd;
+
+    dispatch({
+      type: ADD_TO_CART,
+      payload: {
+        id,
+        price: Number(price),
+        salePrice: Number(sale_price),
+        regularPrice: Number(regular_price),
+        name,
+        images,
+        quantity: Number(quantity)
+      }
+    });
+    // items: [],
+    // count: 0,
+    // subTotal: 0,
+
+    console.log(storage.getItem());
+    let subTotal = 0;
+    if (storage.getItem() === null) {
+      storage.addItem('items', [
+        {
+          id,
+          price: Number(price),
+          salePrice: Number(sale_price),
+          regularPrice: Number(regular_price),
+          name,
+          images,
+          quantity: Number(quantity)
+        }
+      ]);
+
+      if (Number(sale_price) === 0) {
+        subTotal = Number(regular_price);
+      } else {
+        subTotal = Number(sale_price);
+      }
+      storage.addItem('subTotal', subTotal);
+      storage.addItem('count', Number(quantity));
+    }
   };
 
   const loadMoreReviews = async () => {

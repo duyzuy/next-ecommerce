@@ -5,8 +5,10 @@ import Link from 'next/link';
 import styles from '../../styles/header.module.scss';
 import HeaderBottom from '../HeaderBottom';
 import { useSession, signIn, signOut } from 'next-auth/react';
+import { useSelector } from '../../providers/hooks';
 const Header = (props) => {
   const { data: session, status } = useSession();
+  const cart = useSelector((state) => state.cart);
 
   const { categories } = props;
   return (
@@ -44,10 +46,10 @@ const Header = (props) => {
             </div>
             <div className={styles.ec_header_actions}>
               <div className={styles.ec_header_cart}>
-                <Link href="/">
+                <Link href="/cart">
                   <a className="item">
                     <Icon.ShoppingCart size={20} />
-                    <span className="cart_count">10</span>
+                    <span className="cart_count">{cart.count}</span>
                   </a>
                 </Link>
               </div>

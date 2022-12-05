@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useContext } from 'react';
 import { Container, Header } from 'semantic-ui-react';
 import { loginSchema } from '../../../utils/validate';
 import * as Icon from 'react-feather';
@@ -10,6 +10,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getProviders, getSession, signIn } from 'next-auth/react';
 import { Message } from 'semantic-ui-react';
+
 const LoginPage = (props) => {
   const [userData, setUserData] = useState({});
   const { providers } = props;

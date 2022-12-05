@@ -14,9 +14,10 @@ const Button = (props) => {
     icon,
     iconPosition,
     className = '',
-    size = 'small' || 'medium' || 'large',
+    size = 'medium',
     ...rest
   } = props;
+  console.log(size);
   const classes = useMemo(() => {
     let clss = 'ec__button';
     if (color === 'primary') {
@@ -54,7 +55,7 @@ const Button = (props) => {
       clss = clss.concat(' ', size);
     }
     return clss;
-  }, [color, fluid, outline, type, iconPosition]);
+  }, [color, fluid, outline, type, iconPosition, size]);
 
   const IconComp = () => {
     if (icon !== undefined && typeof icon === 'function') {

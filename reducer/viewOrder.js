@@ -5,17 +5,18 @@ const viewOrderState = {
   isLoading: false
 };
 
-const vewOrderReducer = (state, action) => {
-  console.log('reducer action...');
+const viewOrderReducer = (state, action) => {
   switch (action.type) {
-    case VIEW_ORDER_DETAIL:
-      {
-        state = viewOrderState;
-      }
-      break;
+    case VIEW_ORDER_DETAIL: {
+      const newState = {
+        ...state,
+        ...action.payload
+      };
+      return newState;
+    }
     default:
       return state;
   }
 };
 
-export { viewOrderState, vewOrderReducer };
+export { viewOrderState, viewOrderReducer };
