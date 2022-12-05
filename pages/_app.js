@@ -1,4 +1,5 @@
-import AppProvider from '../providers/AppProvider';
+import { AppProvider } from '../providers';
+import { StoreProvider } from '../providers';
 import { getCategories } from '../api/product';
 import Auth from '../components/Auth';
 import Layout from '../components/Layout';
@@ -22,15 +23,17 @@ function MyApp(props) {
 
   return (
     <AppProvider>
-      <SessionProvider session={pageProps?.session}>
-        {Component.auth
-          ? getLayout(
-              <Auth auth={Component.auth}>
-                <Component {...pageProps} />
-              </Auth>
-            )
-          : getLayout(<Component {...pageProps} />)}
-      </SessionProvider>
+      <StoreProvider>
+        <SessionProvider session={pageProps?.session}>
+          {Component.auth
+            ? getLayout(
+                <Auth auth={Component.auth}>
+                  <Component {...pageProps} />
+                </Auth>
+              )
+            : getLayout(<Component {...pageProps} />)}
+        </SessionProvider>
+      </StoreProvider>
     </AppProvider>
   );
 }

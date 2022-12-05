@@ -1,5 +1,14 @@
 import * as Icon from 'react-feather';
-const EcModal = ({ title, isShow, render }) => {
+import { useEffect } from 'react';
+const EcModal = ({ title, isShow, render, onClose }) => {
+  useEffect(() => {
+    if (isShow) {
+      document.body.classList.add('fixed');
+    } else {
+      document.body.classList.remove('fixed');
+    }
+  }, [isShow]);
+
   if (!isShow) return null;
 
   if (render && typeof render !== 'function')
@@ -7,13 +16,13 @@ const EcModal = ({ title, isShow, render }) => {
 
   return (
     <div className="ec__modal">
-      <div className="ec__modal--overlay"></div>
+      <div className="ec__modal--overlay" onClick={onClose}></div>
       <div className="ec__modal--container">
         <div className="ec__modal--inner">
           {(title && (
             <div className="ec__modal--header">
               <h4>{title}</h4>
-              <div className="ec__modal--close">
+              <div className="ec__modal--close" onClick={onClose}>
                 <Icon.X size={16} />
               </div>
             </div>

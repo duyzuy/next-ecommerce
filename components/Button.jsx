@@ -47,7 +47,7 @@ const Button = (props) => {
     if (iconPosition === 'right') {
       clss = clss.concat(' ', 'icon-right');
     }
-    if (className) {
+    if (className !== undefined) {
       clss = clss.concat(' ', className);
     }
     if (size !== undefined) {

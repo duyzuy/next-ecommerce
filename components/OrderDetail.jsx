@@ -1,22 +1,34 @@
 const OrderDetail = ({ data }) => {
   return (
-    <>
-      {' '}
-      <div className="items">
-        <div className="title">Sản phẩm</div>
-        <div className=""></div>
-        {data.items.map((item) => (
-          <div className="item" key={item.id}>
-            <div className="image">
-              <img src={item.image.src} alt={item.name} />
-            </div>
-            <div className="name">{item.name}</div>
-            <div className="price">{item.quantity}</div>
-            <div className="price">{item.price}</div>
+    <div className="order__detail">
+      <div className="order__detail--items">
+        <h4 className="title">Sản phẩm</h4>
+        <div className="prd--items">
+          <div className="header--items">
+            <div className="prd--image"></div>
+            <div className="prd--name">Tên sản phẩm</div>
+            <div className="prd--quality">Số lượng</div>
+            <div className="prd--price">Giá tiền</div>
           </div>
-        ))}
+
+          {data.items.map((item) => (
+            <div className="line--item" key={item.id}>
+              <div className="image">
+                <img
+                  src={item.image.src}
+                  alt={item.name}
+                  width={60}
+                  height="auto"
+                />
+              </div>
+              <div className="name">{item.name}</div>
+              <div className="price">{item.quantity}</div>
+              <div className="price">{item.price}</div>
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="shipping">
+      <div className="order__detail--shipping">
         <h4>Thông tin giao giàng</h4>
         <div className="content">
           <div className="row-content">
@@ -41,7 +53,7 @@ const OrderDetail = ({ data }) => {
           </div>
         </div>
       </div>
-      <div className="billing">
+      <div className="order__detail--billing">
         <h4>Thông tin thanh toán</h4>
         <div className="content">
           <div className="row-content">
@@ -70,7 +82,7 @@ const OrderDetail = ({ data }) => {
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 

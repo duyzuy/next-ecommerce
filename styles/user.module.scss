@@ -127,6 +127,72 @@
                 }
             }
         }
+        .order__detail--items{
+            margin-bottom: 30px;
+            .prd--items{
+                display: table;
+            }
+            .header--items{
+                display: table-row;
+                width: 100%;
+                .prd--name, 
+                .prd--quality, 
+                .prd--price{
+                    display: table-cell;
+                    padding: 5px 10px
+                }
+                .prd--name{
+                   columns: 2;
+                }
+            }
+            .line--item{
+                display: table-row;
+                width: 100%;
+                > div{
+                    display: table-cell;
+                    padding: 5px 10px
+                }
+            }
+        }
+        .order__detail--shipping,
+        .order__detail--billing{
+            margin-bottom: 30px;
+            .content{
+                border: 1px solid #f1f1f1;
+                border-radius: 5px;
+                padding-top: 28px;
+                margin-top: -28px;
+                .row-content{
+                    width: 100%;
+                
+                    display: flex;
+                    flex-wrap: wrap;
+                    .label{
+                        width: 40%;
+                        flex-basis: 40%;
+                    }
+                    .value{
+                        width: 60%;
+                        flex-basis: 60%;
+                    }
+                    .label, .value{
+                        padding: 5px 10px;
+                    }
+                }
+            }
+            h4{
+                background-color: #fff;
+                display: inline-block;
+                padding: 5px 10px;
+                margin-left: 10px;
+                font-size: 16px;
+            }
+        }
+        .order__detail--billing{
+            .content{
+            
+            }
+        }
         .header-actions{
             .ec__button{
                 background-color: transparent;

@@ -35,6 +35,9 @@ body{
   font-family: Product-Sans;
   background-color: #f4f8ff;
 }
+body.fixed{
+  overflow: hidden;
+}
 a{
   color: #3a62c1
 }
@@ -88,4 +91,30 @@ button{
 }
 img{
   max-width: 100%;
+}
+.box.order{
+  position: relative;
+  border: 1px solid #f1f1f1;
+  padding: 20px;
+  border-radius: 5px;
+}
+.box-header{
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+.box-body{
+  .order-status{
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 5px 10px;
+
+  }
+  .items-count, .total-price, .payment-type{
+    margin-bottom: 10px;
+    .label{
+      width: 180px;
+      display: inline-block;
+    }
+  }
 }

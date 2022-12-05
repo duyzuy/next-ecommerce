@@ -1,3 +1,3 @@
 import { createContext } from 'react';
-const AppContext = createContext();
+const AppContext = createContext({ test: 'test' });
 export default AppContext;
