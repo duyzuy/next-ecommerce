@@ -2,11 +2,14 @@ import { useEffect, useState } from 'react';
 import { AppContext } from '../contexts';
 import { client } from '../api/client';
 import { wooSetting } from '../constants/settings';
+import { useDispatch } from './hooks';
+import { LOAD_CART } from '../constants/actions';
 
 const AppProvider = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [currency, setCurrency] = useState();
 
+  const disPatch = useDispatch();
   useEffect(() => {
     (async () => {
       setIsLoading(true);
@@ -22,6 +25,8 @@ const AppProvider = (props) => {
           setIsLoading(false);
         });
     })();
+
+    disPatch({ type: LOAD_CART });
   }, []);
 
   return (

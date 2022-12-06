@@ -12,7 +12,7 @@ const useLocalStorage = (name) => {
 
   const removeItem = () => {};
 
-  const getItem = () => localStorage.getItem(name);
+  const getItem = () => JSON.parse(localStorage.getItem(name));
 
   return {
     addItem,

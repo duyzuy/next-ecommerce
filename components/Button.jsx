@@ -17,7 +17,7 @@ const Button = (props) => {
     size = 'medium',
     ...rest
   } = props;
-  console.log(size);
+
   const classes = useMemo(() => {
     let clss = 'ec__button';
     if (color === 'primary') {

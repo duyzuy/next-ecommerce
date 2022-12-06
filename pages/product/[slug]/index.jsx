@@ -38,45 +38,59 @@ const ProductDetail = (props) => {
   const onAddToCart = (prd, quantity) => {
     const { price, sale_price, id, regular_price, name, images } = prd;
 
+    const prdItem = {
+      id,
+      price:
+        Number(sale_price) === 0 ? Number(regular_price) : Number(sale_price),
+      name,
+      images,
+      quantity: Number(quantity)
+    };
+
     dispatch({
       type: ADD_TO_CART,
-      payload: {
-        id,
-        price: Number(price),
-        salePrice: Number(sale_price),
-        regularPrice: Number(regular_price),
-        name,
-        images,
-        quantity: Number(quantity)
-      }
+      payload: { ...prdItem }
     });
-    // items: [],
-    // count: 0,
-    // subTotal: 0,
 
-    console.log(storage.getItem());
-    let subTotal = 0;
-    if (storage.getItem() === null) {
-      storage.addItem('items', [
-        {
-          id,
-          price: Number(price),
-          salePrice: Number(sale_price),
-          regularPrice: Number(regular_price),
-          name,
-          images,
-          quantity: Number(quantity)
-        }
-      ]);
+    // let cart = {
+    //   items: [],
+    //   count: 0,
+    //   subTotal: 0,
+    //   currency: 'VND'
+    // };
+    // if (storage.getItem() === null) {
+    //   cart = {
+    //     items: [{ ...prdItem }],
+    //     count: prdItem.quantity,
+    //     subTotal: prdItem.price * prdItem.quantity
+    //   };
+    // } else {
+    //   const oldCart = storage.getItem();
+    //   const { items, count, subTotal } = oldCart;
+    //   let newItem = [];
 
-      if (Number(sale_price) === 0) {
-        subTotal = Number(regular_price);
-      } else {
-        subTotal = Number(sale_price);
-      }
-      storage.addItem('subTotal', subTotal);
-      storage.addItem('count', Number(quantity));
-    }
+    //   const item = items.find((item) => item.id === prdItem.id);
+    //   if (item) {
+    //     newItem = items.map((item) =>
+    //       item.id === prdItem.id
+    //         ? { ...item, quantity: item.quantity + prdItem.quantity }
+    //         : item
+    //     );
+    //   } else {
+    //     newItem = [...items, { ...prdItem }];
+    //   }
+
+    //   cart = {
+    //     ...cart,
+    //     items: [...newItem],
+    //     count: count + prdItem.quantity,
+    //     subTotal: subTotal + prdItem.price * prdItem.quantity
+    //   };
+    // }
+
+    // Object.keys(cart).forEach((key) => {
+    //   storage.addItem(key, cart[key]);
+    // });
   };
 
   const loadMoreReviews = async () => {
