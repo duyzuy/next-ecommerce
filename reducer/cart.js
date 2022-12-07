@@ -12,29 +12,39 @@ const cartReducer = (state, action) => {
   switch (action.type) {
     case ADD_TO_CART: {
       const { payload } = action;
-      let newItems = [];
 
-      if (state.count !== 0) {
-        const item = state.items.find((item) => item.id === payload.id);
-        if (item) {
-          newItems = state.items.map((item) =>
-            item.id === payload.id
-              ? { ...item, quantity: item.quantity + payload.quantity }
-              : item
-          );
+      let newItems = [];
+      if (payload.isExistStorage) {
+        if (state.count !== 0) {
+          const item = state.items.find((item) => item.id === payload.data.id);
+          if (item) {
+            newItems = state.items.map((item) =>
+              item.id === payload.data.id
+                ? { ...item, quantity: item.quantity + payload.data.quantity }
+                : item
+            );
+          } else {
+            newItems = [...state.items, { ...payload.data }];
+          }
         } else {
-          newItems = [...state.items, { ...payload }];
+          newItems = [{ ...payload.data }];
         }
+
+        state = {
+          ...state,
+          items: [...newItems],
+          count: state.count + payload.data.quantity,
+          subTotal: state.subTotal + payload.data.price * payload.data.quantity
+        };
       } else {
-        newItems = [{ ...payload }];
+        state = {
+          items: [{ ...payload.data }],
+          count: payload.data.quantity,
+          subTotal: payload.data.price * payload.data.quantity
+        };
       }
 
-      return {
-        ...state,
-        items: [...newItems],
-        count: state.count + payload.quantity,
-        subTotal: state.subTotal + payload.price * payload.quantity
-      };
+      return state;
     }
     case REMOVE_FROM_CART: {
       const newState = {};
@@ -42,16 +52,16 @@ const cartReducer = (state, action) => {
     }
     case LOAD_CART: {
       const cart = JSON.parse(localStorage.getItem('cart')) || {};
-      let newState = {};
+
       if (!isEmpty(cart)) {
         Object.keys(cart).forEach((key) => {
-          newState = {
+          state = {
             ...state,
             [key]: cart[key]
           };
         });
       }
-      return newState;
+      return state;
     }
     default:
       return state;

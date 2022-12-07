@@ -22,21 +22,20 @@ import styles from '../../../styles/singleproduct.module.scss';
 import { getSlugFromProducts } from '../../../api/product';
 import { useDispatch } from '../../../providers/hooks';
 import { ADD_TO_CART } from '../../../constants/actions';
-import useLocalStorage from '../../../hooks/useLocalstorage';
+import { addTocart } from '../../../actions/cart';
+import useCart from '../../../hooks/useCart';
+import { isEmpty } from '../../../utils/helper';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
 
   const { breadItems } = useBreadcrumb(router);
-
   const [productReviews, setProductReviews] = useState(reviews);
-
   const dispatch = useDispatch();
-
-  const storage = useLocalStorage('cart');
+  const cart = useCart();
 
   const onAddToCart = (prd, quantity) => {
-    const { price, sale_price, id, regular_price, name, images } = prd;
+    const { id, sale_price, regular_price, name, images } = prd;
 
     const prdItem = {
       id,
@@ -46,51 +45,19 @@ const ProductDetail = (props) => {
       images,
       quantity: Number(quantity)
     };
+    let isExistStorage = true;
 
-    dispatch({
-      type: ADD_TO_CART,
-      payload: { ...prdItem }
+    if (localStorage.getItem('cart') === null) {
+      isExistStorage = false;
+    }
+
+    dispatch(addTocart({ data: prdItem, isExistStorage }));
+
+    cart.addItem({
+      id: prdItem.id,
+      quantity: prdItem.quantity,
+      product: { ...prdItem }
     });
-
-    // let cart = {
-    //   items: [],
-    //   count: 0,
-    //   subTotal: 0,
-    //   currency: 'VND'
-    // };
-    // if (storage.getItem() === null) {
-    //   cart = {
-    //     items: [{ ...prdItem }],
-    //     count: prdItem.quantity,
-    //     subTotal: prdItem.price * prdItem.quantity
-    //   };
-    // } else {
-    //   const oldCart = storage.getItem();
-    //   const { items, count, subTotal } = oldCart;
-    //   let newItem = [];
-
-    //   const item = items.find((item) => item.id === prdItem.id);
-    //   if (item) {
-    //     newItem = items.map((item) =>
-    //       item.id === prdItem.id
-    //         ? { ...item, quantity: item.quantity + prdItem.quantity }
-    //         : item
-    //     );
-    //   } else {
-    //     newItem = [...items, { ...prdItem }];
-    //   }
-
-    //   cart = {
-    //     ...cart,
-    //     items: [...newItem],
-    //     count: count + prdItem.quantity,
-    //     subTotal: subTotal + prdItem.price * prdItem.quantity
-    //   };
-    // }
-
-    // Object.keys(cart).forEach((key) => {
-    //   storage.addItem(key, cart[key]);
-    // });
   };
 
   const loadMoreReviews = async () => {

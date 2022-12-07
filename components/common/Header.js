@@ -6,6 +6,7 @@ import styles from '../../styles/header.module.scss';
 import HeaderBottom from '../HeaderBottom';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useSelector } from '../../providers/hooks';
+
 const Header = (props) => {
   const { data: session, status } = useSession();
   const cart = useSelector((state) => state.cart);
