@@ -34,7 +34,7 @@ const ProductDetail = (props) => {
   const dispatch = useDispatch();
   const cart = useCart();
 
-  const onAddToCart = (prd, quantity) => {
+  const onAddToCart = (prd, quantity, callback) => {
     const { id, sale_price, regular_price, name, images } = prd;
 
     const prdItem = {
@@ -58,6 +58,10 @@ const ProductDetail = (props) => {
       quantity: prdItem.quantity,
       product: { ...prdItem }
     });
+
+    if (callback && typeof callback === 'function') {
+      callback();
+    }
   };
 
   const loadMoreReviews = async () => {

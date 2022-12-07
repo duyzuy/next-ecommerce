@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Link from 'next/link';
 import * as Icon from 'react-feather';
 import Rating from '../../components/Rating';
 import Price from '../../components/Price';
 import Button from '../../components/Button';
+import Quantity from '../../components/Quantity';
 
 const ACTIONS = {
   UP: 'up',
@@ -13,15 +14,21 @@ const RightSidebar = (props) => {
   const { data, addToCart } = props;
   const [quantity, setQuantity] = useState(1);
 
-  const onQuantity = (type) => {
-    if (type === ACTIONS.UP) {
-      setQuantity((prevState) => prevState + 1);
-    } else {
-      if (quantity === 1) return;
-      setQuantity((prevState) => prevState - 1);
-    }
-  };
+  const onSetQuantity = useCallback(
+    (type) => {
+      if (type === ACTIONS.UP) {
+        setQuantity((prevState) => prevState + 1);
+      } else {
+        if (quantity === 1) return;
+        setQuantity((prevState) => prevState - 1);
+      }
+    },
+    [quantity]
+  );
 
+  const onResetQuantity = () => {
+    setQuantity(1);
+  };
   return (
     <>
       <div className="ec__product--right">
@@ -81,24 +88,14 @@ const RightSidebar = (props) => {
               regularPrice={data?.regular_price}
               salePrice={data?.sale_price}
             />
-            <div className="ec__product--quantity">
-              <label>Chọn số lượng</label>
-              <div className="quantity">
-                <div className="decrease" onClick={() => onQuantity('down')}>
-                  -
-                </div>
-                <div className="number">{quantity}</div>
-                <div className="increase" onClick={() => onQuantity('up')}>
-                  +
-                </div>
-              </div>
-            </div>
+
+            <Quantity onSetQuantity={onSetQuantity} quantity={quantity} />
             <div className="ec__product--action">
               <Button
                 fluid
                 color="primary"
                 icon={() => <Icon.ShoppingCart size={20} />}
-                onClick={() => addToCart(data, quantity)}
+                onClick={() => addToCart(data, quantity, onResetQuantity)}
               >
                 Thêm vào giỏ hàng
               </Button>
