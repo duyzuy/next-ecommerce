@@ -32,9 +32,11 @@ const CartPage = () => {
       }
     });
 
-    if (type === ACTIONS.UP) {
-    }
-    console.log(cartStorage);
+    cartStorage.updateItem({
+      id,
+      quantity: 1,
+      action: type
+    });
   };
   return (
     <Container>

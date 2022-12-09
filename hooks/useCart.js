@@ -102,10 +102,45 @@ const useCart = (options = {}) => {
   };
   const updateItem = ({ id, quantity, action }) => {
     const item = cart.items.find((item) => item.id === id);
-
+    let newItems = [],
+      newCount = 0,
+      newSubToal = 0;
     if (!item) return;
     if (action === 'down' && item.quantity - quantity === 0) {
+      const indexOfItem = cart.items.findIndex((item) => item.id === id);
+      newItems = cart.items.splice(indexOfItem, 1);
+    } else {
+      newItems = cart.items.map((item) =>
+        item.id === id
+          ? {
+              ...item,
+              quantity:
+                action === 'up'
+                  ? item.quantity + quantity
+                  : item.quantity - quantity
+            }
+          : item
+      );
     }
+
+    if (action === 'up') {
+      newCount = cart.count + quantity;
+      newSubToal = cart.count + item.price * quantity;
+    }
+
+    if (action === 'down') {
+      newCount = cart.count - quantity;
+      newSubToal = cart.count - item.price * quantity;
+    }
+
+    localStorage.setItem(
+      'cart',
+      JSON.stringify({
+        items: newItems,
+        count: newCount,
+        subTotal: newSubToal
+      })
+    );
   };
   const getItem = () => localStorage.getItem('cart');
 
