@@ -41,7 +41,7 @@ export async function getStaticPaths() {
     hide_empty: true
   });
 
-  let paths = categories.map((cat) => ({
+  let paths = categories?.map((cat) => ({
     params: {
       slug: cat.slug
     }

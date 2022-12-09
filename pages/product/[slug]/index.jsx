@@ -136,14 +136,6 @@ const ProductDetail = (props) => {
     }
   };
 
-  // useEffect(() => {
-  //   (async () => {
-  //     const reviewList = await client.get(`product/${data.id}/reviews`, {
-  //       perPage: 100
-  //     });
-  //     console.log(reviewList);
-  //   })();
-  // }, [data.id]);
   if (router.isFallback) {
     return <div>Loading...</div>;
   }

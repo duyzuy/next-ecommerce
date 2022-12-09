@@ -22,4 +22,5 @@ const productListReducer = (state, action) => {
   }
 };
 
-export { productListState, productListReducer };
+export { productListState };
+export default productListReducer;

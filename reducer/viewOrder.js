@@ -19,4 +19,5 @@ const viewOrderReducer = (state, action) => {
   }
 };
 
-export { viewOrderState, viewOrderReducer };
+export { viewOrderState };
+export default viewOrderReducer;

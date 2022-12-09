@@ -1,53 +1,41 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Container, Image, Header } from 'semantic-ui-react';
 import styles from '../../styles/cart.module.scss';
 import { useSelector } from '../../providers/hooks';
 import { formatPrice } from '../../helpers/product';
-
-const Price = ({ item }) => {
-  if (item.salePrice !== 0) {
-    return (
-      <>
-        <p className="price regular del">{formatPrice(item.regularPrice)}</p>
-        <p className="price sale">{formatPrice(item.salePrice)}</p>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <p className="price regular">{formatPrice(item.regularPrice)}</p>
-    </>
-  );
+import Quantity from '../../components/Quantity';
+import { useDispatch } from '../../providers/hooks';
+import { UPDATE_CART } from '../../constants/actions';
+import useCart from '../../hooks/useCart';
+const ACTIONS = {
+  UP: 'up',
+  DOWN: 'down'
 };
-
-const SubTotal = ({ item }) => {
-  if (item.salePrice !== 0) {
-    return (
-      <>
-        <p className="price regular del">
-          {formatPrice(item.regularPrice * item.quantity)}
-        </p>
-        <p className="price sale">
-          {formatPrice(item.salePrice * item.quantity)}
-        </p>
-      </>
-    );
-  }
-
-  return (
-    <>
-      <p className="price regular">
-        {formatPrice(item.regularPrice * item.quantity)}
-      </p>
-    </>
-  );
-};
-
 const CartPage = () => {
   const cart = useSelector((state) => state.cart);
   const { items } = cart;
 
+  const [quantity, setQuantity] = useState();
+
+  const disPatch = useDispatch();
+  const cartStorage = useCart();
+  const onSetQuantity = (type, id) => {
+    const item = items.find((item) => item.id === id);
+    if (!item) return;
+
+    disPatch({
+      type: UPDATE_CART,
+      payload: {
+        id: id,
+        quantity: 1,
+        type: type
+      }
+    });
+
+    if (type === ACTIONS.UP) {
+    }
+    console.log(cartStorage);
+  };
   return (
     <Container>
       <div className={styles.cart__wrapper}>
@@ -66,9 +54,9 @@ const CartPage = () => {
               <div className="cart-table-row header">
                 <div className="image">Hình ảnh</div>
                 <div className="name">Tên sản phẩm</div>
-                <div className="quantity">Số lượng</div>
                 <div className="price">Giá tiền</div>
-                <div className="subtotal">Tạm tính</div>
+                <div className="quantity">Số lượng</div>
+                <div className="subtotal">Tổng</div>
               </div>
               {items.map((item, index) => (
                 <div key={index} className="cart-table-row">
@@ -76,18 +64,28 @@ const CartPage = () => {
                     <Image src={item.images[0].src} width={48} height={48} />
                   </div>
                   <div className="name">{item.name}</div>
-                  <div className="quantity">{item.quantity}</div>
                   <div className="price">
-                    <Price item={item} />
+                    <p>{formatPrice(item.price)}</p>
                   </div>
+                  <div className="quantity">
+                    <Quantity
+                      quantity={item.quantity}
+                      value={quantity}
+                      onSetQuantity={onSetQuantity}
+                      id={item.id}
+                    />
+                  </div>
+
                   <div className="subtotal">
-                    <SubTotal item={item} />
+                    <p>{formatPrice(item.price * item.quantity)}</p>
                   </div>
                 </div>
               ))}
             </div>
           </div>
-          <div className="cart-right"></div>
+          <div className="cart-right">
+            <div className="summary"></div>
+          </div>
         </div>
       </div>
     </Container>

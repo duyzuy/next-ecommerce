@@ -100,12 +100,20 @@ const useCart = (options = {}) => {
       })
     );
   };
+  const updateItem = ({ id, quantity, action }) => {
+    const item = cart.items.find((item) => item.id === id);
+
+    if (!item) return;
+    if (action === 'down' && item.quantity - quantity === 0) {
+    }
+  };
   const getItem = () => localStorage.getItem('cart');
 
   return {
     removeItem,
     addItem,
-    getItem
+    getItem,
+    updateItem
   };
 };
 

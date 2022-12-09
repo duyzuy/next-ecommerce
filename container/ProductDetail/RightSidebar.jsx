@@ -89,7 +89,11 @@ const RightSidebar = (props) => {
               salePrice={data?.sale_price}
             />
 
-            <Quantity onSetQuantity={onSetQuantity} quantity={quantity} />
+            <Quantity
+              onSetQuantity={onSetQuantity}
+              quantity={quantity}
+              title="Số lượng"
+            />
             <div className="ec__product--action">
               <Button
                 fluid

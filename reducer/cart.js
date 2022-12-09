@@ -1,4 +1,9 @@
-import { ADD_TO_CART, REMOVE_FROM_CART, LOAD_CART } from '../constants/actions';
+import {
+  ADD_TO_CART,
+  REMOVE_FROM_CART,
+  LOAD_CART,
+  UPDATE_CART
+} from '../constants/actions';
 import { isEmpty } from '../utils/helper';
 const cartState = {
   items: [],
@@ -50,6 +55,51 @@ const cartReducer = (state, action) => {
       const newState = {};
       return newState;
     }
+    case UPDATE_CART: {
+      const { payload } = action;
+      console.log(action);
+      let newSubtotal = 0,
+        newCount = 0,
+        newItems = [];
+
+      const item = state.items.find((item) => item.id === payload.id);
+
+      if (!item) return state;
+      const indexOfItem = state.items.findIndex(
+        (item) => item.id === payload.id
+      );
+      if (payload.type === 'down' && item.quantity - payload.quantity === 0) {
+        newItems = state.items.splice(indexOfItem, 1);
+      } else {
+        newItems = state.items.map((item) =>
+          item.id === payload.id
+            ? {
+                ...item,
+                quantity:
+                  payload.type === 'up'
+                    ? item.quantity + payload.quantity
+                    : item.quantity - payload.quantity
+              }
+            : item
+        );
+      }
+
+      if (payload.type === 'up') {
+        newSubtotal = state.subTotal + payload.quantity * item.price;
+        newCount = state.count + payload.quantity;
+      }
+      if (payload.type === 'down') {
+        newSubtotal = state.subTotal - payload.quantity * item.price;
+        newCount = state.count - payload.quantity;
+      }
+
+      return {
+        ...state,
+        items: newItems,
+        subTotal: newSubtotal,
+        count: newCount
+      };
+    }
     case LOAD_CART: {
       const cart = JSON.parse(localStorage.getItem('cart')) || {};
 
@@ -68,4 +118,5 @@ const cartReducer = (state, action) => {
   }
 };
 
-export { cartState, cartReducer };
+export { cartState };
+export default cartReducer;

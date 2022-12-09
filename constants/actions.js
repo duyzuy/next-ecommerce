@@ -3,3 +3,7 @@ export const CHANGE_PAGE = 'CHANGE_PAGE';
 export const REMOVE_FROM_CART = 'REMOVE_FROM_CART';
 export const ADD_TO_CART = 'ADD_TO_CART';
 export const LOAD_CART = 'LOAD_CART';
+export const UPDATE_CART = 'UPDATE_CART';
+export const LOAD_ECOM_SETTING = 'LOAD_ECOM_SETTING';
+export const LOAD_SHIPPING = 'LOAD_SHIPPING';
+export const LOADING_PAYMENT_GATEWAY = 'LOADING_PAYMENT_GATEWAY';
