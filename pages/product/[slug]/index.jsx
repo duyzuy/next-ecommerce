@@ -25,6 +25,7 @@ import { addTocart } from '../../../actions/cart';
 import useCart from '../../../hooks/useCart';
 import { isEmpty } from '../../../utils/helper';
 import { useToast, toast } from '../../../components/Toast.js';
+import { ADD_TOAST } from '../../../constants/actions';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
@@ -43,6 +44,14 @@ const ProductDetail = (props) => {
     //   type: 'success'
     // });
     toast(`hahahaaaa ${count++}`);
+    dispatch({
+      type: ADD_TOAST,
+      payload: {
+        id: '123',
+        content: 'asdfasdfasdf',
+        type: 'error'
+      }
+    });
     const prdItem = {
       id,
       price:
