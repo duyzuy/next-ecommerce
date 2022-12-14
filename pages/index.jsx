@@ -5,15 +5,13 @@ import { TOP_PROMOTIONS } from '../constants/menu';
 import Brands from '../container/Brands';
 import { data } from '../constants/brandsData.js';
 import TopPromote from '../container/TopPromote';
-import { AppContext } from '../contexts';
-import { getProductByCategoryId, getCategires } from '../api/product';
+import { getProductByCategoryId } from '../api/product';
 import ProductCatList from '../container/ProductCatList';
 import SingleBanner from '../container/SingleBanner';
 import styles from '../styles/home.module.scss';
+
 const Home = (props) => {
   const { brand, hutmui, hongngoai, gas, beptu } = props;
-
-  const { currency } = useContext(AppContext);
 
   return (
     <>
@@ -63,10 +61,8 @@ const Home = (props) => {
     </>
   );
 };
-// Home.getLayout = function getLayout(comp) {
-//   return <>{comp}</>;
-// };
-export async function getStaticProps(ctx) {
+
+export async function getServerSideProps(ctx) {
   console.log('regeneration home page');
   const prdHongNgoai = await getProductByCategoryId(19, { perPage: 10 });
   const prdGas = await getProductByCategoryId(18, { perPage: 10 });
@@ -83,8 +79,7 @@ export async function getStaticProps(ctx) {
       gas: prdGas,
       beptu: prdBeptu
       // categories: categories
-    },
-    revalidate: 10
+    }
   };
 }
 export default Home;

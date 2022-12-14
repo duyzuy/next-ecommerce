@@ -11,6 +11,7 @@ import ProductItem from '../../../components/ProductItem';
 import { client } from '../../../api/client';
 import EcModal from '../../../components/Modal';
 import OrderDetail from '../../../components/OrderDetail';
+import { useDispatch, useSelector } from '../../../providers/hooks';
 const OrderPage = (props) => {
   const { session, profile, orders } = props;
   const [orderDetail, setOrderDetail] = useState({});
@@ -64,6 +65,13 @@ const OrderPage = (props) => {
 };
 
 export default OrderPage;
+
+OrderPage.auth = {
+  role: 'customer',
+  loading: 'loading...',
+  unauthorized: '/user/login' // redirect to this url
+};
+
 export async function getServerSideProps(ctx) {
   const session = await getSession({ req: ctx.req });
 
@@ -86,8 +94,3 @@ export async function getServerSideProps(ctx) {
     props: { session, profile, orders }
   };
 }
-OrderPage.auth = {
-  role: 'customer',
-  loading: 'loading...',
-  unauthorized: '/user/login' // redirect to this url
-};

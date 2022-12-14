@@ -1,44 +1,81 @@
-import { memo, useMemo, useState } from 'react';
+import { memo, useEffect, useMemo, useState } from 'react';
 import { Container, Header, Grid } from 'semantic-ui-react';
 import Link from 'next/link';
 import Card from '../../components/Card';
 import { contentType } from '../../constants/constants';
 import Pagination from '../Pagination';
 import { client } from '../../api/client';
-// import useSWR from 'swr';
+import { useDispatch, useSelector } from '../../providers/hooks';
+import {
+  LOAD_LIST_PRODUCT,
+  UPDATE_PAGE_LIST_PRODUCT
+} from '../../constants/actions';
 const ProductCatList = (props) => {
   const { id, name, slug, image, products } = props;
   const [isLoading, setIsLoading] = useState(false);
   const [prds, setPrds] = useState(products);
-  const [currentPage, setCurrentPage] = useState(1);
+  const dispatch = useDispatch();
+  const dataList = useSelector((state) => state.productList);
 
   const handleLoadProducts = async (page) => {
     setIsLoading(true);
 
-    const response = await client.get(`category/${id}`, {
-      page: page
-    });
+    const listPrd = dataList.lists.find((list) => list.id === id);
+
+    if (!listPrd) return;
+    // check data and caching if already fetched.
+    const isCached = listPrd.pageCache.includes(page);
+    let data = [];
+    let nextPage = page;
+    if (isCached) {
+      data = listPrd.items[page];
+    } else {
+      const response = await client.get(`category/${id}`, {
+        page: nextPage
+      });
+      data = response.lists.data;
+      nextPage = Number(response.lists.page);
+    }
+
     setPrds((prevState) => ({
       ...prevState,
-      data: response.lists.data,
-      page: response.lists.page
+      data: data,
+      page: nextPage
     }));
-    setCurrentPage(page);
+
+    dispatch({
+      type: UPDATE_PAGE_LIST_PRODUCT,
+      payload: {
+        id: id,
+        items: data,
+        page: nextPage
+      }
+    });
+
     setIsLoading(false);
   };
-
-  // const { data, error } = useSWR(
-  //   `api/category/${id}?page=1&perPage=24`,
-  //   async (url) => {
-  //     console.log('swr', url);
-
-  //     const response = await fetch(url).then((res) => res.json());
-  //     console.log(response);
-  //     return response;
-  //   }
-  // );
-
-  // console.log(data);
+  useEffect(() => {
+    //check if data cached
+    const listPrd = dataList.lists.find((list) => list.id === id);
+    if (listPrd) {
+      const data = listPrd.items[listPrd.currentPage];
+      setPrds((prevState) => ({
+        ...prevState,
+        data: data,
+        page: Number(listPrd.currentPage)
+      }));
+      // setCurrentPage(Number(listPrd.currentPage));
+    } else {
+      dispatch({
+        type: LOAD_LIST_PRODUCT,
+        payload: {
+          id: id,
+          items: products.data,
+          page: products.page
+        }
+      });
+    }
+  }, []);
 
   return (
     <div className={`section-product ${id}`}>
@@ -71,7 +108,7 @@ const ProductCatList = (props) => {
             totalPage={prds.totalPages}
             pageRange={3}
             isLoading={isLoading}
-            currentPage={currentPage}
+            currentPage={Number(prds.page)}
             onSetcurrentPage={handleLoadProducts}
           />
         </div>

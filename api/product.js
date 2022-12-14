@@ -283,7 +283,7 @@ export const getProductByCategoryId = async (catId, params) => {
         };
       })
       .catch((error) => {
-        return error.response.data;
+        return error.response;
       });
 
     return {

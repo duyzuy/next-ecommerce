@@ -21,10 +21,10 @@ import { isValidEmail } from '../../../utils/validate';
 import styles from '../../../styles/singleproduct.module.scss';
 import { getSlugFromProducts } from '../../../api/product';
 import { useDispatch } from '../../../providers/hooks';
-import { ADD_TO_CART } from '../../../constants/actions';
 import { addTocart } from '../../../actions/cart';
 import useCart from '../../../hooks/useCart';
 import { isEmpty } from '../../../utils/helper';
+import { useToast, toast } from '../../../components/Toast.js';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
@@ -33,10 +33,16 @@ const ProductDetail = (props) => {
   const [productReviews, setProductReviews] = useState(reviews);
   const dispatch = useDispatch();
   const cart = useCart();
-
+  // const toast = useToast();
+  let count = 0;
   const onAddToCart = (prd, quantity, callback) => {
     const { id, sale_price, regular_price, name, images } = prd;
-
+    // toast.setMessage({
+    //   title: 'asdasdfas',
+    //   message: 'this is message',
+    //   type: 'success'
+    // });
+    toast(`hahahaaaa ${count++}`);
     const prdItem = {
       id,
       price:

@@ -4,7 +4,7 @@ const handleUpdateCustomer = async (req, res) => {
   const { query, body } = req;
 
   const { id } = query;
-  console.log(req);
+
   await wcApi
     .put(`customers/${id}`, {
       ...body

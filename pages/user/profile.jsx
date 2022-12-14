@@ -10,9 +10,10 @@ import AddressPage from '../../container/Profile/AddressPage';
 import { client } from '../../api/client';
 import styles from '../../styles/user.module.scss';
 import UserSidebar from '../../container/Profile/UserSideBar';
+
 const UserProfile = (props) => {
   const { session, profile, orders } = props;
-  console.log({ session, profile });
+
   const router = useRouter();
   const { query } = router;
   const [userProfile, setUserProfile] = useState(profile);
@@ -76,7 +77,7 @@ const UserProfile = (props) => {
     </Container>
   );
 };
-
+UserProfile.propTypes = {};
 export default UserProfile;
 export async function getServerSideProps(ctx) {
   const session = await getSession({ req: ctx.req });
