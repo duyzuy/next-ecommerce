@@ -7,6 +7,7 @@ import Quantity from '../../components/Quantity';
 import { useDispatch } from '../../providers/hooks';
 import { UPDATE_CART } from '../../constants/actions';
 import useCart from '../../hooks/useCart';
+import * as Icon from 'react-feather';
 const ACTIONS = {
   UP: 'up',
   DOWN: 'down'
@@ -54,6 +55,7 @@ const CartPage = () => {
           <div className="cart-left">
             <div className="table cart">
               <div className="cart-table-row header">
+                <div className="action"></div>
                 <div className="image">Hình ảnh</div>
                 <div className="name">Tên sản phẩm</div>
                 <div className="price">Giá tiền</div>
@@ -63,9 +65,17 @@ const CartPage = () => {
               {items.map((item, index) => (
                 <div key={index} className="cart-table-row">
                   <div className="image">
+                    <Icon.Trash size={12} style={{ color: '#c83a3a' }} />
+                  </div>
+                  <div className="image">
                     <Image src={item.images[0].src} width={48} height={48} />
                   </div>
-                  <div className="name">{item.name}</div>
+                  <div className="name">
+                    {item.name}
+                    <div className="price">
+                      <p>{formatPrice(item.price)}</p>
+                    </div>
+                  </div>
                   <div className="price">
                     <p>{formatPrice(item.price)}</p>
                   </div>

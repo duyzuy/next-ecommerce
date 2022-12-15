@@ -24,7 +24,7 @@ import { useDispatch } from '../../../providers/hooks';
 import { addTocart } from '../../../actions/cart';
 import useCart from '../../../hooks/useCart';
 import { isEmpty } from '../../../utils/helper';
-import { useToast, toast } from '../../../components/Toast.js';
+import { toast } from '../../../lib/toast';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
@@ -33,16 +33,11 @@ const ProductDetail = (props) => {
   const [productReviews, setProductReviews] = useState(reviews);
   const dispatch = useDispatch();
   const cart = useCart();
-  // const toast = useToast();
-  let count = 0;
+
   const onAddToCart = (prd, quantity, callback) => {
     const { id, sale_price, regular_price, name, images } = prd;
-    // toast.setMessage({
-    //   title: 'asdasdfas',
-    //   message: 'this is message',
-    //   type: 'success'
-    // });
-    toast(`hahahaaaa ${count++}`);
+
+    // toast({ type: 'success', message: 'Đã thêm vào giỏ hàng' });
     const prdItem = {
       id,
       price:
