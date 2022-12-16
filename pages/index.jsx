@@ -6,7 +6,6 @@ import Brands from '../container/Brands';
 import { data } from '../constants/brandsData.js';
 import TopPromote from '../container/TopPromote';
 import {
-  getProductByCategoryId,
   getProductCategoryDetail,
   getProductListByCatId
 } from '../api/product';
@@ -16,7 +15,7 @@ import styles from '../styles/home.module.scss';
 
 const Home = (props) => {
   const { catListData, brand } = props;
-  console.log(catListData);
+
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />

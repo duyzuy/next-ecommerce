@@ -3,7 +3,7 @@ import { Suspense } from 'react';
 import useClasses from '../hooks/useClasses';
 import Header from './common/Header';
 import Footer from './common/Footer';
-// import { Toast } from '../lib/toast';
+import { Toast } from '../lib/toast';
 const DynamicHeader = dynamic(() => import('./common/Header'), {
   suspense: true,
   loading: undefined
@@ -36,7 +36,7 @@ const Layout = (props) => {
   return (
     <>
       <Header categories={categories} />
-      {/* <Toast /> */}
+      <Toast />
       <main id="main" className={`ec_main ${clss}`}>
         {props.children}
       </main>

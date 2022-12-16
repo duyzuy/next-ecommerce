@@ -10,7 +10,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/router';
 import { getProviders, getSession, signIn } from 'next-auth/react';
 import { Message } from 'semantic-ui-react';
-
+import { toast } from '../../../lib/toast';
 const LoginPage = (props) => {
   const [userData, setUserData] = useState({});
   const { providers } = props;
@@ -24,6 +24,7 @@ const LoginPage = (props) => {
       const callbackUrl = '/user/profile';
 
       credentials = Object.assign({ callbackUrl }, credentials);
+
       if (provider === 'credentials') {
         await loginSchema.validate({ ...userData });
         credentials = {
@@ -40,6 +41,10 @@ const LoginPage = (props) => {
 
       if (result.ok && result.status === 200) {
         router.push('/user/profile', undefined, { shallow: false });
+        toast({
+          type: 'success',
+          message: `Đăng nhập thành công`
+        });
       } else {
         setErrors([result.error]);
       }

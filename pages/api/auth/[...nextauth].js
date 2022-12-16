@@ -95,6 +95,9 @@ export const authOptions = {
 
       return false;
     },
+    async redirect({ url, baseUrl }) {
+      return url;
+    },
     async jwt({ token, user, account }) {
       // Persist the OAuth access_token to the token right after signin
 

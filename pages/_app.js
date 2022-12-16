@@ -7,7 +7,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import 'semantic-ui-css/semantic.min.css';
 import 'swiper/css/bundle';
 import '../styles/global.scss';
-
+import '../lib/toast/style.scss';
 import { SessionProvider } from 'next-auth/react';
 function MyApp(props) {
   const { Component, pageProps, appData } = props;

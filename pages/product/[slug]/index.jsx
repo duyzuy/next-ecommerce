@@ -23,7 +23,6 @@ import { getSlugFromProducts } from '../../../api/product';
 import { useDispatch } from '../../../providers/hooks';
 import { addTocart } from '../../../actions/cart';
 import useCart from '../../../hooks/useCart';
-import { isEmpty } from '../../../utils/helper';
 import { toast } from '../../../lib/toast';
 const ProductDetail = (props) => {
   const router = useRouter();
@@ -37,7 +36,13 @@ const ProductDetail = (props) => {
   const onAddToCart = (prd, quantity, callback) => {
     const { id, sale_price, regular_price, name, images } = prd;
 
-    // toast({ type: 'success', message: 'Đã thêm vào giỏ hàng' });
+    // toast({ type: 'error', message: 'Lỗi không thể thêm vào giỏ hàng' });
+    toast({
+      type: 'success',
+      message: `Đã thêm vào giỏ hàng - <strong>${name}</strong>`
+    });
+    // toast({ type: 'infor', message: 'Hiện tại đã hết sản phẩm' });
+    // toast({ type: 'warning', message: 'giỏ hàng bạn đã đầy' });
     const prdItem = {
       id,
       price:
