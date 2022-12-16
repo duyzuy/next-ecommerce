@@ -34,9 +34,11 @@
                 .quantity{
                     width: 90px;
                 }
-                .price, 
                 .subtotal{
                     text-align: right;
+                    p{
+                        color: inherit ;
+                    }
                 }
                 >div{
                     display: table-cell;
@@ -63,7 +65,7 @@
                 }
                 p{
                     margin-bottom: 0;
-                    text-align: right;
+                    color: #e91e63
                 }
             
         }

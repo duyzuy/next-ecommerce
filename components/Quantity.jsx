@@ -1,9 +1,17 @@
 import { useEffect, useState, memo } from 'react';
-const Quantity = ({ onSetQuantity, quantity, title, value, id }) => {
+const Quantity = ({
+  onSetQuantity,
+  quantity,
+  title,
+  value,
+  id,
+  size = 'medium'
+}) => {
   return (
-    <div className="ec__product--quantity">
-      {title ?? <label>{title}</label>}
-      <div className="quantity">
+    <div className={`quantity ${size}`}>
+      {(title && <span className="quantity__label">{title}</span>) || <></>}
+
+      <div className="quantity__form">
         <div className="decrease" onClick={() => onSetQuantity('down', id)}>
           -
         </div>

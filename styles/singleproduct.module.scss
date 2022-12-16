@@ -55,40 +55,7 @@
             }
           
         }
-        .ec__product--quantity{
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 30px;
-            align-items: flex-end;
-            .quantity{
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                .increase, 
-                .decrease
-                {
-                    width: 40px;
-                    height: 40px;
-                    border: 1px solid #f1f1f1;
-                    text-align: center;
-                    line-height: 40px;
-                    cursor: pointer;
-                    border-radius: 5px;
-                    
-                }
-                .number{
-                    width: 80px;
-                    margin-left: 5px;
-                    margin-right: 5px;
-                    border: 1px solid #f1f1f1;
-                    text-align: center;
-                    height: 40px;
-                    line-height: 40px;
-                    border-radius: 5px;
-                }
-            }
-        }
-   
+
     }
     :global .ec__product--top{
         padding: 20px;

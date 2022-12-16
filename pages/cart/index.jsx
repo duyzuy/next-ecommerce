@@ -58,13 +58,12 @@ const CartPage = () => {
                 <div className="action"></div>
                 <div className="image">Hình ảnh</div>
                 <div className="name">Tên sản phẩm</div>
-                <div className="price">Giá tiền</div>
                 <div className="quantity">Số lượng</div>
-                <div className="subtotal">Tổng</div>
+                <div className="subtotal">Tổng tiền</div>
               </div>
               {items.map((item, index) => (
                 <div key={index} className="cart-table-row">
-                  <div className="image">
+                  <div className="btn-remove">
                     <Icon.Trash size={12} style={{ color: '#c83a3a' }} />
                   </div>
                   <div className="image">
@@ -76,18 +75,16 @@ const CartPage = () => {
                       <p>{formatPrice(item.price)}</p>
                     </div>
                   </div>
-                  <div className="price">
-                    <p>{formatPrice(item.price)}</p>
-                  </div>
-                  <div className="quantity">
+
+                  <div className="cart-quantity">
                     <Quantity
                       quantity={item.quantity}
                       value={quantity}
                       onSetQuantity={onSetQuantity}
                       id={item.id}
+                      size="small"
                     />
                   </div>
-
                   <div className="subtotal">
                     <p>{formatPrice(item.price * item.quantity)}</p>
                   </div>
