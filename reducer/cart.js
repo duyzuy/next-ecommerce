@@ -21,7 +21,7 @@ const cartReducer = (state, action) => {
       const { payload } = action;
       console.log(action);
       let newItems = [];
-      // if (payload.isExistStorage) {
+
       if (state.count !== 0) {
         const item = state.items.find((item) => item.id === payload.data.id);
         if (item) {
@@ -43,13 +43,6 @@ const cartReducer = (state, action) => {
         count: state.count + payload.data.quantity,
         subTotal: state.subTotal + payload.data.price * payload.data.quantity
       };
-      // } else {
-      //   state = {
-      //     items: [{ ...payload.data }],
-      //     count: payload.data.quantity,
-      //     subTotal: payload.data.price * payload.data.quantity
-      //   };
-      // }
 
       return state;
     }

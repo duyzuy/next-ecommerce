@@ -51,13 +51,8 @@ const ProductDetail = (props) => {
       images,
       quantity: Number(quantity)
     };
-    let isExistStorage = true;
 
-    if (localStorage.getItem('cart') === null) {
-      isExistStorage = false;
-    }
-
-    dispatch(addTocart({ data: prdItem, isExistStorage }));
+    dispatch(addTocart({ data: prdItem }));
 
     cart.addItem({
       id: prdItem.id,
