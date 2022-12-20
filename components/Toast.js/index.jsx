@@ -8,6 +8,10 @@ export const toast = (message = '', options = {}) => {
 const Toast = (props) => {
   const lists = useSelector((state) => state.toast);
   console.log(lists);
+
+  // const toast = (message = '', options = {}) => {
+  //   return message;
+  // };
   return (
     <div className="toast-container">
       {lists.message.map((mess) => (
@@ -18,3 +22,4 @@ const Toast = (props) => {
 };
 
 export default Toast;
+export {toast}
