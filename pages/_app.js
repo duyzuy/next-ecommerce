@@ -9,10 +9,11 @@ import 'swiper/css/bundle';
 import '../styles/global.scss';
 import '../lib/toast/style.scss';
 import { SessionProvider } from 'next-auth/react';
+let count = 0;
 function MyApp(props) {
   const { Component, pageProps, appData } = props;
   const { device, ...rest } = appData;
-
+  console.log(count++);
   const getLayout =
     Component.getLayout ||
     ((page) => (
