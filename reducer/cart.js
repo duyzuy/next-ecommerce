@@ -9,9 +9,10 @@ const cartState = {
   items: [],
   count: 0,
   subTotal: 0,
-  isLoading: false,
   currency: 'VND',
-  stt: 0
+  hasPromotion: false,
+  promotionCode: '',
+  discount: 0
 };
 
 const cartReducer = (state, action) => {
@@ -57,7 +58,6 @@ const cartReducer = (state, action) => {
       return newState;
     }
     case UPDATE_CART: {
-      console.log('1');
       const { payload } = action;
 
       let newSubtotal = 0,

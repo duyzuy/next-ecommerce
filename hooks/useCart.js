@@ -124,15 +124,11 @@ const useCart = (options = {}) => {
       );
     }
 
-    if (action === 'up') {
-      newCount = cart.count + quantity;
-      newSubToal = cart.subTotal + item.price * quantity;
-    }
-
-    if (action === 'down') {
-      newCount = cart.count - quantity;
-      newSubToal = cart.subTotal - item.price * quantity;
-    }
+    newCount = action === 'up' ? cart.count + quantity : cart.count - quantity;
+    newSubToal =
+      action === 'up'
+        ? cart.subTotal + item.price * quantity
+        : cart.subTotal - item.price * quantity;
 
     localStorage.setItem(
       'cart',
