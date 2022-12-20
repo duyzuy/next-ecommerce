@@ -23,9 +23,7 @@ import { getSlugFromProducts } from '../../../api/product';
 import { useDispatch } from '../../../providers/hooks';
 import { addTocart } from '../../../actions/cart';
 import useCart from '../../../hooks/useCart';
-import { isEmpty } from '../../../utils/helper';
-import { useToast, toast } from '../../../components/Toast.js';
-import { ADD_TOAST } from '../../../constants/actions';
+import { toast } from '../../../lib/toast';
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
@@ -34,24 +32,17 @@ const ProductDetail = (props) => {
   const [productReviews, setProductReviews] = useState(reviews);
   const dispatch = useDispatch();
   const cart = useCart();
-  // const toast = useToast();
-  let count = 0;
+
   const onAddToCart = (prd, quantity, callback) => {
     const { id, sale_price, regular_price, name, images } = prd;
-    // toast.setMessage({
-    //   title: 'asdasdfas',
-    //   message: 'this is message',
-    //   type: 'success'
-    // });
-    toast(`hahahaaaa ${count++}`);
-    dispatch({
-      type: ADD_TOAST,
-      payload: {
-        id: '123',
-        content: 'asdfasdfasdf',
-        type: 'error'
-      }
+
+    // toast({ type: 'error', message: 'Lỗi không thể thêm vào giỏ hàng' });
+    toast({
+      type: 'success',
+      message: `Đã thêm vào giỏ hàng - <strong>${name}</strong>`
     });
+    // toast({ type: 'infor', message: 'Hiện tại đã hết sản phẩm' });
+    // toast({ type: 'warning', message: 'giỏ hàng bạn đã đầy' });
     const prdItem = {
       id,
       price:

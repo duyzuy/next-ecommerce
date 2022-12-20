@@ -11,57 +11,65 @@ import {
   UPDATE_PAGE_LIST_PRODUCT
 } from '../../constants/actions';
 const ProductCatList = (props) => {
-  const { id, name, slug, image, products } = props;
+  const { catData } = props;
+
   const [isLoading, setIsLoading] = useState(false);
-  const [prds, setPrds] = useState(products);
+  const [categoryData, setCategoryData] = useState(catData);
   const dispatch = useDispatch();
-  const dataList = useSelector((state) => state.productList);
+  const dataCached = useSelector((state) => state.productList);
 
   const handleLoadProducts = async (page) => {
     setIsLoading(true);
 
-    const listPrd = dataList.lists.find((list) => list.id === id);
+    const listPrd = dataCached.lists.find(
+      (list) => list.id === categoryData.id
+    );
 
     if (!listPrd) return;
     // check data and caching if already fetched.
     const isCached = listPrd.pageCache.includes(page);
-    let data = [];
+    let prdList = [];
     let nextPage = page;
     if (isCached) {
-      data = listPrd.items[page];
+      prdList = listPrd.items[page];
     } else {
-      const response = await client.get(`category/${id}`, {
+      const response = await client.get(`category/${categoryData.id}`, {
         page: nextPage
       });
-      data = response.lists.data;
+      console.log(response);
+      prdList = response.lists.data;
       nextPage = Number(response.lists.page);
     }
 
-    setPrds((prevState) => ({
+    setCategoryData((prevState) => ({
       ...prevState,
-      data: data,
+      lists: prdList,
       page: nextPage
     }));
 
     dispatch({
       type: UPDATE_PAGE_LIST_PRODUCT,
       payload: {
-        id: id,
-        items: data,
-        page: nextPage
+        id: categoryData.id,
+        items: prdList,
+        page: nextPage,
+        isCached
       }
     });
 
     setIsLoading(false);
   };
+
   useEffect(() => {
     //check if data cached
-    const listPrd = dataList.lists.find((list) => list.id === id);
+    const listPrd = dataCached.lists.find(
+      (list) => list.id === categoryData.id
+    );
     if (listPrd) {
-      const data = listPrd.items[listPrd.currentPage];
-      setPrds((prevState) => ({
+      const listPrdFromState = listPrd.items[listPrd.currentPage];
+      setCategoryData((prevState) => ({
         ...prevState,
-        data: data,
+        lists: listPrdFromState,
         page: Number(listPrd.currentPage)
       }));
       // setCurrentPage(Number(listPrd.currentPage));
@@ -69,28 +77,28 @@ const ProductCatList = (props) => {
       dispatch({
         type: LOAD_LIST_PRODUCT,
         payload: {
-          id: id,
-          items: products.data,
-          page: products.page
+          id: categoryData.id,
+          items: categoryData.lists,
+          page: categoryData.page
         }
       });
     }
   }, []);
 
   return (
-    <div className={`section-product ${id}`}>
+    <div className={`section-product cat-${categoryData.id}`}>
       <Container>
         <div className="section-header">
-          <Header>{name}</Header>
+          <Header>{categoryData.name}</Header>
           <span>
-            <Link href={`product-cat/${slug}`}>
+            <Link href={`product-cat/${categoryData.slug}`}>
               <a>Xem thêm</a>
             </Link>
           </span>
         </div>
         <div className="section-products">
           <Grid columns={5}>
-            {prds.data.map((prd) => {
+            {categoryData.lists.map((prd) => {
               return (
                 <Grid.Column key={prd.id}>
                   <Card
@@ -105,10 +113,10 @@ const ProductCatList = (props) => {
         </div>
         <div className="section-footer">
           <Pagination
-            totalPage={prds.totalPages}
+            totalPage={categoryData.totalPage}
             pageRange={3}
             isLoading={isLoading}
-            currentPage={Number(prds.page)}
+            currentPage={Number(categoryData.page)}
             onSetcurrentPage={handleLoadProducts}
           />
         </div>

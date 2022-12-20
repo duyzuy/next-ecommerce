@@ -9,15 +9,17 @@ const cartState = {
   items: [],
   count: 0,
   subTotal: 0,
-  isLoading: false,
-  currency: 'VND'
+  currency: 'VND',
+  hasPromotion: false,
+  promotionCode: '',
+  discount: 0
 };
 
 const cartReducer = (state, action) => {
   switch (action.type) {
     case ADD_TO_CART: {
       const { payload } = action;
-
+      console.log(action);
       let newItems = [];
       if (payload.isExistStorage) {
         if (state.count !== 0) {
@@ -57,19 +59,18 @@ const cartReducer = (state, action) => {
     }
     case UPDATE_CART: {
       const { payload } = action;
-      console.log(action);
+
       let newSubtotal = 0,
         newCount = 0,
-        newItems = [];
+        newItems = state.items;
 
       const item = state.items.find((item) => item.id === payload.id);
 
-      if (!item) return state;
-      const indexOfItem = state.items.findIndex(
-        (item) => item.id === payload.id
-      );
       if (payload.type === 'down' && item.quantity - payload.quantity === 0) {
-        newItems = state.items.splice(indexOfItem, 1);
+        const indexOfItem = state.items.findIndex(
+          (item) => item.id === payload.id
+        );
+        newItems.splice(indexOfItem, 1);
       } else {
         newItems = state.items.map((item) =>
           item.id === payload.id
@@ -84,14 +85,14 @@ const cartReducer = (state, action) => {
         );
       }
 
-      if (payload.type === 'up') {
-        newSubtotal = state.subTotal + payload.quantity * item.price;
-        newCount = state.count + payload.quantity;
-      }
-      if (payload.type === 'down') {
-        newSubtotal = state.subTotal - payload.quantity * item.price;
-        newCount = state.count - payload.quantity;
-      }
+      newSubtotal =
+        payload.type === 'up'
+          ? state.subTotal + payload.quantity * item.price
+          : state.subTotal - payload.quantity * item.price;
+      newCount =
+        payload.type === 'up'
+          ? state.count + payload.quantity
+          : state.count - payload.quantity;
 
       return {
         ...state,

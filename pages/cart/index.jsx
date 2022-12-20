@@ -7,6 +7,9 @@ import Quantity from '../../components/Quantity';
 import { useDispatch } from '../../providers/hooks';
 import { UPDATE_CART } from '../../constants/actions';
 import useCart from '../../hooks/useCart';
+import * as Icon from 'react-feather';
+import PromotionCode from '../../container/Promotion';
+import { client } from '../../api/client';
 const ACTIONS = {
   UP: 'up',
   DOWN: 'down'
@@ -14,8 +17,6 @@ const ACTIONS = {
 const CartPage = () => {
   const cart = useSelector((state) => state.cart);
   const { items } = cart;
-
-  const [quantity, setQuantity] = useState();
 
   const disPatch = useDispatch();
   const cartStorage = useCart();
@@ -38,6 +39,16 @@ const CartPage = () => {
       action: type
     });
   };
+
+  const onApplyPromotionCode = () => {};
+  const handleApplyCode = async (code) => {
+    console.log(code);
+    const response = await client.get(`coupon`, {
+      code: code
+    });
+    console.log(response);
+  };
+
   return (
     <Container>
       <div className={styles.cart__wrapper}>
@@ -53,40 +64,75 @@ const CartPage = () => {
         <div className="cart-body">
           <div className="cart-left">
             <div className="table cart">
-              <div className="cart-table-row header">
-                <div className="image">Hình ảnh</div>
-                <div className="name">Tên sản phẩm</div>
-                <div className="price">Giá tiền</div>
-                <div className="quantity">Số lượng</div>
-                <div className="subtotal">Tổng</div>
-              </div>
-              {items.map((item, index) => (
-                <div key={index} className="cart-table-row">
-                  <div className="image">
-                    <Image src={item.images[0].src} width={48} height={48} />
-                  </div>
-                  <div className="name">{item.name}</div>
-                  <div className="price">
-                    <p>{formatPrice(item.price)}</p>
-                  </div>
-                  <div className="quantity">
-                    <Quantity
-                      quantity={item.quantity}
-                      value={quantity}
-                      onSetQuantity={onSetQuantity}
-                      id={item.id}
-                    />
-                  </div>
+              <table>
+                <thead>
+                  <tr>
+                    <th className=""></th>
+                    <th className="image">Hình ảnh</th>
+                    <th className="name">Tên sản phẩm</th>
+                    <th className="quantity">Số lượng</th>
+                    <th className="subtotal">Tổng tiền</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item, index) => (
+                    <tr key={index}>
+                      <td className="btn-remove">
+                        <Icon.Trash size={12} style={{ color: '#c83a3a' }} />
+                      </td>
+                      <td className="image">
+                        <Image
+                          src={item.images[0].src}
+                          width={48}
+                          height={48}
+                        />
+                      </td>
+                      <td className="name">
+                        {item.name}
+                        <div className="price">
+                          <p>{formatPrice(item.price)}</p>
+                        </div>
+                      </td>
 
-                  <div className="subtotal">
-                    <p>{formatPrice(item.price * item.quantity)}</p>
-                  </div>
-                </div>
-              ))}
+                      <td className="cart-quantity">
+                        <Quantity
+                          quantity={item.quantity}
+                          value={item.quantity}
+                          onSetQuantity={onSetQuantity}
+                          id={item.id}
+                          size="small"
+                        />
+                      </td>
+                      <td className="subtotal">
+                        <p>{formatPrice(item.price * item.quantity)}</p>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </div>
           <div className="cart-right">
-            <div className="summary"></div>
+            <div className="summary">
+              <PromotionCode
+                code={cart.promotionCode}
+                onApplyCode={handleApplyCode}
+              />
+              <div className="cart__summary">
+                <div className="subtotal">
+                  <p className="subtotal-label">Tạm tính</p>
+                  <p className="subtotal-value">{cart.subTotal}</p>
+                </div>
+                <div className="discount">
+                  <p className="subtotal-label">Giảm giá</p>
+                  <p className="subtotal-value">{cart.discount}</p>
+                </div>
+                <div className="discount">
+                  <p className="subtotal-label">Tổng tiền</p>
+                  <p className="subtotal-value">{formatPrice(cart.subTotal)}</p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

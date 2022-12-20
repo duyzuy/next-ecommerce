@@ -50,7 +50,7 @@ const Header = (props) => {
                 <Link href="/cart">
                   <a className="item">
                     <Icon.ShoppingCart size={20} />
-                    <span className="cart_count">{cart.count}</span>
+                    <span className="cart_count">{cart?.count}</span>
                   </a>
                 </Link>
               </div>
