@@ -21,35 +21,35 @@ const cartReducer = (state, action) => {
       const { payload } = action;
       console.log(action);
       let newItems = [];
-      if (payload.isExistStorage) {
-        if (state.count !== 0) {
-          const item = state.items.find((item) => item.id === payload.data.id);
-          if (item) {
-            newItems = state.items.map((item) =>
-              item.id === payload.data.id
-                ? { ...item, quantity: item.quantity + payload.data.quantity }
-                : item
-            );
-          } else {
-            newItems = [...state.items, { ...payload.data }];
-          }
+      // if (payload.isExistStorage) {
+      if (state.count !== 0) {
+        const item = state.items.find((item) => item.id === payload.data.id);
+        if (item) {
+          newItems = state.items.map((item) =>
+            item.id === payload.data.id
+              ? { ...item, quantity: item.quantity + payload.data.quantity }
+              : item
+          );
         } else {
-          newItems = [{ ...payload.data }];
+          newItems = [...state.items, { ...payload.data }];
         }
-
-        state = {
-          ...state,
-          items: [...newItems],
-          count: state.count + payload.data.quantity,
-          subTotal: state.subTotal + payload.data.price * payload.data.quantity
-        };
       } else {
-        state = {
-          items: [{ ...payload.data }],
-          count: payload.data.quantity,
-          subTotal: payload.data.price * payload.data.quantity
-        };
+        newItems = [{ ...payload.data }];
       }
+
+      state = {
+        ...state,
+        items: [...newItems],
+        count: state.count + payload.data.quantity,
+        subTotal: state.subTotal + payload.data.price * payload.data.quantity
+      };
+      // } else {
+      //   state = {
+      //     items: [{ ...payload.data }],
+      //     count: payload.data.quantity,
+      //     subTotal: payload.data.price * payload.data.quantity
+      //   };
+      // }
 
       return state;
     }

@@ -10,3 +10,8 @@ export const contentType = {
   POST: 'post',
   PAGE: 'page'
 };
+
+export const discountType = {
+  FIXED_CART: 'fixed_cart',
+  PERCENT: 'percent'
+};

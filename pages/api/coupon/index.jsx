@@ -1,12 +1,13 @@
 import { wcApi } from '../../../api/woo';
 
 const handleCoupons = async (req, res) => {
-  const { query, body } = req;
-  console.log(req);
+  const { query } = req;
+
   await wcApi
-    .get(`coupons`)
+    .get(`coupons`, {
+      code: query.code
+    })
     .then((response) => {
-      console.log(response);
       res.status(200).json({
         status: response.status,
         statusText: response.statusText,

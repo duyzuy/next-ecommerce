@@ -10,6 +10,9 @@ import useCart from '../../hooks/useCart';
 import * as Icon from 'react-feather';
 import PromotionCode from '../../container/Promotion';
 import { client } from '../../api/client';
+import { discountType } from '../../constants/constants';
+import { isExpired } from '../../utils/date';
+import { toast } from '../../lib/toast';
 const ACTIONS = {
   UP: 'up',
   DOWN: 'down'
@@ -41,12 +44,24 @@ const CartPage = () => {
   };
 
   const onApplyPromotionCode = () => {};
+
   const handleApplyCode = async (code) => {
-    console.log(code);
     const response = await client.get(`coupon`, {
       code: code
     });
-    console.log(response);
+    if (response.status === 200 && response.data.length > 0) {
+      //handle expired date
+      if (isExpired(response.data[0].date_expires)) {
+        toast({
+          type: 'error',
+          message: `Mã giảm giá đã hết hạn`
+        });
+      }
+
+      //check minimum amount
+
+      //check limit usage and limit by user
+    }
   };
 
   return (
@@ -67,19 +82,16 @@ const CartPage = () => {
               <table>
                 <thead>
                   <tr>
-                    <th className=""></th>
                     <th className="image">Hình ảnh</th>
                     <th className="name">Tên sản phẩm</th>
                     <th className="quantity">Số lượng</th>
                     <th className="subtotal">Tổng tiền</th>
+                    <th className=""></th>
                   </tr>
                 </thead>
                 <tbody>
                   {items.map((item, index) => (
                     <tr key={index}>
-                      <td className="btn-remove">
-                        <Icon.Trash size={12} style={{ color: '#c83a3a' }} />
-                      </td>
                       <td className="image">
                         <Image
                           src={item.images[0].src}
@@ -105,6 +117,9 @@ const CartPage = () => {
                       </td>
                       <td className="subtotal">
                         <p>{formatPrice(item.price * item.quantity)}</p>
+                      </td>
+                      <td className="btn-remove">
+                        <Icon.Trash size={12} style={{ color: '#c83a3a' }} />
                       </td>
                     </tr>
                   ))}
