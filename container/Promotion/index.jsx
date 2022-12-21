@@ -13,7 +13,10 @@ const PromotionCode = ({ code, onApplyCode, isValid }) => {
     onApplyCode(promotionCode);
   };
   return (
-    <>
+    <div className="cart__promotion">
+      <div className="cart__promotion--code">
+        <div className="code"></div>
+      </div>
       <div className="cart__promotion--form">
         <label htmlFor="promotionCode">Áp dụng mã giảm giá</label>
         <div className="promotion__control">
@@ -26,7 +29,7 @@ const PromotionCode = ({ code, onApplyCode, isValid }) => {
           <Button onClick={onApplyPromotionCode}>Áp dụng</Button>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default PromotionCode;

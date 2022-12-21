@@ -19,7 +19,7 @@ const cartReducer = (state, action) => {
   switch (action.type) {
     case ADD_TO_CART: {
       const { payload } = action;
-      console.log(action);
+
       let newItems = [];
 
       if (state.count !== 0) {

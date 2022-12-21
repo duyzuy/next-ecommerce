@@ -34,7 +34,7 @@ const ProductDetail = (props) => {
   const cart = useCart();
 
   const onAddToCart = (prd, quantity, callback) => {
-    const { id, sale_price, regular_price, name, images } = prd;
+    const { id, sale_price, regular_price, name, images, categories } = prd;
 
     // toast({ type: 'error', message: 'Lỗi không thể thêm vào giỏ hàng' });
     toast({
@@ -49,7 +49,8 @@ const ProductDetail = (props) => {
         Number(sale_price) === 0 ? Number(regular_price) : Number(sale_price),
       name,
       images,
-      quantity: Number(quantity)
+      quantity: Number(quantity),
+      categories
     };
 
     dispatch(addTocart({ data: prdItem }));

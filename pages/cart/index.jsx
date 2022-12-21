@@ -49,18 +49,30 @@ const CartPage = () => {
     const response = await client.get(`coupon`, {
       code: code
     });
+    console.log(response.data[0]);
     if (response.status === 200 && response.data.length > 0) {
+      const coupon = response.data[0];
       //handle expired date
-      if (isExpired(response.data[0].date_expires)) {
+      if (isExpired(coupon.date_expires)) {
         toast({
           type: 'error',
           message: `Mã giảm giá đã hết hạn`
         });
       }
 
+      const minimumAmount = Number.parseFloat(coupon.minimum_amount).toFixed();
+      const maximumAmount = Number.parseFloat(coupon.maximum_amount).toFixed();
+      const usageLimit = coupon.usage_limit;
+      const usageLimitPerUser = coupon.usage_limit_per_user;
+      const discountType = coupon.discount_type;
       //check minimum amount
-
+      console.log(cart);
       //check limit usage and limit by user
+    } else if (response.status === 200 && response.data.length === 0) {
+      toast({
+        type: 'error',
+        message: `Mã giảm giá không hợp lệ`
+      });
     }
   };
 
@@ -79,52 +91,34 @@ const CartPage = () => {
         <div className="cart-body">
           <div className="cart-left">
             <div className="table cart">
-              <table>
-                <thead>
-                  <tr>
-                    <th className="image">Hình ảnh</th>
-                    <th className="name">Tên sản phẩm</th>
-                    <th className="quantity">Số lượng</th>
-                    <th className="subtotal">Tổng tiền</th>
-                    <th className=""></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {items.map((item, index) => (
-                    <tr key={index}>
-                      <td className="image">
-                        <Image
-                          src={item.images[0].src}
-                          width={48}
-                          height={48}
-                        />
-                      </td>
-                      <td className="name">
-                        {item.name}
-                        <div className="price">
-                          <p>{formatPrice(item.price)}</p>
-                        </div>
-                      </td>
-
-                      <td className="cart-quantity">
-                        <Quantity
-                          quantity={item.quantity}
-                          value={item.quantity}
-                          onSetQuantity={onSetQuantity}
-                          id={item.id}
-                          size="small"
-                        />
-                      </td>
-                      <td className="subtotal">
-                        <p>{formatPrice(item.price * item.quantity)}</p>
-                      </td>
-                      <td className="btn-remove">
-                        <Icon.Trash size={12} style={{ color: '#c83a3a' }} />
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+              {items.map((item, index) => (
+                <div className="product__item" key={item.id}>
+                  <div className="product__name">
+                    <div className="product__image">
+                      <Image src={item.images[0].src} fill="true" />
+                    </div>
+                    <div className="product__content">
+                      <p className="name">{item.name}</p>
+                      <p className="price">{formatPrice(item.price)}</p>
+                    </div>
+                  </div>
+                  <div className="product__quantity">
+                    <Quantity
+                      quantity={item.quantity}
+                      value={item.quantity}
+                      onSetQuantity={onSetQuantity}
+                      id={item.id}
+                      size="small"
+                    />
+                  </div>
+                  <div className="product__subtotal">
+                    <p>{formatPrice(item.price * item.quantity)}</p>
+                  </div>
+                  <span className="btn-remove">
+                    <Icon.Trash size={12} style={{ color: '#c83a3a' }} />
+                  </span>
+                </div>
+              ))}
             </div>
           </div>
           <div className="cart-right">
@@ -136,13 +130,13 @@ const CartPage = () => {
               <div className="cart__summary">
                 <div className="subtotal">
                   <p className="subtotal-label">Tạm tính</p>
-                  <p className="subtotal-value">{cart.subTotal}</p>
+                  <p className="subtotal-value">{formatPrice(cart.subTotal)}</p>
                 </div>
                 <div className="discount">
                   <p className="subtotal-label">Giảm giá</p>
                   <p className="subtotal-value">{cart.discount}</p>
                 </div>
-                <div className="discount">
+                <div className="total">
                   <p className="subtotal-label">Tổng tiền</p>
                   <p className="subtotal-value">{formatPrice(cart.subTotal)}</p>
                 </div>

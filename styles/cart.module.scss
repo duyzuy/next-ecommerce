@@ -6,13 +6,72 @@
 
     :global .cart-body{
         display: flex;
-        
+        flex-wrap: wrap;
         .cart-left{
-            flex-basis: 70%;
-            width: 70%;
+            flex-basis: calc(100% - 320px);
+            width: calc(100% - 320px);
+            padding-right: 30px;
             .table.cart{
                 display: table;
                 width: 100%;
+                border: 1px solid #f1f1f1;
+                padding: 15px 20px;
+                table{
+                    width: 100%;
+                }
+                .product__item{
+                    display: flex;
+                    margin-bottom: 30px;
+                    align-items: center;
+                    justify-content: space-between;
+                }
+                .product__item:last-of-type{
+                    margin-bottom: 0;
+                }
+                .product__name{
+                    width: 40%;
+                    display: flex;
+                    
+                }
+                .product__image{
+                    display: inline-block;
+                    width: 40px;
+                }
+                .product__content{
+                    flex: 1;
+                    padding-left: 15px;
+                    .name{
+                        margin-bottom: 5px;
+                        line-height: 1.2;
+                        font-size: 13px;
+                    }
+                    .price{
+                        margin-bottom: 0;
+                        font-size: 13px;
+                        opacity: 0.8;
+                    }
+                }
+                .product__quantity{
+                    padding-left: 40px;
+           
+                }
+                .product__subtotal{
+                    padding-left: 40px;
+                    flex: 1;
+                }
+                .product__action{
+                    
+                }
+                .btn-remove{
+                    cursor: pointer;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    background-color: #f4f8ff;
+                    border-radius: 50%;
+                }
             }
             .cart-table-row{
                 display: table-row;
@@ -63,11 +122,21 @@
                 .price.sale{
                     color: #c83a3a
                 }
-                p{
-                    margin-bottom: 0;
-                    color: #e91e63
-                }
+               
             
+        }
+        .cart-right{
+            width: 320px;
+            
+        }
+        .cart__summary{
+            border: 1px solid #f1f1f1;
+            padding: 15px;
+            border-radius: 10px;
+            .subtotal, .discount, .total{
+                display: flex;
+                justify-content: space-between;
+            }
         }
     }
 

@@ -34,7 +34,6 @@ const useCart = (options = {}) => {
       ...product,
       quantity: quantity
     };
-
     const prdItem = cart.items.find((item) => item.id === id);
 
     let newItems = [];
