@@ -11,7 +11,7 @@ export const contentType = {
   PAGE: 'page'
 };
 
-export const discountType = {
+export const DISCOUNT_TYPE = {
   FIXED_CART: 'fixed_cart',
   PERCENT: 'percent'
 };

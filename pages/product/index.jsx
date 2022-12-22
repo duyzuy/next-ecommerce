@@ -4,8 +4,12 @@ import { isEmpty, isExists } from '../../utils/helper';
 import { getProductList } from '../../api/product';
 import ProductArchive from '../../container/ProductArchive';
 import { useRouter } from 'next/router';
+import {
+  getProductAttributes,
+  getProductAttrTerms
+} from '../../api/ProductAttributes';
 const Product = (props) => {
-  const { products } = props;
+  const { products, attribures } = props;
 
   const router = useRouter();
   return (
@@ -13,6 +17,7 @@ const Product = (props) => {
       products={products}
       type={contentType.PRODUCT}
       router={router}
+      attribures={attribures}
     />
   );
 };
@@ -32,9 +37,24 @@ export async function getServerSideProps(ctx) {
     ...productFilterValue
   });
 
+  // const prdIds = Promise.all();
+  const prdAttributes = await getProductAttributes();
+
+  const prdAttrWithTerms = await Promise.all(
+    prdAttributes.map(async (attr) => {
+      return await getProductAttrTerms(attr.id).then((response) => {
+        return {
+          ...attr,
+          attrTerms: response
+        };
+      });
+    })
+  );
+
   return {
     props: {
-      products: products
+      products: products,
+      attribures: prdAttrWithTerms
     }
   };
 }

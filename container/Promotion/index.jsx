@@ -18,15 +18,18 @@ const PromotionCode = ({ code, onApplyCode, isValid }) => {
         <div className="code"></div>
       </div>
       <div className="cart__promotion--form">
-        <label htmlFor="promotionCode">Áp dụng mã giảm giá</label>
+        <label htmlFor="promotionCode">Bạn có mã giảm giá?</label>
         <div className="promotion__control">
           <input
             id="promotionCode"
             className="input"
             value={promotionCode}
+            placeholder="Mã giảm giá"
             onChange={(e) => onChangePromotion(e.target.value)}
           />
-          <Button onClick={onApplyPromotionCode}>Áp dụng</Button>
+          <Button onClick={onApplyPromotionCode} color="primary">
+            Áp dụng
+          </Button>
         </div>
       </div>
     </div>

@@ -56,7 +56,7 @@ const Select = (props) => {
               <span className="text">{placeholder}</span>
             </div>
           )}
-          {options.map((opt, index) => (
+          {options?.map((opt, index) => (
             <div
               className={
                 selected?.value === opt.value ? 'option selected' : 'option'
