@@ -1,7 +1,7 @@
-export const formatPrice = (price) => {
+export const formatPrice = (price, currency = 'VND') => {
   const formatter = new Intl.NumberFormat('it-IT', {
     style: 'currency',
-    currency: 'VND',
+    currency: currency,
     minimumFractionDigits: 0
   });
   return formatter.format(price);

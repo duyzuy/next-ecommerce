@@ -55,7 +55,7 @@ const Button = (props) => {
       clss = clss.concat(' ', size);
     }
     return clss;
-  }, [color, fluid, outline, type, iconPosition, size]);
+  }, [color, fluid, outline, type, iconPosition, size, className]);
 
   const IconComp = () => {
     if (icon !== undefined && typeof icon === 'function') {

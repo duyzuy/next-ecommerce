@@ -58,6 +58,17 @@
         .quantity{
             margin-bottom: 30px;
         }
+        .ec__gopayment{
+            text-align: center;
+            padding-top: 20px;
+            .ec__button{
+                margin-top: 0px;
+                color: #3e59ba;
+                height: auto;
+                display: inline-block;
+            }
+        }
+        
 
     }
     :global .ec__product--top{

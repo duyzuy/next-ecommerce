@@ -3,20 +3,20 @@ import productListReducer, { productListState } from './productList';
 import viewOrderReducer, { viewOrderState } from './viewOrder';
 import cartReducer, { cartState } from './cart';
 import settingReducer, { settingState } from './settingReducer';
-import toastReducer, { toastState } from './toast';
+import bookingReducer, { bookingState } from './booking';
 export const initialState = {
   productList: productListState,
   viewOrder: viewOrderState,
-  cart: cartState,
+  // cart: cartState,
   setting: settingState,
-  toast: toastState
+  booking: bookingState
 };
 const rootReducer = combineReducers({
   productList: productListReducer,
   viewOrder: viewOrderReducer,
-  cart: cartReducer,
+  // cart: cartReducer,
   setting: settingReducer,
-  toast: toastReducer
+  booking: bookingReducer
 });
 
 export default rootReducer;

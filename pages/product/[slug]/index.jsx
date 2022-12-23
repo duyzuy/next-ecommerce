@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import {
   getProductBySlug,
@@ -20,19 +20,22 @@ import RightSidebar from '../../../container/ProductDetail/RightSidebar';
 import { isValidEmail } from '../../../utils/validate';
 import styles from '../../../styles/singleproduct.module.scss';
 import { getSlugFromProducts } from '../../../api/product';
-import { useDispatch } from '../../../providers/hooks';
-import { addTocart } from '../../../actions/cart';
+import { useDispatch, useSelector } from '../../../providers/hooks';
+import { addBooking } from '../../../actions/booking';
 import useCart from '../../../hooks/useCart';
 import { toast } from '../../../lib/toast';
+import { setPayment } from '../../../constants/booking';
+
 const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
 
   const { breadItems } = useBreadcrumb(router);
   const [productReviews, setProductReviews] = useState(reviews);
+  const [isShowPayment, setIsShowPayment] = useState(false);
   const dispatch = useDispatch();
   const cart = useCart();
-
+  const bookingInfor = useSelector((state) => state.booking);
   const onAddToCart = (prd, quantity, callback) => {
     const { id, sale_price, regular_price, name, images, categories, on_sale } =
       prd;
@@ -55,17 +58,18 @@ const ProductDetail = (props) => {
       onSale: on_sale
     };
 
-    dispatch(addTocart({ data: prdItem }));
+    dispatch(addBooking({ data: prdItem }));
 
-    cart.addItem({
-      id: prdItem.id,
-      quantity: prdItem.quantity,
-      product: { ...prdItem }
-    });
+    // cart.addItem({
+    //   id: prdItem.id,
+    //   quantity: prdItem.quantity,
+    //   product: { ...prdItem }
+    // });
 
     if (callback && typeof callback === 'function') {
       callback();
     }
+    setIsShowPayment(true);
   };
 
   const loadMoreReviews = async () => {
@@ -139,7 +143,15 @@ const ProductDetail = (props) => {
       if (callback && typeof callback === 'function') callback();
     }
   };
-
+  useEffect(() => {
+    setPayment(false);
+    if (bookingInfor.products.count === 0) {
+      setPayment(true);
+    }
+  }, [bookingInfor]);
+  useEffect(() => {
+    setIsShowPayment(false);
+  }, [data]);
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
@@ -147,7 +159,6 @@ const ProductDetail = (props) => {
     <div className={styles.ec__product__single}>
       <SEO title={data?.name} description="bep tu nhap khau chinh hang" />
       <Breadcrumb items={breadCrumbItems} />
-
       <Container>
         <div className={'ec__wrapper'}>
           <div className="ec__product--left">
@@ -180,7 +191,11 @@ const ProductDetail = (props) => {
               </div>
             </div>
           </div>
-          <RightSidebar data={data} addToCart={onAddToCart} />
+          <RightSidebar
+            data={data}
+            addToCart={onAddToCart}
+            isShowPayment={isShowPayment}
+          />
         </div>
         {(productRelated && (
           <div className={styles.product_related}>

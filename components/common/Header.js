@@ -9,7 +9,7 @@ import { useSelector } from '../../providers/hooks';
 
 const Header = (props) => {
   const { data: session, status } = useSession();
-  const cart = useSelector((state) => state.cart);
+  const bookingInfor = useSelector((state) => state.booking);
 
   const { categories } = props;
   return (
@@ -50,7 +50,9 @@ const Header = (props) => {
                 <Link href="/cart">
                   <a className="item">
                     <Icon.ShoppingCart size={20} />
-                    <span className="cart_count">{cart?.count}</span>
+                    <span className="cart_count">
+                      {bookingInfor.products.count}
+                    </span>
                   </a>
                 </Link>
               </div>

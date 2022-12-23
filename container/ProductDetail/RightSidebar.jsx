@@ -11,7 +11,7 @@ const ACTIONS = {
   DOWN: 'down'
 };
 const RightSidebar = (props) => {
-  const { data, addToCart } = props;
+  const { data, addToCart, isShowPayment } = props;
   const [quantity, setQuantity] = useState(1);
 
   const onSetQuantity = useCallback(
@@ -103,6 +103,14 @@ const RightSidebar = (props) => {
               >
                 Thêm vào giỏ hàng
               </Button>
+              {(isShowPayment && (
+                <div className="ec__gopayment">
+                  <Button type="link" href="/payment">
+                    Đến trang thanh toán
+                    <Icon.ArrowRight style={{ marginLeft: 5 }} size={10} />
+                  </Button>
+                </div>
+              )) || <></>}
             </div>
           </div>
         </div>

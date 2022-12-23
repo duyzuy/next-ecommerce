@@ -1,11 +1,11 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, useEffect, useCallback, memo } from 'react';
 import { Container, Image, Header } from 'semantic-ui-react';
 import styles from '../../styles/cart.module.scss';
 import { useSelector } from '../../providers/hooks';
 import { formatPrice } from '../../helpers/product';
 import Quantity from '../../components/Quantity';
 import { useDispatch } from '../../providers/hooks';
-import { UPDATE_CART } from '../../constants/actions';
+import { UPDATE_CART, UPDATE_PRICE_ON_CART } from '../../constants/actions';
 import useCart from '../../hooks/useCart';
 import * as Icon from 'react-feather';
 import PromotionCode from '../../container/Promotion';
@@ -16,19 +16,28 @@ import { toast } from '../../lib/toast';
 import Button from '../../components/Button';
 import Select from '../../components/Select';
 import { useRouter } from 'next/router';
-
+import { setPayment, isPayment } from '../../constants/booking';
+import CartItems from '../../components/CartItems';
+import BookingSummary from '../../components/BookingSummary';
 const ACTIONS = {
-  UP: 'up',
-  DOWN: 'down'
+  REMOVE_CODE: 'removeCode',
+  ADD_CODE: 'addCode'
 };
+
 const CartPage = () => {
-  const cart = useSelector((state) => state.cart);
-  const { items } = cart;
+  const bookingInfor = useSelector((state) => state.booking);
+  const currency = useSelector(
+    (state) => state.setting.woocommerceCurrency?.value
+  );
+  // const { items } = cart;
   const router = useRouter();
   const disPatch = useDispatch();
   const cartStorage = useCart();
+
+  const bookingItems = bookingInfor.products.items;
+
   const onSetQuantity = (type, id) => {
-    const item = items.find((item) => item.id === id);
+    const item = bookingItems.find((item) => item.id === id);
     if (!item) return;
 
     disPatch({
@@ -40,15 +49,34 @@ const CartPage = () => {
       }
     });
 
-    cartStorage.updateItem({
-      id,
-      quantity: 1,
-      action: type
-    });
+    // cartStorage.updateItem({
+    //   id,
+    //   quantity: 1,
+    //   action: type
+    // });
   };
 
-  const onApplyPromotionCode = () => {};
-
+  const EmptyCart = () => {
+    return (
+      <div className="cart__empty">
+        <div className="image">
+          <Image src="./assets/images/cart-empty.png" fill="true" />
+        </div>
+        <div className="empty--content">
+          <p className="title">Giỏ hàng của bạn đang trống</p>
+          <p className="sub">Trở lại cửa hàng và lựa chọn sản phẩm yêu thích</p>
+          <Button
+            onClick={() => {
+              router.push('/product');
+            }}
+            color="primary"
+          >
+            Trở về cửa hàng
+          </Button>
+        </div>
+      </div>
+    );
+  };
   const handleApplyCode = async (code) => {
     const response = await client.get(`coupon`, {
       code: code
@@ -62,6 +90,7 @@ const CartPage = () => {
           type: 'error',
           message: `Mã giảm giá đã hết hạn`
         });
+        return;
       }
       const discountType = coupon.discount_type;
       const amount = Number.parseFloat(coupon.amount).toFixed();
@@ -71,23 +100,91 @@ const CartPage = () => {
       const usageLimitPerUser = coupon.usage_limit_per_user;
       const usageCount = coupon.usage_count;
       const usedBy = coupon.used_by;
+      const prdCategoryApply = coupon.product_categories;
 
       //check minimum amount
       let nummberOfDiscount = minimumAmount;
 
+      //check type discount
       if (coupon.discount_type === DISCOUNT_TYPE.PERCENT) {
-        const discountNumber = (amount * cart.subTotal) / 100;
-        if (discountNumber > minimumAmount) {
+        const discountNumber = (amount * bookingInfor.products.subTotal) / 100;
+        if (discountNumber > minimumAmount && minimumAmount !== 0) {
+          nummberOfDiscount = discountNumber;
+        }
+
+        if (discountNumber > maximumAmount && maximumAmount !== 0) {
+          nummberOfDiscount = maximumAmount;
         }
       }
 
       if (coupon.discount_type === DISCOUNT_TYPE.FIXED_CART) {
-        const discountNumber = (amount * cart.subTotal) / 100;
-        if (discountNumber < minimumAmount) {
+        if (amount > minimumAmount && minimumAmount !== 0) {
+          nummberOfDiscount = amount;
+        }
+
+        if (amount > maximumAmount && maximumAmount !== 0) {
+          nummberOfDiscount = maximumAmount;
         }
       }
 
+      //check category valid in cart order
+      let isValidCategory = true;
+      const prdCatInCart = bookingInfor.products.items.reduce((acc, item) => {
+        item.categories.forEach((cat, index) => {
+          if (!acc.includes(cat.id)) {
+            acc.push(cat.id);
+          }
+        });
+        return acc;
+      }, []);
+
+      if (prdCategoryApply.length > 0) {
+        prdCategoryApply.forEach((cat, index) => {
+          if (!prdCatInCart.includes(cat)) {
+            isValidCategory = false;
+            return;
+          }
+        });
+      }
+      if (!isValidCategory) {
+        toast({
+          type: 'warning',
+          message: `Giỏ hàng chứa sản phẩm không nằm trong danh mục giảm giá`
+        });
+        return;
+      }
+
+      //check code is is current applied
+      if (code === bookingInfor.promotionCode) {
+        toast({
+          type: 'warning',
+          message: `Mã giảm giá đã được áp dụng`
+        });
+        return;
+      }
+
       //check limit usage and limit by user
+      if (usageCount > usageLimit) {
+        toast({
+          type: 'warning',
+          message: `Số lượng sử dụng đã hết`
+        });
+        return;
+      }
+      // success in all case
+      disPatch({
+        type: UPDATE_PRICE_ON_CART,
+        payload: {
+          couponCode: code,
+          discountValue: nummberOfDiscount,
+          discountType: discountType,
+          type: ACTIONS.ADD_CODE
+        }
+      });
+      toast({
+        type: 'success',
+        message: `Áp dụng mã thành công`
+      });
     } else if (response.status === 200 && response.data.length === 0) {
       toast({
         type: 'error',
@@ -95,7 +192,26 @@ const CartPage = () => {
       });
     }
   };
+  const handleRemoveCode = useCallback((code) => {
+    disPatch({
+      type: UPDATE_PRICE_ON_CART,
+      payload: {
+        couponCode: code,
+        type: ACTIONS.REMOVE_CODE
+      }
+    });
 
+    toast({
+      type: 'success',
+      message: `Đã huỷ áp dụng code - <strong>${code}</strong`
+    });
+  }, []);
+  useEffect(() => {
+    setPayment(true);
+    if (bookingInfor.products.count === 0) {
+      setPayment(false);
+    }
+  }, [bookingInfor]);
   return (
     <Container>
       <div className={styles.cart__wrapper}>
@@ -109,92 +225,23 @@ const CartPage = () => {
           </Header>
         </div>
         <div className="cart-body">
-          {cart.count === 0 ? (
+          {(!bookingItems.length && <EmptyCart />) || (
             <>
-              <div className="cart__empty">
-                <div className="image-empty">
-                  <Image src="./assets/images/cart-empty.png" fill />
-                </div>
-                <div className="empty--content">
-                  <p className="title">Giỏ hàng của bạn đang trống</p>
-                  <p className="sub">
-                    Trở lại cửa hàng và lựa chọn sản phẩm yêu thích
-                  </p>
-                  <Button
-                    onClick={() => {
-                      router.push('/product');
-                    }}
-                    color="primary"
-                  >
-                    Trở về cửa hàng
-                  </Button>
-                </div>
-              </div>
-            </>
-          ) : (
-            <>
-              {' '}
               <div className="cart-left">
-                <div className="table cart">
-                  {items.map((item, index) => (
-                    <div className="product__item" key={item.id}>
-                      <div className="product__name">
-                        <div className="product__image">
-                          <Image src={item.images[0].src} fill="true" />
-                        </div>
-                        <div className="product__content">
-                          <p className="name">{item.name}</p>
-                          <p className="price">{formatPrice(item.price)}</p>
-                        </div>
-                      </div>
-                      <div className="product__quantity">
-                        <Quantity
-                          quantity={item.quantity}
-                          value={item.quantity}
-                          onSetQuantity={onSetQuantity}
-                          id={item.id}
-                          size="small"
-                        />
-                      </div>
-                      <div className="product__subtotal">
-                        <p>{formatPrice(item.price * item.quantity)}</p>
-                      </div>
-                      <span className="btn-remove">
-                        <Icon.Trash size={12} style={{ color: '#c83a3a' }} />
-                      </span>
-                    </div>
-                  ))}
-                </div>
+                <CartItems
+                  items={bookingItems}
+                  onSetQuantity={onSetQuantity}
+                  currency={currency}
+                />
               </div>
               <div className="cart-right">
-                <div className="summary">
-                  <PromotionCode
-                    code={cart.promotionCode}
-                    onApplyCode={handleApplyCode}
-                  />
-
-                  <div className="cart__summary">
-                    <div className="subtotal">
-                      <p className="subtotal-label">Tạm tính</p>
-                      <p className="subtotal-value">
-                        {formatPrice(cart.subTotal)}
-                      </p>
-                    </div>
-                    <div className="discount">
-                      <p className="subtotal-label">Giảm giá</p>
-                      <p className="subtotal-value">{cart.discount}</p>
-                    </div>
-                    <div className="total">
-                      <p className="subtotal-label">Tổng tiền</p>
-                      <p className="subtotal-value">
-                        {formatPrice(cart.subTotal)}
-                      </p>
-                    </div>
-                    <div className="cart-actions">
-                      <Button color="primary">Tiến hành thanh toán</Button>
-                    </div>
-                  </div>
-                </div>
+                <BookingSummary
+                  bookingInfor={bookingInfor}
+                  currency={currency}
+                  onApplyCode={handleApplyCode}
+                  onRemoveCode={handleRemoveCode}
+                  router={router}
+                />
               </div>
             </>
           )}
@@ -204,7 +251,7 @@ const CartPage = () => {
   );
 };
 
-export default CartPage;
+export default memo(CartPage);
 
 export async function getServerSideProps(ctx) {
   return {
