@@ -9,7 +9,7 @@ const BookingSummary = ({
   onRemoveCode,
   router
 }) => {
-  console.log('render');
+  console.log('summary render');
   return (
     <div className="summary">
       <PromotionCode

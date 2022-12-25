@@ -1,5 +1,3 @@
-import { useState, useEffect, useContext } from 'react';
-
 import SEO from '../components/common/Seo';
 import { TOP_PROMOTIONS } from '../constants/menu';
 import Brands from '../container/Brands';

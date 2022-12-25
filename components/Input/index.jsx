@@ -1,3 +1,4 @@
+import { useMemo } from 'react';
 const Input = (props) => {
   const {
     type,
@@ -11,6 +12,16 @@ const Input = (props) => {
     ...rest
   } = props;
 
+  const clss = useMemo(() => {
+    let classes = 'ec__form--control';
+    if (icon) {
+      classes = classes.concat(' ', 'has-icon');
+    }
+    if (type !== undefined) {
+      classes = classes.concat(' ', `${type}`);
+    }
+    return classes;
+  }, [type, icon]);
   const handleChange = (e) => {
     if (onChange !== undefined && typeof onChange === 'function') {
       onChange(e);
@@ -21,7 +32,6 @@ const Input = (props) => {
     return (
       <div className="ec__form--control radio">
         <input name={name} type="radio" {...rest} onChange={handleChange} />
-
         <label htmlFor={props.id}>{label}</label>
       </div>
     );
@@ -35,7 +45,7 @@ const Input = (props) => {
     );
   }
   return (
-    <div className={`ec__form--control ${type}`}>
+    <div className={clss}>
       <label htmlFor={props.id}>{label}</label>
       <div className="ec__form--input">
         {icon !== undefined && typeof icon === 'function' ? (

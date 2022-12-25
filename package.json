@@ -27,6 +27,7 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
+    "@types/react": "^18.0.26",
     "eslint": "8.23.1",
     "eslint-config-next": "12.3.0"
   }

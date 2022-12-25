@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from '../../../providers/hooks';
 import { addBooking } from '../../../actions/booking';
 import useCart from '../../../hooks/useCart';
 import { toast } from '../../../lib/toast';
-import { setPayment } from '../../../constants/booking';
+import { setPayment, isPayment } from '../../../constants/booking';
 
 const ProductDetail = (props) => {
   const router = useRouter();
@@ -70,6 +70,7 @@ const ProductDetail = (props) => {
       callback();
     }
     setIsShowPayment(true);
+    setPayment(true);
   };
 
   const loadMoreReviews = async () => {

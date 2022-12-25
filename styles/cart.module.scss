@@ -1,15 +1,18 @@
-.cart__wrapper{
-    background-color: #fff;
-    padding: 20px;
+.wrapper{
+ 
+  
     margin-top: 60px;
-    border-radius: 20px;
 
-    :global .cart-body{
+    :global .page-body{
         display: flex;
         flex-wrap: wrap;
         justify-content: center;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 20px;
         .cart__empty{
             text-align: center;
+            padding: 60px;
             .image{
                 width: 150px;
                 margin: auto;
@@ -152,10 +155,10 @@
         }
         .cart-right{
             width: 320px;
+         
             
         }
         .cart__promotion{
-          
             padding: 15px;
             border-radius: 10px;
             margin-bottom: 15px;
@@ -199,8 +202,7 @@
             border-radius: 10px;
             .line{
                 height: 1px;
-                background-color: #c8c8c8;
-
+                background-color: #f4f8ff;
                 display: block;
                margin: 10px auto;
             }
@@ -267,5 +269,13 @@
             }
         }
     }
+    :global .page-header{
+        .booking{
+            &.steps{
+                margin-bottom: 30px;
+            }
+        }
+    }
+    
 
 }

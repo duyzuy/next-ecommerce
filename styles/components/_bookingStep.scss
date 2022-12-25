@@ -1,0 +1,53 @@
+.steps{
+    .inner{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .step{
+        position: relative;
+        text-align: center;
+        width: 150px;
+        opacity: 0.6;
+        &:after{
+            content: '';
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            background-color: #cfcfcf;
+            top: 19px;
+            right: calc(50% - 150px)
+        }
+        &:last-of-type{
+            &:after{
+                content: inherit
+            }
+        }
+        .number{
+            position: relative;
+            z-index: 2;
+            width: 36px;
+            height: 36px;
+            background-color: #fff;
+            margin: 0 auto 15px;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 36px;
+     
+        }
+        &.active {
+            opacity: 1;
+            .number{
+                background: #108cf2;
+                color: #fff
+            }
+             &:after{
+                background-color: #108cf2;
+             }
+        }
+        &.current{
+            opacity: 1;
+        }
+    }
+}

@@ -1,29 +1,51 @@
-import { useMemo, useState, useEffect, useCallback, memo } from 'react';
-import { Container, Image, Header } from 'semantic-ui-react';
+import { useEffect, useCallback } from 'react';
+import { Container, Header } from 'semantic-ui-react';
 import styles from '../../styles/cart.module.scss';
 import { useSelector } from '../../providers/hooks';
-import { formatPrice } from '../../helpers/product';
-import Quantity from '../../components/Quantity';
 import { useDispatch } from '../../providers/hooks';
 import { UPDATE_CART, UPDATE_PRICE_ON_CART } from '../../constants/actions';
 import useCart from '../../hooks/useCart';
 import * as Icon from 'react-feather';
-import PromotionCode from '../../container/Promotion';
 import { client } from '../../api/client';
 import { DISCOUNT_TYPE } from '../../constants/constants';
 import { isExpired } from '../../utils/date';
 import { toast } from '../../lib/toast';
-import Button from '../../components/Button';
-import Select from '../../components/Select';
 import { useRouter } from 'next/router';
 import { setPayment, isPayment } from '../../constants/booking';
 import CartItems from '../../components/CartItems';
 import BookingSummary from '../../components/BookingSummary';
+import BookingSteps from '../../components/BookingSteps';
+import CartEmpty from '../../components/CartEmpty';
 const ACTIONS = {
   REMOVE_CODE: 'removeCode',
   ADD_CODE: 'addCode'
 };
-
+const STEPS = [
+  {
+    step: 1,
+    name: 'Chọn sản phẩm',
+    key: 'selecting',
+    icon: () => <Icon.Pocket size={18} />
+  },
+  {
+    step: 2,
+    name: 'Giỏ hàng',
+    key: 'cart',
+    icon: () => <Icon.ShoppingCart size={18} />
+  },
+  {
+    step: 3,
+    name: 'Thanh toán',
+    key: 'payment',
+    icon: () => <Icon.CreditCard size={18} />
+  },
+  {
+    step: 4,
+    name: 'Hoàn thành',
+    key: 'thankyou',
+    icon: () => <Icon.Smile size={18} />
+  }
+];
 const CartPage = () => {
   const bookingInfor = useSelector((state) => state.booking);
   const currency = useSelector(
@@ -36,7 +58,7 @@ const CartPage = () => {
 
   const bookingItems = bookingInfor.products.items;
 
-  const onSetQuantity = (type, id) => {
+  const onSetQuantity = useCallback((type, id) => {
     const item = bookingItems.find((item) => item.id === id);
     if (!item) return;
 
@@ -54,30 +76,9 @@ const CartPage = () => {
     //   quantity: 1,
     //   action: type
     // });
-  };
+  }, []);
 
-  const EmptyCart = () => {
-    return (
-      <div className="cart__empty">
-        <div className="image">
-          <Image src="./assets/images/cart-empty.png" fill="true" />
-        </div>
-        <div className="empty--content">
-          <p className="title">Giỏ hàng của bạn đang trống</p>
-          <p className="sub">Trở lại cửa hàng và lựa chọn sản phẩm yêu thích</p>
-          <Button
-            onClick={() => {
-              router.push('/product');
-            }}
-            color="primary"
-          >
-            Trở về cửa hàng
-          </Button>
-        </div>
-      </div>
-    );
-  };
-  const handleApplyCode = async (code) => {
+  const handleApplyCode = useCallback(async (code) => {
     const response = await client.get(`coupon`, {
       code: code
     });
@@ -191,7 +192,7 @@ const CartPage = () => {
         message: `Mã giảm giá không hợp lệ`
       });
     }
-  };
+  }, []);
   const handleRemoveCode = useCallback((code) => {
     disPatch({
       type: UPDATE_PRICE_ON_CART,
@@ -214,8 +215,8 @@ const CartPage = () => {
   }, [bookingInfor]);
   return (
     <Container>
-      <div className={styles.cart__wrapper}>
-        <div className="cart-header">
+      <div className={styles.wrapper}>
+        <div className="page-header">
           <Header
             size="large"
             textAlign="center"
@@ -223,9 +224,10 @@ const CartPage = () => {
           >
             Giỏ hàng
           </Header>
+          <BookingSteps active={['selecting']} current="cart" steps={STEPS} />
         </div>
-        <div className="cart-body">
-          {(!bookingItems.length && <EmptyCart />) || (
+        <div className="page-body">
+          {(!bookingItems.length && <CartEmpty router={router} />) || (
             <>
               <div className="cart-left">
                 <CartItems
@@ -251,7 +253,7 @@ const CartPage = () => {
   );
 };
 
-export default memo(CartPage);
+export default CartPage;
 
 export async function getServerSideProps(ctx) {
   return {

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, memo } from 'react';
 import Button from '../../components/Button';
 
 const PromotionCode = ({ code, onApplyCode, hasPromotion, onRemoveCode }) => {
@@ -47,4 +47,4 @@ const PromotionCode = ({ code, onApplyCode, hasPromotion, onRemoveCode }) => {
     </div>
   );
 };
-export default PromotionCode;
+export default memo(PromotionCode);

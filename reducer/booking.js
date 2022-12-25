@@ -64,7 +64,7 @@ const bookingReducer = (state, action) => {
 
       let newSubtotal = 0,
         newCount = 0,
-        newItems = state.items,
+        newItems = state.products.items,
         newTotal = 0;
 
       const item = state.products.items.find((item) => item.id === payload.id);

@@ -44,7 +44,7 @@ const Select = (props) => {
       <div className="select-wrapper">
         <div className="select-item">
           <span className="text">
-            {isEmpty(selected) ? 'Select' : selected.text}
+            {isEmpty(selected) ? label : selected.text}
           </span>
           <span className="icon">
             <Icon.ArrowDown size={12} />

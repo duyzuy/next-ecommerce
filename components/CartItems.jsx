@@ -5,7 +5,6 @@ import Quantity from './Quantity';
 
 import { Image } from 'semantic-ui-react';
 const CartItems = ({ items, onSetQuantity, currency }) => {
-  console.log('item render');
   return (
     <div className="table cart">
       {items?.map((item, index) => (
