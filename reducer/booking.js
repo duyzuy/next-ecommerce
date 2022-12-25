@@ -16,7 +16,12 @@ const bookingState = {
   hasPromotion: false,
   promotionCode: '',
   discountValue: 0,
-  discountType: ''
+  discountType: '',
+  userIfor: {
+    billing: {},
+    shipping: {},
+    shippingItems: {}
+  }
 };
 
 const bookingReducer = (state, action) => {
