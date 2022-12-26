@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import { getProviders, getSession, signIn } from 'next-auth/react';
 import { Message } from 'semantic-ui-react';
 import { toast } from '../../../lib/toast';
+
 const LoginPage = (props) => {
   const [userData, setUserData] = useState({});
   const { providers } = props;

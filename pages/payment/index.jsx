@@ -6,9 +6,11 @@ import Input from '../../components/Input';
 import styles from '../../styles/payment.module.scss';
 import Select from '../../components/Select';
 import { useSelector, useDispatch } from '../../providers/hooks';
-const PaymentPage = () => {
+const PaymentPage = (props) => {
+  const { cities } = props;
+  console.log(cities);
   const router = useRouter();
-  const [cities, setCities] = useState([]);
+  //   const [cities, setCities] = useState([]);
   const setting = useSelector((state) => state.setting);
   const countryAllows = setting.woocommerceSpecificAllowedCountries;
   const [paymentInfor, setPaymentInfor] = useState({
@@ -50,11 +52,16 @@ const PaymentPage = () => {
       }
     }));
   };
-  // useEffect(() => {
-  //   (async () => {
-  //     const cities = await fetch('https://provinces.open-api.vn/api');
-  //   })();
-  // }, []);
+  //   useEffect(() => {
+  //     (async () => {
+  //       const cities = await fetch('https://provinces.open-api.vn/api', {
+  //         method: 'POST',
+  //         headers: {
+  //           'Content-Type': 'application/json'
+  //         }
+  //       }).then((response) => response.json());
+  //     })();
+  //   }, []);
 
   return (
     <Container>
@@ -88,12 +95,19 @@ const PaymentPage = () => {
                     selected={paymentInfor?.user.city}
                     onSetSelected={handleSelection}
                   />
-
-                  <Input
-                    name="address"
-                    label="Địa chỉ"
-                    placeholder="Tên đệm và tên"
+                  <Select
+                    label="Thành phố"
+                    options={countries}
+                    selected={paymentInfor?.user.city}
+                    onSetSelected={handleSelection}
                   />
+                  <Select
+                    label="Quận huyện"
+                    options={countries}
+                    selected={paymentInfor?.user.city}
+                    onSetSelected={handleSelection}
+                  />
+                  <Input name="address" label="Địa chỉ" placeholder="Địa chỉ" />
                 </form>
               </div>
             </div>
@@ -105,28 +119,39 @@ const PaymentPage = () => {
   );
 };
 export default PaymentPage;
-// export async function getServerSideProps(ctx) {
-//   const session = await getSession({ req: ctx.req });
+export async function getServerSideProps(ctx) {
+  //   const session = await getSession({ req: ctx.req });
 
-//   if (!session) {
-//     return {
-//       redirect: {
-//         destination: '/user/login',
-//         permanent: false
-//       }
-//     };
-//   }
+  //   if (!session) {
+  //     return {
+  //       redirect: {
+  //         destination: '/user/login',
+  //         permanent: false
+  //       }
+  //     };
+  //   }
 
-//   const profile = await getCustomerByEmail(session.user.email);
+  //   const profile = await getCustomerByEmail(session.user.email);
 
-//   const orders = await getOrders({
-//     customer: profile.id
-//   });
+  //   const orders = await getOrders({
+  //     customer: profile.id
+  //   });
 
-//   return {
-//     props: { session, profile, orders }
-//   };
-// }
+  const response = await fetch('https://provinces.open-api.vn/api/?depth=2', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  });
+
+  const cities = await response.json();
+  return {
+    props: {
+      cities
+      // session, profile, orders
+    }
+  };
+}
 PaymentPage.booking = {
   loading: 'loading...',
   redirect: '/cart' // redirect to this url

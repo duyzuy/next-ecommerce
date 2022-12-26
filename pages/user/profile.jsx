@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Container } from 'semantic-ui-react';
 import { getSession } from 'next-auth/react';
 
@@ -10,6 +10,8 @@ import AddressPage from '../../container/Profile/AddressPage';
 import { client } from '../../api/client';
 import styles from '../../styles/user.module.scss';
 import UserSidebar from '../../container/Profile/UserSideBar';
+import { LOAD_USER_INFO } from '../../constants/actions';
+import { useDispatch, useSelector } from '../../providers/hooks';
 
 const UserProfile = (props) => {
   const { session, profile, orders } = props;
@@ -19,6 +21,7 @@ const UserProfile = (props) => {
   const [userProfile, setUserProfile] = useState(profile);
   const [isLoading, setIsLoading] = useState(false);
 
+  const dispatch = useDispatch();
   /**
    * 9SnkzAQKUbKRuvWjTIo#gG(M
    * update user data infor
@@ -48,7 +51,9 @@ const UserProfile = (props) => {
       callback();
     }
   };
-
+  useEffect(() => {
+    dispatch({ type: LOAD_USER_INFO, payload: profile });
+  }, [profile]);
   return (
     <Container>
       <div className={styles.auth__wrapper}>
