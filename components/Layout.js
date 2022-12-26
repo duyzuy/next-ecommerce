@@ -4,6 +4,7 @@ import useClasses from '../hooks/useClasses';
 import Header from './common/Header';
 import Footer from './common/Footer';
 import { Toast } from '../lib/toast';
+
 const DynamicHeader = dynamic(() => import('./common/Header'), {
   suspense: true,
   loading: undefined

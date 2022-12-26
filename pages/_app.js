@@ -24,8 +24,8 @@ function MyApp(props) {
 
   return (
     <StoreProvider>
-      <AppProvider>
-        <SessionProvider session={pageProps?.session}>
+      <SessionProvider session={pageProps?.session}>
+        <AppProvider>
           {Component.auth
             ? getLayout(
                 <Auth auth={Component.auth}>
@@ -33,8 +33,8 @@ function MyApp(props) {
                 </Auth>
               )
             : getLayout(<Component {...pageProps} />)}
-        </SessionProvider>
-      </AppProvider>
+        </AppProvider>
+      </SessionProvider>
     </StoreProvider>
   );
 }

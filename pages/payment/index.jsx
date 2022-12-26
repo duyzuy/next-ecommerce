@@ -8,7 +8,7 @@ import Select from '../../components/Select';
 import { useSelector, useDispatch } from '../../providers/hooks';
 const PaymentPage = (props) => {
   const { cities } = props;
-  console.log(cities);
+
   const router = useRouter();
   //   const [cities, setCities] = useState([]);
   const setting = useSelector((state) => state.setting);

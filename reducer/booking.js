@@ -3,7 +3,8 @@ import {
   REMOVE_FROM_CART,
   LOAD_CART,
   UPDATE_CART,
-  UPDATE_PRICE_ON_CART
+  UPDATE_PRICE_ON_CART,
+  ADD_PAYMENT_INFO
 } from '../constants/actions';
 
 const bookingState = {
@@ -155,6 +156,9 @@ const bookingReducer = (state, action) => {
           hasPromotion: true
         };
       }
+      return state;
+    }
+    case ADD_PAYMENT_INFO: {
       return state;
     }
     default:

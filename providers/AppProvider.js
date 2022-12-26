@@ -1,6 +1,5 @@
 import { useEffect, useCallback } from 'react';
 import { AppContext } from '../contexts';
-
 import { useDispatch } from './hooks';
 import {
   LOAD_CART,
@@ -13,9 +12,11 @@ import {
   loadShipping,
   loadPaymentGateway
 } from '../actions/setting';
-
+import { useSession } from 'next-auth/react';
+import { client } from '../api/client';
 const AppProvider = (props) => {
   const disPatch = useDispatch();
+  const { data: session, status } = useSession();
 
   const onDispatchSetting = useCallback(async () => {
     const data = await loadSetting();
@@ -41,12 +42,23 @@ const AppProvider = (props) => {
     });
   }, []);
 
+  const fetchUserInfor = async () => {
+    const response = await fetch('/user', { email: session.user.email }).then(
+      (data) => data
+    );
+    console.log(response);
+  };
   useEffect(() => {
     disPatch({ type: LOAD_CART });
     onDispatchSetting();
     onDispatchShipping();
   }, []);
 
+  useEffect(() => {
+    if (session) {
+      fetchUserInfor();
+    }
+  }, []);
   return (
     <AppContext.Provider value={{ isLoading: false }}>
       {props.children}

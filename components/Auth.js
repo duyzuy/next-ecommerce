@@ -1,5 +1,9 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useDispatch, useSelector } from '../providers/hooks';
+import { client } from '../api/client';
+import { useEffect } from 'react';
+
 function Auth({ children, auth }) {
   const router = useRouter();
 
@@ -15,6 +19,16 @@ function Auth({ children, auth }) {
     return <div>Check Auth permission...</div>;
   }
 
+  useEffect(() => {
+    if (session) {
+      (async () => {
+        const response = await client.get('/user', {
+          email: session.user.email
+        });
+        console.log(response);
+      })();
+    }
+  }, []);
   return children;
 }
 

@@ -1,3 +1,4 @@
+import { memo } from 'react';
 import Image from 'next/image';
 import { Container, Input } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
@@ -6,28 +7,14 @@ import styles from '../../styles/header.module.scss';
 import HeaderBottom from '../HeaderBottom';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { useSelector, useDispatch } from '../../providers/hooks';
-import { useEffect } from 'react';
-import { getCustomerByEmail } from '../../api/customer';
-import { LOAD_USER_INFO } from '../../constants/actions';
-import { client } from '../../api/client';
+
 const Header = (props) => {
   const { data: session, status } = useSession();
 
   const bookingInfor = useSelector((state) => state.booking);
-  const dispatch = useDispatch();
-  const { categories } = props;
-  console.log(session);
-  useEffect(() => {
-    if (session) {
-      (async () => {
-        const profile = await client.get('/user', {
-          email: session.user.email
-        });
 
-        dispatch({ type: LOAD_USER_INFO, payload: profile });
-      })();
-    }
-  }, []);
+  const { categories } = props;
+
   return (
     <header id="ec__header" className={styles.ec_header}>
       <div id="ec_header_top" className={styles.ec_header_top}>
@@ -142,4 +129,4 @@ const Header = (props) => {
   );
 };
 
-export default Header;
+export default memo(Header);
