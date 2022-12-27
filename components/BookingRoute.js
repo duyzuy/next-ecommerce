@@ -1,21 +1,16 @@
-import { useMemo } from 'react';
-import { useSelector } from '../providers/hooks';
+import { useMemo, useEffect } from 'react';
 import { useRouter } from 'next/router';
-
+import useBooking from '../hooks/useBooking';
 const BookingRoute = ({ children }) => {
-  const booking = useSelector((state) => state.booking);
   const router = useRouter();
-
-  const canBooking = useMemo(() => {
-    return booking.products.count === 0;
-  }, [booking]);
-
-  console.log(canBooking);
-  if (canBooking) {
-    router.push('/cart');
-    return;
+  const isPayment = useBooking({
+    onCanNotBooking: () => {
+      router.push('/cart');
+    }
+  });
+  if (!isPayment) {
+    return <div>loading</div>;
   }
-
   return children;
 };
 export default BookingRoute;

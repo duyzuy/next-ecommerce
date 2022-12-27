@@ -22,16 +22,29 @@ function MyApp(props) {
       </Layout>
     ));
 
+  const CustomComponent = (props) => {
+    if (Component.auth) {
+      return (
+        <Auth auth={Component.auth}>
+          <Component {...props} />
+        </Auth>
+      );
+    }
+
+    if (Component.booking) {
+      return (
+        <BookingRoute>
+          <Component {...props} />
+        </BookingRoute>
+      );
+    }
+    return <Component {...props} />;
+  };
   return (
     <StoreProvider>
       <SessionProvider session={pageProps?.session}>
         <AppProvider>
-          {(Component.auth &&
-            getLayout(
-              <Auth auth={Component.auth}>
-                <Component {...pageProps} />
-              </Auth>
-            )) || <Component {...pageProps} />}
+          {getLayout(<CustomComponent {...pageProps} />)}
         </AppProvider>
       </SessionProvider>
     </StoreProvider>

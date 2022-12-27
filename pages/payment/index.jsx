@@ -5,6 +5,7 @@ import { Container, Header } from 'semantic-ui-react';
 import Input from '../../components/Input';
 import styles from '../../styles/payment.module.scss';
 import Select from '../../components/Select';
+// import { Select } from 'semantic-ui-react';
 import { useSelector, useDispatch } from '../../providers/hooks';
 const PaymentPage = (props) => {
   const { cities } = props;
@@ -15,46 +16,27 @@ const PaymentPage = (props) => {
   const booking = useSelector((state) => state.booking);
 
   const countryAllows = setting.woocommerceSpecificAllowedCountries;
-  const [paymentInfor, setPaymentInfor] = useState({
+  const [formData, setFormData] = useState({
     user: {},
     shipping: {},
     payment: {}
   });
-  // const [countries, setCountries] = useState(() => {
-  //   return countryAllows?.value.reduce(
-  //     (acc, key) => {
-  //       acc.push({
-  //         value: key,
-  //         text: countryAllows.options[key]
-  //       });
-  //       return acc;
-  //     },
-  //     [{ value: '', text: 'Chọn quốc gia' }]
-  //   );
-  // });
-  useEffect(() => {
-    if (booking.products.count === 0) {
-      router.push('/cart');
-    }
-  }, []);
+
   const countries = useMemo(() => {
     return countryAllows?.value.reduce(
       (acc, key) => {
-        acc.push({
-          value: key,
-          text: countryAllows.options[key]
-        });
+        acc = [...acc, { key, value: key, text: countryAllows.options[key] }];
         return acc;
       },
       [{ value: '', text: 'Chọn quốc gia' }]
     );
   }, [countryAllows]);
 
-  const handleSelection = (data) => {
-    setPaymentInfor((prevState) => ({
+  const handleSelection = (type, data) => {
+    setFormData((prevState) => ({
       ...prevState,
       user: {
-        city: data
+        [type]: data
       }
     }));
   };
@@ -95,24 +77,30 @@ const PaymentPage = (props) => {
                     label="Tên đệm và tên"
                     placeholder="Tên đệm và tên"
                   />
+                  <Input name="email" label="Email" placeholder="Email" />
+                  <Input
+                    name="phone"
+                    label="Số điện thoại "
+                    placeholder="Số điện thoại"
+                  />
                   <Select
                     label="Quốc gia"
                     options={countries}
-                    selected={paymentInfor?.user.city}
-                    onSetSelected={handleSelection}
+                    selected={formData?.user.country}
+                    onSetSelected={(data) => handleSelection('country', data)}
                   />
                   <Select
                     label="Thành phố"
                     options={countries}
-                    selected={paymentInfor?.user.city}
-                    onSetSelected={handleSelection}
+                    selected={formData?.user.city}
+                    onSetSelected={(data) => handleSelection('city', data)}
                   />
-                  <Select
+                  {/* <Select
                     label="Quận huyện"
                     options={countries}
-                    selected={paymentInfor?.user.city}
-                    onSetSelected={handleSelection}
-                  />
+                    selected={formData?.user.city}
+                    onSetSelected={(data) => handleSelection('district', data)}
+                  /> */}
                   <Input name="address" label="Địa chỉ" placeholder="Địa chỉ" />
                 </form>
               </div>
@@ -141,7 +129,7 @@ export async function getServerSideProps(ctx) {
     }
   };
 }
-PaymentPage.booking = {
-  loading: 'loading...',
-  redirect: '/cart' // redirect to this url
-};
+// PaymentPage.booking = {
+//   loading: 'loading...',
+//   redirect: '/cart' // redirect to this url
+// };
