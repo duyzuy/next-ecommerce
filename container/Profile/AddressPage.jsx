@@ -2,6 +2,8 @@ import { useState, useCallback, useMemo } from 'react';
 import * as Icon from 'react-feather';
 import Button from '../../components/Button';
 import { Loader } from 'semantic-ui-react';
+import BillingForm from '../../components/BillingForm';
+import ShippingForm from '../../components/ShippingForm';
 const EDITS = {
   BILLING: 'billing',
   SHIPPING: 'shipping'
@@ -53,6 +55,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
     }
     return '';
   }, [userData]);
+
   const handleChange = (key, value) => {
     setUserData((prevState) => ({
       ...prevState,
@@ -62,6 +65,7 @@ const AddressPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
       }
     }));
   };
+
   const onUpdateUserData = (action) => {
     onUpdateUserInfor(
       action,
@@ -103,169 +107,15 @@ const AddressPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
                 </Button>
               </div>
             </div>
-            <div className="section-content">
-              <div className="row">
-                <div className="label">Họ</div>
-                <div className="value">
-                  {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.billing.first_name}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Họ"
-                        onChange={(e) =>
-                          handleChange('first_name', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{billing.first_name || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Tên đệm và tên</div>
-                <div className="value">
-                  {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.billing.last_name}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Tên đệm và tên"
-                        onChange={(e) =>
-                          handleChange('last_name', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{billing.last_name || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Điện thoại</div>
-                <div className="value">
-                  {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.billing.phone}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Điện thoại"
-                        onChange={(e) => handleChange('phone', e.target.value)}
-                      />
-                    </div>
-                  ) : (
-                    <p>{billing.phone || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Email</div>
-                <div className="value">
-                  {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.billing.email}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Email"
-                        onChange={(e) => handleChange('email', e.target.value)}
-                      />
-                    </div>
-                  ) : (
-                    <p>{billing.email || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Quốc gia/Khu vực</div>
-                <div className="value">
-                  <p>{billing.country || '--'}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Thành phố</div>
-                <div className="value">
-                  <p>{billing.city || '--'}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Mã tỉnh thành</div>
-                <div className="value">
-                  {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.billing.postcode}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Mã tỉnh thành"
-                        onChange={(e) =>
-                          handleChange('postcode', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{billing.postcode || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Địa chỉ 1</div>
-                <div className="value">
-                  {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.billing.address_1}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Địa chỉ 1"
-                        onChange={(e) =>
-                          handleChange('address_1', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{billing.address_1 || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Địa chỉ 2</div>
-                <div className="value">
-                  {userData.editting === EDITS.BILLING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.billing.address_2}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Địa chỉ 2"
-                        onChange={(e) =>
-                          handleChange('address_2', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{billing.address_2 || '--'}</p>
-                  )}
-                </div>
-              </div>
-
-              {(userData.editting === EDITS.BILLING && (
-                <div className="page-actions">
-                  <Button
-                    disabled={canUpdated === EDITS.BILLING ? false : true}
-                    color={'primary'}
-                    size="small"
-                    onClick={() => onUpdateUserData(EDITS.BILLING)}
-                  >
-                    {(isLoading && 'Loading...') || 'Cập nhật'}
-                  </Button>
-                </div>
-              )) || <></>}
-            </div>
+            <BillingForm
+              isEditting={userData.editting === EDITS.BILLING ? true : false}
+              isLoading={isLoading}
+              data={billing}
+              isDisabled={canUpdated === 'billing' ? false : true}
+              onUpdateUserData={onUpdateUserData}
+              onChange={handleChange}
+              formData={userData.billing}
+            />
           </div>
 
           <div className="shipping-address">
@@ -289,162 +139,15 @@ const AddressPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
                 </Button>
               </div>
             </div>
-            <div className="section-content">
-              <div className="row">
-                <div className="label">Họ</div>
-                <div className="value">
-                  {userData.editting === EDITS.SHIPPING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.shipping.first_name}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Họ"
-                        onChange={(e) =>
-                          handleChange('first_name', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{shipping.first_name || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Tên đệm và tên</div>
-                <div className="value">
-                  {userData.editting === EDITS.SHIPPING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.shipping.last_name}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Họ"
-                        onChange={(e) =>
-                          handleChange('last_name', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{shipping.last_name || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Điện thoại</div>
-                <div className="value">
-                  {userData.editting === EDITS.SHIPPING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.shipping.phone}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Điện thoại"
-                        onChange={(e) => handleChange('phone', e.target.value)}
-                      />
-                    </div>
-                  ) : (
-                    <p>{shipping.phone || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Quốc gia/Khu vực</div>
-                <div className="value">
-                  <p>{shipping.country || '--'}</p>
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Thành phố</div>
-                <div className="value">
-                  {userData.editting === EDITS.SHIPPING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.shipping.city}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Thành phố"
-                        onChange={(e) => handleChange('city', e.target.value)}
-                      />
-                    </div>
-                  ) : (
-                    <p>{shipping.city || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Mã tỉnh thành</div>
-                <div className="value">
-                  {userData.editting === EDITS.SHIPPING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        value={userData.shipping.postcode}
-                        disabled={(isLoading && true) || false}
-                        placeholder="Mã tỉnh thành"
-                        onChange={(e) =>
-                          handleChange('postcode', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{shipping.postcode || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Địa chỉ 1</div>
-                <div className="value">
-                  {userData.editting === EDITS.SHIPPING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        disabled={(isLoading && true) || false}
-                        value={userData.shipping.address_1}
-                        placeholder="Địa chỉ 1"
-                        onChange={(e) =>
-                          handleChange('address_1', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{shipping.address_1 || '--'}</p>
-                  )}
-                </div>
-              </div>
-              <div className="row">
-                <div className="label">Địa chỉ 2</div>
-                <div className="value">
-                  {userData.editting === EDITS.SHIPPING ? (
-                    <div className="ui small input fluid">
-                      <input
-                        type="text"
-                        disabled={(isLoading && true) || false}
-                        value={userData.shipping.address_2}
-                        placeholder="Địa chỉ 2"
-                        onChange={(e) =>
-                          handleChange('address_2', e.target.value)
-                        }
-                      />
-                    </div>
-                  ) : (
-                    <p>{shipping.address_2 || '--'}</p>
-                  )}
-                </div>
-              </div>
-
-              {(userData.editting === EDITS.SHIPPING && (
-                <div className="page-actions">
-                  <Button
-                    color={'primary'}
-                    size="small"
-                    onClick={() => onUpdateUserData(EDITS.SHIPPING)}
-                  >
-                    {(isLoading && 'Loading...') || 'Cập nhật'}
-                  </Button>
-                </div>
-              )) || <></>}
-            </div>
+            <ShippingForm
+              isEditting={userData.editting === EDITS.SHIPPING ? true : false}
+              isLoading={isLoading}
+              data={shipping}
+              isDisabled={canUpdated === 'shipping' ? false : true}
+              onUpdateUserData={onUpdateUserData}
+              onChange={handleChange}
+              formData={userData.shipping}
+            />
           </div>
         </div>
       </div>

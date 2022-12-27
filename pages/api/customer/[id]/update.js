@@ -2,7 +2,7 @@ import { wcApi } from '../../../../api/woo';
 
 const handleUpdateCustomer = async (req, res) => {
   const { query, body } = req;
-
+  console.log(body);
   const { id } = query;
 
   await wcApi

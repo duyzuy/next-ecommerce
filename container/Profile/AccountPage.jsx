@@ -24,8 +24,8 @@ const AccountPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
         ...prevState,
         isEdit: true,
         profile: {
-          first_name: data.first_name,
-          last_name: data.last_name
+          firstName: data.firstName,
+          lastName: data.lastName
         }
       }));
     } else {
@@ -58,14 +58,14 @@ const AccountPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
                 <div className="ui small input">
                   <input
                     type="text"
-                    value={userData.profile.first_name}
+                    value={userData.profile.firstName}
                     disabled={(isLoading && true) || false}
                     placeholder="Họ"
-                    onChange={(e) => handleChange('first_name', e.target.value)}
+                    onChange={(e) => handleChange('firstName', e.target.value)}
                   />
                 </div>
               ) : (
-                <p>{data.first_name || '--'}</p>
+                <p>{data.firstName || '--'}</p>
               )}
             </div>
           </div>
@@ -76,21 +76,21 @@ const AccountPage = ({ title, data, onUpdateUserInfor, isLoading }) => {
                 <div className="ui small input">
                   <input
                     type="text"
-                    value={userData.profile.last_name}
+                    value={userData.profile.lastName}
                     disabled={(isLoading && true) || false}
-                    placeholder="Họ"
-                    onChange={(e) => handleChange('last_name', e.target.value)}
+                    placeholder="Tên đệm và tên"
+                    onChange={(e) => handleChange('lastName', e.target.value)}
                   />
                 </div>
               ) : (
-                <p>{data.last_name || '--'}</p>
+                <p>{data.lastName || '--'}</p>
               )}
             </div>
           </div>
           <div className="row">
             <div className="label">Tên tài khoản</div>
             <div className="value">
-              <p>{data.username || '--'}</p>
+              <p>{data.userName || '--'}</p>
             </div>
           </div>
           <div className="row">

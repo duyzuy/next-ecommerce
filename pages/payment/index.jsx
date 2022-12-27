@@ -12,6 +12,8 @@ const PaymentPage = (props) => {
   const router = useRouter();
   //   const [cities, setCities] = useState([]);
   const setting = useSelector((state) => state.setting);
+  const booking = useSelector((state) => state.booking);
+
   const countryAllows = setting.woocommerceSpecificAllowedCountries;
   const [paymentInfor, setPaymentInfor] = useState({
     user: {},
@@ -30,7 +32,11 @@ const PaymentPage = (props) => {
   //     [{ value: '', text: 'Chọn quốc gia' }]
   //   );
   // });
-
+  useEffect(() => {
+    if (booking.products.count === 0) {
+      router.push('/cart');
+    }
+  }, []);
   const countries = useMemo(() => {
     return countryAllows?.value.reduce(
       (acc, key) => {
@@ -120,23 +126,6 @@ const PaymentPage = (props) => {
 };
 export default PaymentPage;
 export async function getServerSideProps(ctx) {
-  //   const session = await getSession({ req: ctx.req });
-
-  //   if (!session) {
-  //     return {
-  //       redirect: {
-  //         destination: '/user/login',
-  //         permanent: false
-  //       }
-  //     };
-  //   }
-
-  //   const profile = await getCustomerByEmail(session.user.email);
-
-  //   const orders = await getOrders({
-  //     customer: profile.id
-  //   });
-
   const response = await fetch('https://provinces.open-api.vn/api/?depth=2', {
     method: 'GET',
     headers: {

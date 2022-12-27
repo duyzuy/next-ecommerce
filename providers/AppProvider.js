@@ -5,7 +5,8 @@ import {
   LOAD_CART,
   LOAD_ECOM_SETTING,
   LOAD_SHIPPING,
-  LOADING_PAYMENT_GATEWAY
+  LOADING_PAYMENT_GATEWAY,
+  FETCH_USER_DATA
 } from '../constants/actions';
 import {
   loadSetting,
@@ -42,11 +43,13 @@ const AppProvider = (props) => {
     });
   }, []);
 
-  const fetchUserInfor = async () => {
-    const response = await fetch('/user', { email: session.user.email }).then(
-      (data) => data
-    );
-    console.log(response);
+  const fetchUserData = async (session) => {
+    const response = await client.get('/user', { email: session.user.email });
+
+    disPatch({
+      type: FETCH_USER_DATA,
+      payload: { ...response.data }
+    });
   };
   useEffect(() => {
     disPatch({ type: LOAD_CART });
@@ -56,7 +59,7 @@ const AppProvider = (props) => {
 
   useEffect(() => {
     if (session) {
-      fetchUserInfor();
+      fetchUserData(session);
     }
   }, []);
   return (

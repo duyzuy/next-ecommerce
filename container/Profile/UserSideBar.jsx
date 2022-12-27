@@ -1,14 +1,14 @@
 import { PROFILE_ROUTES } from '../../constants/route';
 import SignOutButton from '../../components/SignOutButton';
 import Link from 'next/link';
-const UserSidebar = ({ session, profile, router }) => {
+const UserSidebar = ({ profile, router }) => {
   return (
     <div className="auth--sidebar">
       <div className="auth-avt">
         <div className="auth-avt-image">
-          <img src={profile.avatar_url} width={60} height={60} />
+          <img src={profile.avatarUrl} width={60} height={60} />
         </div>
-        <div className="auth-account">{session?.user?.name}</div>
+        <div className="auth-account">{profile.userName}</div>
       </div>
       <div className="auth--menu">
         <ul>

@@ -1,7 +1,8 @@
 import { wcApi } from '../../../api/woo';
 
-export const handleGetUserData = async (req, res) => {
+const handleGetUserData = async (req, res) => {
   const { query } = req;
+
   await wcApi
     .get(`customers`, {
       email: query.email,
@@ -26,6 +27,7 @@ export const handleGetUserData = async (req, res) => {
       }
     })
     .catch((error) => {
-      return error.response;
+      console.log(error);
     });
 };
+export default handleGetUserData;

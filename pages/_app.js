@@ -9,7 +9,7 @@ import 'swiper/css/bundle';
 import '../styles/global.scss';
 import '../lib/toast/style.scss';
 import { SessionProvider } from 'next-auth/react';
-
+import BookingRoute from '../components/BookingRoute';
 function MyApp(props) {
   const { Component, pageProps, appData } = props;
   const { device, ...rest } = appData;
@@ -26,13 +26,12 @@ function MyApp(props) {
     <StoreProvider>
       <SessionProvider session={pageProps?.session}>
         <AppProvider>
-          {Component.auth
-            ? getLayout(
-                <Auth auth={Component.auth}>
-                  <Component {...pageProps} />
-                </Auth>
-              )
-            : getLayout(<Component {...pageProps} />)}
+          {(Component.auth &&
+            getLayout(
+              <Auth auth={Component.auth}>
+                <Component {...pageProps} />
+              </Auth>
+            )) || <Component {...pageProps} />}
         </AppProvider>
       </SessionProvider>
     </StoreProvider>

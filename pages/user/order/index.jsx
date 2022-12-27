@@ -13,7 +13,7 @@ import EcModal from '../../../components/Modal';
 import OrderDetail from '../../../components/OrderDetail';
 import { useDispatch, useSelector } from '../../../providers/hooks';
 const OrderPage = (props) => {
-  const { session, profile, orders } = props;
+  const { session, orders } = props;
   const [orderDetail, setOrderDetail] = useState({});
   const [isShowModal, setIsShowModal] = useState(false);
   const router = useRouter();
@@ -26,11 +26,11 @@ const OrderPage = (props) => {
       setOrderDetail(response.data);
     }
   };
-
+  const userData = useSelector((state) => state.user);
   return (
     <Container>
       <div className={styles.auth__wrapper}>
-        <UserSidebar profile={profile} router={router} session={session} />
+        <UserSidebar profile={userData} router={router} session={session} />
         <div className="auth--body">
           <div className="auth--wrapper">
             <div className="account-page">
@@ -91,6 +91,6 @@ export async function getServerSideProps(ctx) {
   });
 
   return {
-    props: { session, profile, orders }
+    props: { session, orders }
   };
 }
