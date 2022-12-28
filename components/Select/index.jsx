@@ -12,7 +12,7 @@ const Select = (props) => {
     placeholder
   } = props;
   const selectRef = useRef();
-  const [isOpen, setIsOpen] = useState({});
+  // const [isOpen, setIsOpen] = useState({});
   const onSelectionChange = (e, opt) => {
     e.stopPropagation();
     // if (onSelection !== undefined && typeof onSelection === 'function') {
@@ -21,35 +21,27 @@ const Select = (props) => {
 
     onSetSelected(opt);
     selectRef.current.classList.remove('open');
-    setIsOpen(false);
-  };
-
-  const outSideClick = (e) => {
-    if (e.target.closest('.ec__form--control.select .select-item')) {
-      console.log(e);
-      // selectRef.current.classList.toggle('open');
-      setIsOpen(true);
-    } else {
-      // selectRef.current.classList.remove('open');
-      setIsOpen(false);
-    }
   };
 
   useEffect(() => {
+    const outSideClick = (e) => {
+      // _this.classList.add('ooo');
+
+      if (selectRef.current.contains(e.target)) {
+        selectRef.current.classList.toggle('open');
+      } else {
+        selectRef.current.classList.remove('open');
+      }
+    };
+
     window.addEventListener('click', outSideClick);
 
     return () => {
       window.removeEventListener('click', outSideClick);
     };
-  }, []);
+  }, [selectRef]);
   return (
-    <div
-      className={
-        (isOpen && 'ec__form--control select open') ||
-        'ec__form--control select'
-      }
-      ref={selectRef}
-    >
+    <div className="ec__form--control select" ref={selectRef}>
       {(label && <label className="select-label">{label}</label>) || <></>}
       <div className="select-wrapper">
         <div className="select-item">

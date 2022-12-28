@@ -1,8 +1,42 @@
 .wrapper{
     margin-top: 60px;
+    :global .page-header{
+        margin-bottom: 30px;
+    }
     :global .page-body{
         background-color: #fff;
         padding: 20px;
         border-radius: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        .section-header{
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 30px;
+            h4{
+                font-size: 1.3rem;
+            }
+        }
+        .col-left{
+            width: 60%;
+            padding-right: 30px;
+
+          
+            .form-row{
+                display: flex;
+                align-items: center;
+                margin-left: -15px;
+                margin-right: -15px;
+                .ec__form--control{
+                    flex: 1;
+                    padding-left: 15px;
+                    padding-right: 15px;
+                }
+            }
+        }
+        .col-right{
+            width: 40%;
+        }
+
     }
 }
