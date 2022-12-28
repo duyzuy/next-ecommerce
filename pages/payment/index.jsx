@@ -24,7 +24,7 @@ const PaymentPage = (props) => {
   const [formData, setFormData] = useState({
     user: {},
     shipping: {},
-    payment: {}
+    billing: {}
   });
   const handleSelection = (type, data) => {
     setFormData((formData) => ({
@@ -119,18 +119,20 @@ const PaymentPage = (props) => {
                     placeholder="Số điện thoại"
                   />
                 </div>
-                <Select
-                  label="Quốc gia"
-                  options={countries}
-                  selected={formData?.user.country}
-                  onSetSelected={(data) => handleSelection('country', data)}
-                />
-                <Select
-                  label="Tỉnh/thành phố"
-                  options={citiesOpt}
-                  selected={formData?.user.city}
-                  onSetSelected={(data) => handleSelection('city', data)}
-                />
+                <div className="form-row">
+                  <Select
+                    label="Quốc gia"
+                    options={countries}
+                    selected={formData?.user.country}
+                    onSetSelected={(data) => handleSelection('country', data)}
+                  />
+                  <Select
+                    label="Tỉnh/thành phố"
+                    options={citiesOpt}
+                    selected={formData?.user.city}
+                    onSetSelected={(data) => handleSelection('city', data)}
+                  />
+                </div>
                 <Select
                   label="Quận/huyện"
                   options={districtsOpts}
@@ -156,36 +158,41 @@ const PaymentPage = (props) => {
                     />
                   </div>
                   <div className="form-row">
-                    <Input name="email" label="Email" placeholder="Email" />
                     <Input
                       name="phone"
                       label="Số điện thoại "
                       placeholder="Số điện thoại"
                     />
                   </div>
-                  <Select
-                    label="Quốc gia"
-                    options={countries}
-                    selected={formData?.user.country}
-                    onSetSelected={(data) => handleSelection('country', data)}
-                  />
-                  <Select
-                    label="Tỉnh/thành phố"
-                    options={citiesOpt}
-                    selected={formData?.user.city}
-                    onSetSelected={(data) => handleSelection('city', data)}
-                  />
-                  <Select
-                    label="Quận/huyện"
-                    options={districtsOpts}
-                    selected={formData?.user.district}
-                    onSetSelected={(data) => handleSelection('district', data)}
-                  />
-                  <Input
-                    name="postcode"
-                    label="Mã bưu điện"
-                    placeholder="Mã bưu điện"
-                  />
+                  <div className="form-row">
+                    <Select
+                      label="Quốc gia"
+                      options={countries}
+                      selected={formData?.user.country}
+                      onSetSelected={(data) => handleSelection('country', data)}
+                    />
+                    <Select
+                      label="Tỉnh/thành phố"
+                      options={citiesOpt}
+                      selected={formData?.user.city}
+                      onSetSelected={(data) => handleSelection('city', data)}
+                    />
+                  </div>
+                  <div className="form-row">
+                    <Select
+                      label="Quận/huyện"
+                      options={districtsOpts}
+                      selected={formData?.user.district}
+                      onSetSelected={(data) =>
+                        handleSelection('district', data)
+                      }
+                    />
+                    <Input
+                      name="postcode"
+                      label="Mã bưu điện"
+                      placeholder="Mã bưu điện"
+                    />
+                  </div>
                   <Input name="address" label="Địa chỉ" placeholder="Địa chỉ" />
                 </div>
               </div>
@@ -218,6 +225,11 @@ const PaymentPage = (props) => {
     </>
   );
 };
+PaymentPage.booking = {
+  loading: 'loading...',
+  redirect: '/cart'
+};
+
 export default withBookingLayout(PaymentPage, {
   title: 'Thanh toán',
   step: 'payment',
@@ -238,7 +250,3 @@ export async function getServerSideProps(ctx) {
     }
   };
 }
-// PaymentPage.booking = {
-//   loading: 'loading...',
-//   redirect: '/cart' // redirect to this url
-// };

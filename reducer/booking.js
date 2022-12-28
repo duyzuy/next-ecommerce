@@ -4,7 +4,8 @@ import {
   LOAD_CART,
   UPDATE_CART,
   UPDATE_PRICE_ON_CART,
-  ADD_PAYMENT_INFO
+  ADD_PAYMENT_INFO,
+  CHANGE_PAYMENT_METHOD
 } from '../constants/actions';
 
 const bookingState = {
@@ -18,10 +19,12 @@ const bookingState = {
   promotionCode: '',
   discountValue: 0,
   discountType: '',
-  userIfor: {
+  order: {
+    payment_method: 'bacs',
     billing: {},
     shipping: {},
-    shippingItems: {}
+    line_items: [],
+    shipping_lines: []
   }
 };
 
@@ -48,6 +51,10 @@ const bookingReducer = (state, action) => {
       } else {
         newItems = [{ ...payload }];
       }
+      const lineItems = newItems.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity
+      }));
       totalPrice = payload.price * payload.quantity;
       state = {
         ...state,
@@ -55,6 +62,10 @@ const bookingReducer = (state, action) => {
           items: [...newItems],
           count: state.products.count + payload.quantity,
           subTotal: state.products.subTotal + totalPrice
+        },
+        order: {
+          ...state.order,
+          line_items: [...lineItems]
         },
         total: state.total + totalPrice
       };
@@ -93,7 +104,10 @@ const bookingReducer = (state, action) => {
             : item
         );
       }
-
+      const lineItems = newItems.map((item) => ({
+        product_id: item.id,
+        quantity: item.quantity
+      }));
       newSubtotal =
         payload.type === 'up'
           ? state.products.subTotal + payload.quantity * item.price
@@ -113,6 +127,10 @@ const bookingReducer = (state, action) => {
           items: newItems,
           subTotal: newSubtotal,
           count: newCount
+        },
+        order: {
+          ...state.order,
+          line_items: [...lineItems]
         },
         total: newTotal
       };
@@ -158,8 +176,14 @@ const bookingReducer = (state, action) => {
       }
       return state;
     }
-    case ADD_PAYMENT_INFO: {
-      return state;
+    case CHANGE_PAYMENT_METHOD: {
+      return {
+        ...state,
+        order: {
+          ...state.order,
+          ...action.payload
+        }
+      };
     }
     default:
       return state;

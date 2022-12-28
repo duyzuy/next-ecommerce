@@ -4,7 +4,6 @@ import { isEmpty } from '../../utils/helper';
 const Select = (props) => {
   const {
     options,
-    onSelection,
     selected = {},
     onSetSelected,
     label,
@@ -12,12 +11,9 @@ const Select = (props) => {
     placeholder
   } = props;
   const selectRef = useRef();
-  // const [isOpen, setIsOpen] = useState({});
+
   const onSelectionChange = (e, opt) => {
     e.stopPropagation();
-    // if (onSelection !== undefined && typeof onSelection === 'function') {
-    //   onSelection(opt);
-    // }
 
     onSetSelected(opt);
     selectRef.current.classList.remove('open');
@@ -25,8 +21,6 @@ const Select = (props) => {
 
   useEffect(() => {
     const outSideClick = (e) => {
-      // _this.classList.add('ooo');
-
       if (selectRef.current.contains(e.target)) {
         selectRef.current.classList.toggle('open');
       } else {

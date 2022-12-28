@@ -51,17 +51,39 @@
             background-color: #f4f8ff;
             border-radius: 10px;
             border: 2px solid transparent;
+            .payment__type--header{
+                display: flex;
+                align-items: center;
+                padding: 15px;
+                cursor: pointer;
+                .title{
+                    margin-bottom: 0;
+                    font-weight: bold;
+                }
+                .check{
+               
+                    margin-right: 10px;
+                }
+            }
+            .payment__type--body{
+                padding: 0 15px 15px;
+                display: none;
+            }
             &.active{
                 border-color: #3d5abb;
                 .check{
-                &:after{
-                    border-color: #3d5abb;;
+                    &:after{
+                        border-color: #3d5abb;;
+                    }
+                    &:before{
+                        opacity: 1;
+                        transform: scale(1);
+                    }
+                
                 }
-                &:before{
-                    opacity: 1;
-                    transform: scale(1);
+                .payment__type--body{
+                    display: block !important;
                 }
-            }
             }
         }
         .check{
@@ -95,22 +117,7 @@
             }
             
         }
-        .payment__type--header{
-            display: flex;
-            align-items: center;
-            padding: 15px;
-            .title{
-                margin-bottom: 0;
-                font-weight: bold;
-            }
-            .check{
-           
-                margin-right: 10px;
-            }
-        }
-        .payment__type--body{
-            padding: 0 15px 15px;
-        }
+       
     }
     .booking__summary--subtoal{
         border: 1px solid #f1f1f1;

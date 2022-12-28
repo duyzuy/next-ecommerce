@@ -1,4 +1,4 @@
-import { memo, useCallback, useMemo } from 'react';
+import { memo, useCallback, useMemo, useEffect } from 'react';
 import PromotionCode from '../container/Promotion';
 import { formatPrice } from '../helpers/product';
 import Button from './Button';
@@ -7,7 +7,10 @@ import { DISCOUNT_TYPE } from '../constants/constants';
 import { isExpired } from '../utils/date';
 import { toast } from '../lib/toast';
 import { useDispatch, useSelector } from '../providers/hooks';
-import { UPDATE_PRICE_ON_CART } from '../constants/actions';
+import {
+  UPDATE_PRICE_ON_CART,
+  CHANGE_PAYMENT_METHOD
+} from '../constants/actions';
 
 const ACTIONS = {
   REMOVE_CODE: 'removeCode',
@@ -20,7 +23,7 @@ const BookingSummary = ({ bookingInfor, currency, router, step = 'cart' }) => {
   const paymentGateWay = useSelector(
     (state) => state.setting.woocommercePaymentGateWay
   );
-
+  console.log(paymentGateWay);
   const handleApplyCode = useCallback(async (code) => {
     const response = await client.get(`coupon`, {
       code: code
@@ -151,6 +154,21 @@ const BookingSummary = ({ bookingInfor, currency, router, step = 'cart' }) => {
     });
   }, []);
 
+  // useEffect(() => {
+  //   dispatch({type: ADD_PAYMENT_INFO,
+  //   payload: {
+
+  //   }})
+  // }, [])
+  const onSelectPaymentMethod = (payment) => {
+    dispatch({
+      type: CHANGE_PAYMENT_METHOD,
+      payload: {
+        payment_method: payment.id,
+        payment_method_title: payment.title
+      }
+    });
+  };
   return (
     <div className={`booking__summary ${step}`}>
       <PromotionCode
@@ -224,8 +242,18 @@ const BookingSummary = ({ bookingInfor, currency, router, step = 'cart' }) => {
         {paymentGateWay.map((item, index) => {
           if (item.enabled) {
             return (
-              <div className="payment__type active" key={index}>
-                <div className="payment__type--header">
+              <div
+                className={
+                  (bookingInfor.order.payment_method === item.id &&
+                    `payment__type active`) ||
+                  'payment__type'
+                }
+                key={index}
+              >
+                <div
+                  className="payment__type--header"
+                  onClick={() => onSelectPaymentMethod(item)}
+                >
                   <span className="check"></span>
                   <p className="title">{item.title}</p>
                 </div>

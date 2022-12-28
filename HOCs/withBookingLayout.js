@@ -28,6 +28,7 @@ const withBookingLayout = (Component, { title, step, styles }) => {
       icon: () => <Icon.Smile size={18} />
     }
   ];
+
   return (props) => (
     <Container>
       <div className={styles.wrapper}>
