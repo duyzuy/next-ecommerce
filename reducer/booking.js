@@ -5,7 +5,8 @@ import {
   UPDATE_CART,
   UPDATE_PRICE_ON_CART,
   ADD_PAYMENT_INFO,
-  CHANGE_PAYMENT_METHOD
+  CHANGE_PAYMENT_METHOD,
+  UPDATE_PAYMENT_INFOR
 } from '../constants/actions';
 
 const bookingState = {
@@ -184,6 +185,31 @@ const bookingReducer = (state, action) => {
           ...action.payload
         }
       };
+    }
+    case UPDATE_PAYMENT_INFOR: {
+      const { key, value } = action.payload;
+      let keys = key.split('.');
+      if (keys.length === 2) {
+        state = {
+          ...state,
+          order: {
+            ...state.order,
+            [keys[0]]: {
+              ...state.order[keys[0]],
+              [keys[1]]: value
+            }
+          }
+        };
+      } else {
+        state = {
+          ...state,
+          order: {
+            ...state.order,
+            [key]: value
+          }
+        };
+      }
+      return state;
     }
     default:
       return state;

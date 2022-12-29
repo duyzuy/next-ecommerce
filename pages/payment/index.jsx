@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from 'react';
 import { useRouter } from 'next/router';
-import { isPayment } from '../../constants/booking';
-import { Container, Header, TextArea } from 'semantic-ui-react';
+
 import Input from '../../components/Input';
 import styles from '../../styles/payment.module.scss';
 import Select from '../../components/Select';
@@ -9,13 +8,17 @@ import Select from '../../components/Select';
 import { useSelector, useDispatch } from '../../providers/hooks';
 import { withBookingLayout } from '../../HOCs/withBookingLayout';
 import BookingSummary from '../../components/BookingSummary';
+import TextArea from '../../components/TextArea';
+import { UPDATE_PAYMENT_INFOR } from '../../constants/actions';
 const PaymentPage = (props) => {
   const { cities } = props;
 
   const router = useRouter();
-  //   const [cities, setCities] = useState([]);
+
   const setting = useSelector((state) => state.setting);
   const bookingInfor = useSelector((state) => state.booking);
+  const [isDifferenceShipping, setIsDifferenceShipping] = useState(false);
+  const dispatch = useDispatch();
   const currency = useSelector(
     (state) => state.setting.woocommerceCurrency?.value
   );
@@ -24,17 +27,45 @@ const PaymentPage = (props) => {
   const [formData, setFormData] = useState({
     user: {},
     shipping: {},
-    billing: {}
+    billing: {},
+    isDifferenceShipping: false
   });
-  const handleSelection = (type, data) => {
-    setFormData((formData) => ({
-      ...formData,
-      user: {
-        ...formData.user,
-        [type]: data
+  const handleChange = (key, value) => {
+    const keys = key.split('.');
+
+    if (keys.length === 2) {
+      setFormData((prevState) => ({
+        ...prevState,
+        [keys[0]]: {
+          ...prevState[keys[0]],
+          [keys[1]]: value
+        }
+      }));
+    } else {
+      setFormData((prevState) => ({
+        ...prevState,
+        [key]: value
+      }));
+    }
+    dispatch({
+      type: UPDATE_PAYMENT_INFOR,
+      payload: {
+        key,
+        value
       }
-    }));
+    });
   };
+  const onSelectDifferenceShipping = () => {
+    setIsDifferenceShipping((prevState) => !prevState);
+    dispatch({
+      type: UPDATE_PAYMENT_INFOR,
+      payload: {
+        key: 'isDifferenceShipping',
+        value: !isDifferenceShipping
+      }
+    });
+  };
+
   const countries = useMemo(() => {
     return countryAllows?.value.reduce(
       (acc, key) => {
@@ -44,7 +75,7 @@ const PaymentPage = (props) => {
     );
   }, [countryAllows]);
 
-  const citiesOpt = useMemo(() => {
+  const shippingCityOpts = useMemo(() => {
     let arrCities = [];
     cities.forEach((item, index) => {
       let districts = [];
@@ -72,27 +103,41 @@ const PaymentPage = (props) => {
     });
 
     return arrCities;
-  }, [cities]);
+  }, [bookingInfor?.order?.shipping?.city]);
+  const billingCityOpts = useMemo(() => {
+    let arrCities = [];
+    cities.forEach((item, index) => {
+      let districts = [];
+      item.districts.forEach((subItem, subIndex) => {
+        districts[subIndex] = {
+          code: subItem.code,
+          codeName: subItem.codename,
+          provinceCode: subItem.province_code,
+          divisionType: subItem.division_type,
+          value: subItem.codename,
+          text: subItem.name,
+          wards: subItem.wards
+        };
+      });
 
-  const districtsOpts = useMemo(() => {
-    const city = formData.user.city || {};
-    let districts = [];
-    const citySelected = cities.find((item) => item.code === city.code);
-
-    if (citySelected) {
-      districts = citySelected.districts.map((item, index) => ({
+      arrCities[index] = {
         code: item.code,
         codeName: item.codename,
-        provinceCode: item.province_code,
+        phoneCode: item.phone_code,
         divisionType: item.division_type,
         value: item.codename,
         text: item.name,
-        wards: item.wards
-      }));
-    }
-    return districts;
-  }, [formData.user.city, formData.user.country]);
-
+        districts: districts
+      };
+    });
+    if (formData.billing.country === '') return arrCities;
+  }, [bookingInfor?.order?.billing?.city]);
+  const shippingDistrictOpt = useMemo(() => {
+    return [];
+  }, []);
+  const billingDistrictOpt = useMemo(() => {
+    return [];
+  }, []);
   return (
     <>
       <div className="col-left">
@@ -104,106 +149,182 @@ const PaymentPage = (props) => {
             <form>
               <div className="billing__form">
                 <div className="form-row">
-                  <Input name="firstName" label="Họ" placeholder="Họ" />
+                  <Input
+                    name="firstName"
+                    label="Họ"
+                    placeholder="Họ"
+                    value={bookingInfor?.order?.billing?.firstName}
+                    onChange={(e) =>
+                      handleChange('billing.firstName', e.target.value)
+                    }
+                  />
                   <Input
                     name="lastName"
                     label="Tên đệm và tên"
                     placeholder="Tên đệm và tên"
+                    value={bookingInfor?.order?.billing?.lastName}
+                    onChange={(e) =>
+                      handleChange('billing.lastName', e.target.value)
+                    }
                   />
                 </div>
                 <div className="form-row">
-                  <Input name="email" label="Email" placeholder="Email" />
+                  <Input
+                    name="email"
+                    label="Email"
+                    placeholder="Email"
+                    value={bookingInfor?.order?.billing?.email}
+                    onChange={(e) =>
+                      handleChange('billing.email', e.target.value)
+                    }
+                  />
                   <Input
                     name="phone"
-                    label="Số điện thoại "
+                    label="Số điện thoại"
                     placeholder="Số điện thoại"
+                    value={bookingInfor?.order?.billing?.phone}
+                    onChange={(e) =>
+                      handleChange('billing.phone', e.target.value)
+                    }
                   />
                 </div>
                 <div className="form-row">
                   <Select
                     label="Quốc gia"
                     options={countries}
-                    selected={formData?.user.country}
-                    onSetSelected={(data) => handleSelection('country', data)}
+                    selected={bookingInfor?.order?.billing?.country}
+                    onSetSelected={(data) =>
+                      handleChange('billing.country', data)
+                    }
                   />
                   <Select
                     label="Tỉnh/thành phố"
-                    options={citiesOpt}
-                    selected={formData?.user.city}
-                    onSetSelected={(data) => handleSelection('city', data)}
+                    options={billingCityOpts}
+                    selected={bookingInfor?.order?.billing.city}
+                    onSetSelected={(data) => handleChange('billing.city', data)}
                   />
                 </div>
                 <Select
                   label="Quận/huyện"
-                  options={districtsOpts}
-                  selected={formData?.user.district}
-                  onSetSelected={(data) => handleSelection('district', data)}
+                  options={billingDistrictOpt}
+                  selected={bookingInfor?.order?.billing.district}
+                  onSetSelected={(data) =>
+                    handleChange('billing.district', data)
+                  }
                 />
-                <Input name="address" label="Địa chỉ" placeholder="Địa chỉ" />
+                <Input
+                  name="address"
+                  label="Địa chỉ"
+                  placeholder="Địa chỉ"
+                  value={bookingInfor?.order?.billing?.address}
+                  onChange={(e) =>
+                    handleChange('billing.address', e.target.value)
+                  }
+                />
               </div>
               <div className="shipping__form">
                 <div className="shipping__form--header">
-                  <div className="ec__form--control checkbox">
-                    <input type="checkbox" />
-                    Giao hàng tới địa chỉ khác ?
+                  <div
+                    className={
+                      (isDifferenceShipping && 'form__check checked') ||
+                      'form__check'
+                    }
+                    onClick={onSelectDifferenceShipping}
+                  >
+                    <span className="icon"></span>
+                    <p>Giao hàng tới địa chỉ khác ?</p>
                   </div>
                 </div>
-                <div className="shipping__form--body">
-                  <div className="form-row">
-                    <Input name="firstName" label="Họ" placeholder="Họ" />
+                {(isDifferenceShipping && (
+                  <div className="shipping__form--body">
+                    <div className="form-row">
+                      <Input
+                        name="firstName"
+                        label="Họ"
+                        placeholder="Họ"
+                        value={bookingInfor?.order?.shipping?.firstName}
+                        onChange={(e) =>
+                          handleChange('shipping.firstName', e.target.value)
+                        }
+                      />
+                      <Input
+                        name="lastName"
+                        label="Tên đệm và tên"
+                        placeholder="Tên đệm và tên"
+                        value={bookingInfor?.order?.shipping?.lastName}
+                        onChange={(e) =>
+                          handleChange('shipping.lastName', e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="form-row">
+                      <Input
+                        name="phone"
+                        label="Số điện thoại "
+                        placeholder="Số điện thoại"
+                        value={bookingInfor?.order?.shipping?.phone}
+                        onChange={(e) =>
+                          handleChange('shipping.phone', e.target.value)
+                        }
+                      />
+                    </div>
+                    <div className="form-row">
+                      <Select
+                        label="Quốc gia"
+                        options={countries}
+                        selected={bookingInfor?.order?.shipping?.country}
+                        onSetSelected={(data) =>
+                          handleChange('shipping.country', data)
+                        }
+                      />
+                      <Select
+                        label="Tỉnh/thành phố"
+                        options={shippingCityOpts}
+                        selected={bookingInfor?.order?.shipping?.city}
+                        onSetSelected={(data) =>
+                          handleChange('shipping.city', data)
+                        }
+                      />
+                    </div>
+                    <div className="form-row">
+                      <Select
+                        label="Quận/huyện"
+                        options={shippingDistrictOpt}
+                        selected={bookingInfor?.order?.shipping?.district}
+                        onSetSelected={(data) =>
+                          handleChange('shipping.district', data)
+                        }
+                      />
+                      <Input
+                        name="postcode"
+                        label="Mã bưu điện"
+                        placeholder="Mã bưu điện"
+                        value={bookingInfor?.order?.shipping?.postCode}
+                        onChange={(e) =>
+                          handleChange('shipping.postCode', e.target.value)
+                        }
+                      />
+                    </div>
                     <Input
-                      name="lastName"
-                      label="Tên đệm và tên"
-                      placeholder="Tên đệm và tên"
-                    />
-                  </div>
-                  <div className="form-row">
-                    <Input
-                      name="phone"
-                      label="Số điện thoại "
-                      placeholder="Số điện thoại"
-                    />
-                  </div>
-                  <div className="form-row">
-                    <Select
-                      label="Quốc gia"
-                      options={countries}
-                      selected={formData?.user.country}
-                      onSetSelected={(data) => handleSelection('country', data)}
-                    />
-                    <Select
-                      label="Tỉnh/thành phố"
-                      options={citiesOpt}
-                      selected={formData?.user.city}
-                      onSetSelected={(data) => handleSelection('city', data)}
-                    />
-                  </div>
-                  <div className="form-row">
-                    <Select
-                      label="Quận/huyện"
-                      options={districtsOpts}
-                      selected={formData?.user.district}
-                      onSetSelected={(data) =>
-                        handleSelection('district', data)
+                      name="address"
+                      label="Địa chỉ"
+                      placeholder="Địa chỉ"
+                      value={bookingInfor?.order?.shipping?.address}
+                      onChange={(e) =>
+                        handleChange('shipping.address', e.target.value)
                       }
                     />
-                    <Input
-                      name="postcode"
-                      label="Mã bưu điện"
-                      placeholder="Mã bưu điện"
-                    />
                   </div>
-                  <Input name="address" label="Địa chỉ" placeholder="Địa chỉ" />
-                </div>
+                )) || <></>}
               </div>
               <div className="note">
-                <div className="ec__form--control">
-                  <label>Ghi chú đơn hàng</label>
-                  <textarea
-                    className="ec__form--input textarea"
-                    rows={8}
-                  ></textarea>
-                </div>
+                <TextArea
+                  noResize
+                  label="Ghi chú"
+                  value={bookingInfor?.order?.orderNote}
+                  rows={4}
+                  onChange={(value) => handleChange('orderNote', value)}
+                />
               </div>
             </form>
           </div>

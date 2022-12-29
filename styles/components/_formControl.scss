@@ -107,6 +107,24 @@
                 padding-left: 45px;
             }
         }
+        &.textarea {
+            display: block;
+            label{
+                display: inline-block;
+            }
+            textarea{
+                display: block;
+                width: 100%;
+                border-color: #f1f1f1;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            &.no-resize {
+                textarea{
+                    resize: none;
+                }
+            }
+        }
     }
     &--input{
         position: relative;

@@ -204,7 +204,7 @@ const BookingSummary = ({ bookingInfor, currency, router, step = 'cart' }) => {
           </p>
         </div>
         <div className="shipping">
-          <p className="subtotal-label">Giao hàng</p>
+          <p className="subtotal-label">Phí giao hàng</p>
           <p className="subtotal-value">
             {formatPrice(bookingInfor.products.subTotal, currency)}
           </p>
