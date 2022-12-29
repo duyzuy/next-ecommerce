@@ -12,7 +12,7 @@ import TextArea from '../../components/TextArea';
 import { UPDATE_PAYMENT_INFOR } from '../../constants/actions';
 const PaymentPage = (props) => {
   const { cities } = props;
-
+  console.log({ cities });
   const router = useRouter();
 
   const setting = useSelector((state) => state.setting);
@@ -24,29 +24,8 @@ const PaymentPage = (props) => {
   );
 
   const countryAllows = setting.woocommerceSpecificAllowedCountries;
-  const [formData, setFormData] = useState({
-    user: {},
-    shipping: {},
-    billing: {},
-    isDifferenceShipping: false
-  });
-  const handleChange = (key, value) => {
-    const keys = key.split('.');
 
-    if (keys.length === 2) {
-      setFormData((prevState) => ({
-        ...prevState,
-        [keys[0]]: {
-          ...prevState[keys[0]],
-          [keys[1]]: value
-        }
-      }));
-    } else {
-      setFormData((prevState) => ({
-        ...prevState,
-        [key]: value
-      }));
-    }
+  const handleChange = (key, value) => {
     dispatch({
       type: UPDATE_PAYMENT_INFOR,
       payload: {
@@ -65,18 +44,19 @@ const PaymentPage = (props) => {
       }
     });
   };
-
+  const countryDefault = { value: '', key: '', text: 'Chọn quốc gia' };
   const countries = useMemo(() => {
     return countryAllows?.value.reduce(
       (acc, key) => {
         return [...acc, { key, value: key, text: countryAllows.options[key] }];
       },
-      [{ value: '', text: 'Chọn quốc gia' }]
+      [{ ...countryDefault }]
     );
   }, [countryAllows]);
-
+  const emptyData = { value: 'n/a', key: 'n/a', text: 'N/A' };
+  const cityDefault = { value: '', key: '', text: 'Chọn thành phố' };
   const shippingCityOpts = useMemo(() => {
-    let arrCities = [];
+    let arrCities = [{ ...cityDefault }];
     cities.forEach((item, index) => {
       let districts = [];
       item.districts.forEach((subItem, subIndex) => {
@@ -91,7 +71,7 @@ const PaymentPage = (props) => {
         };
       });
 
-      arrCities[index] = {
+      arrCities.push({
         code: item.code,
         codeName: item.codename,
         phoneCode: item.phone_code,
@@ -99,13 +79,20 @@ const PaymentPage = (props) => {
         value: item.codename,
         text: item.name,
         districts: districts
-      };
+      });
     });
 
+    if (
+      !bookingInfor.order.shipping.country ||
+      bookingInfor.order.shipping.country.key !== 'VN'
+    ) {
+      return [{ ...cityDefault }, { ...emptyData }];
+    }
     return arrCities;
   }, [bookingInfor?.order?.shipping?.city]);
+
   const billingCityOpts = useMemo(() => {
-    let arrCities = [];
+    let arrCities = [{ ...cityDefault }];
     cities.forEach((item, index) => {
       let districts = [];
       item.districts.forEach((subItem, subIndex) => {
@@ -120,7 +107,7 @@ const PaymentPage = (props) => {
         };
       });
 
-      arrCities[index] = {
+      arrCities.push({
         code: item.code,
         codeName: item.codename,
         phoneCode: item.phone_code,
@@ -128,13 +115,22 @@ const PaymentPage = (props) => {
         value: item.codename,
         text: item.name,
         districts: districts
-      };
+      });
     });
-    if (formData.billing.country === '') return arrCities;
-  }, [bookingInfor?.order?.billing?.city]);
+
+    if (
+      !bookingInfor.order.billing.country ||
+      bookingInfor.order.billing.country.key !== 'VN'
+    ) {
+      return [{ ...cityDefault }, { ...emptyData }];
+    }
+    return arrCities;
+  }, [bookingInfor?.order?.billing?.country]);
+
+  console.log({ bookingInfor });
   const shippingDistrictOpt = useMemo(() => {
     return [];
-  }, []);
+  }, [bookingInfor?.order?.shipping?.city]);
   const billingDistrictOpt = useMemo(() => {
     return [];
   }, []);
@@ -192,6 +188,7 @@ const PaymentPage = (props) => {
                   <Select
                     label="Quốc gia"
                     options={countries}
+                    defaultSelect={countryDefault}
                     selected={bookingInfor?.order?.billing?.country}
                     onSetSelected={(data) =>
                       handleChange('billing.country', data)
@@ -200,6 +197,7 @@ const PaymentPage = (props) => {
                   <Select
                     label="Tỉnh/thành phố"
                     options={billingCityOpts}
+                    defaultSelect={cityDefault}
                     selected={bookingInfor?.order?.billing.city}
                     onSetSelected={(data) => handleChange('billing.city', data)}
                   />
@@ -272,6 +270,7 @@ const PaymentPage = (props) => {
                       <Select
                         label="Quốc gia"
                         options={countries}
+                        defaultSelect={countryDefault}
                         selected={bookingInfor?.order?.shipping?.country}
                         onSetSelected={(data) =>
                           handleChange('shipping.country', data)
@@ -280,6 +279,7 @@ const PaymentPage = (props) => {
                       <Select
                         label="Tỉnh/thành phố"
                         options={shippingCityOpts}
+                        defaultSelect={cityDefault}
                         selected={bookingInfor?.order?.shipping?.city}
                         onSetSelected={(data) =>
                           handleChange('shipping.city', data)
