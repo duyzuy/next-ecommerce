@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/router';
 
 import Input from '../../components/Input';
@@ -9,21 +9,44 @@ import { useSelector, useDispatch } from '../../providers/hooks';
 import { withBookingLayout } from '../../HOCs/withBookingLayout';
 import BookingSummary from '../../components/BookingSummary';
 import TextArea from '../../components/TextArea';
-import { UPDATE_PAYMENT_INFOR } from '../../constants/actions';
+import PaymentBillingForm from '../../components/PaymentBillingForm';
+import PaymentShippingForm from '../../components/PaymentShippingForm';
+import {
+  loadShipping,
+  loadShippingLocationsByZoneId,
+  loadPaymentGateway,
+  loadShippingMethodsByZoneId
+} from '../../actions/setting';
+
+import {
+  UPDATE_PAYMENT_INFOR,
+  FETCH_SHIPPING_SETTING,
+  FETCH_PAYMENT_GATEWAY_SETTING,
+  FETCH_SHIPPING_METHODS_SETTING,
+  FETCH_SHIPPING_LOCATIONS_SETTING
+} from '../../constants/actions';
+
 const PaymentPage = (props) => {
   const { cities } = props;
-  console.log({ cities });
+
   const router = useRouter();
-
-  const setting = useSelector((state) => state.setting);
-  const bookingInfor = useSelector((state) => state.booking);
-  const [isDifferenceShipping, setIsDifferenceShipping] = useState(false);
   const dispatch = useDispatch();
-  const currency = useSelector(
-    (state) => state.setting.woocommerceCurrency?.value
-  );
+  const [isDifferenceShipping, setIsDifferenceShipping] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const generalSetting = useSelector((state) => state.setting.general);
+  const bookingInfor = useSelector((state) => state.booking);
+  const currency = useSelector((state) => {
+    return (
+      state.setting.general?.woocommerceCurrency.value ||
+      state.setting.general?.woocommerceCurrency.default
+    );
+  });
 
-  const countryAllows = setting.woocommerceSpecificAllowedCountries;
+  const {
+    woocommerceShipToCountries,
+    woocommerceSpecificShipToCountries,
+    woocommerceSpecificAllowedCountries
+  } = generalSetting || {};
 
   const handleChange = (key, value) => {
     dispatch({
@@ -44,96 +67,50 @@ const PaymentPage = (props) => {
       }
     });
   };
+
   const countryDefault = { value: '', key: '', text: 'Chọn quốc gia' };
   const countries = useMemo(() => {
-    return countryAllows?.value.reduce(
+    return woocommerceSpecificAllowedCountries?.value.reduce(
       (acc, key) => {
-        return [...acc, { key, value: key, text: countryAllows.options[key] }];
+        return [
+          ...acc,
+          {
+            key,
+            value: key,
+            text: woocommerceSpecificAllowedCountries.options[key]
+          }
+        ];
       },
       [{ ...countryDefault }]
     );
-  }, [countryAllows]);
-  const emptyData = { value: 'n/a', key: 'n/a', text: 'N/A' };
-  const cityDefault = { value: '', key: '', text: 'Chọn thành phố' };
-  const shippingCityOpts = useMemo(() => {
-    let arrCities = [{ ...cityDefault }];
-    cities.forEach((item, index) => {
-      let districts = [];
-      item.districts.forEach((subItem, subIndex) => {
-        districts[subIndex] = {
-          code: subItem.code,
-          codeName: subItem.codename,
-          provinceCode: subItem.province_code,
-          divisionType: subItem.division_type,
-          value: subItem.codename,
-          text: subItem.name,
-          wards: subItem.wards
-        };
+  }, [woocommerceSpecificAllowedCountries]);
+
+  const onGetPaymentSetting = useCallback(async () => {
+    try {
+      setIsLoading(true);
+      const shipping = await loadShipping();
+      const payment = await loadPaymentGateway();
+
+      dispatch({
+        type: FETCH_SHIPPING_SETTING,
+        payload: shipping
       });
 
-      arrCities.push({
-        code: item.code,
-        codeName: item.codename,
-        phoneCode: item.phone_code,
-        divisionType: item.division_type,
-        value: item.codename,
-        text: item.name,
-        districts: districts
+      dispatch({
+        type: FETCH_PAYMENT_GATEWAY_SETTING,
+        payload: payment
       });
-    });
-
-    if (
-      !bookingInfor.order.shipping.country ||
-      bookingInfor.order.shipping.country.key !== 'VN'
-    ) {
-      return [{ ...cityDefault }, { ...emptyData }];
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
-    return arrCities;
-  }, [bookingInfor?.order?.shipping?.city]);
-
-  const billingCityOpts = useMemo(() => {
-    let arrCities = [{ ...cityDefault }];
-    cities.forEach((item, index) => {
-      let districts = [];
-      item.districts.forEach((subItem, subIndex) => {
-        districts[subIndex] = {
-          code: subItem.code,
-          codeName: subItem.codename,
-          provinceCode: subItem.province_code,
-          divisionType: subItem.division_type,
-          value: subItem.codename,
-          text: subItem.name,
-          wards: subItem.wards
-        };
-      });
-
-      arrCities.push({
-        code: item.code,
-        codeName: item.codename,
-        phoneCode: item.phone_code,
-        divisionType: item.division_type,
-        value: item.codename,
-        text: item.name,
-        districts: districts
-      });
-    });
-
-    if (
-      !bookingInfor.order.billing.country ||
-      bookingInfor.order.billing.country.key !== 'VN'
-    ) {
-      return [{ ...cityDefault }, { ...emptyData }];
-    }
-    return arrCities;
-  }, [bookingInfor?.order?.billing?.country]);
-
-  console.log({ bookingInfor });
-  const shippingDistrictOpt = useMemo(() => {
-    return [];
-  }, [bookingInfor?.order?.shipping?.city]);
-  const billingDistrictOpt = useMemo(() => {
-    return [];
   }, []);
+
+  useEffect(() => {
+    onGetPaymentSetting();
+  }, []);
+
   return (
     <>
       <div className="col-left">
@@ -143,83 +120,13 @@ const PaymentPage = (props) => {
           </div>
           <div className="payment-form">
             <form>
-              <div className="billing__form">
-                <div className="form-row">
-                  <Input
-                    name="firstName"
-                    label="Họ"
-                    placeholder="Họ"
-                    value={bookingInfor?.order?.billing?.firstName}
-                    onChange={(e) =>
-                      handleChange('billing.firstName', e.target.value)
-                    }
-                  />
-                  <Input
-                    name="lastName"
-                    label="Tên đệm và tên"
-                    placeholder="Tên đệm và tên"
-                    value={bookingInfor?.order?.billing?.lastName}
-                    onChange={(e) =>
-                      handleChange('billing.lastName', e.target.value)
-                    }
-                  />
-                </div>
-                <div className="form-row">
-                  <Input
-                    name="email"
-                    label="Email"
-                    placeholder="Email"
-                    value={bookingInfor?.order?.billing?.email}
-                    onChange={(e) =>
-                      handleChange('billing.email', e.target.value)
-                    }
-                  />
-                  <Input
-                    name="phone"
-                    label="Số điện thoại"
-                    placeholder="Số điện thoại"
-                    value={bookingInfor?.order?.billing?.phone}
-                    onChange={(e) =>
-                      handleChange('billing.phone', e.target.value)
-                    }
-                  />
-                </div>
-                <div className="form-row">
-                  <Select
-                    label="Quốc gia"
-                    options={countries}
-                    defaultSelect={countryDefault}
-                    selected={bookingInfor?.order?.billing?.country}
-                    onSetSelected={(data) =>
-                      handleChange('billing.country', data)
-                    }
-                  />
-                  <Select
-                    label="Tỉnh/thành phố"
-                    options={billingCityOpts}
-                    defaultSelect={cityDefault}
-                    selected={bookingInfor?.order?.billing.city}
-                    onSetSelected={(data) => handleChange('billing.city', data)}
-                  />
-                </div>
-                <Select
-                  label="Quận/huyện"
-                  options={billingDistrictOpt}
-                  selected={bookingInfor?.order?.billing.district}
-                  onSetSelected={(data) =>
-                    handleChange('billing.district', data)
-                  }
-                />
-                <Input
-                  name="address"
-                  label="Địa chỉ"
-                  placeholder="Địa chỉ"
-                  value={bookingInfor?.order?.billing?.address}
-                  onChange={(e) =>
-                    handleChange('billing.address', e.target.value)
-                  }
-                />
-              </div>
+              <PaymentBillingForm
+                formKey="billing"
+                data={bookingInfor?.order?.billing}
+                onChange={handleChange}
+                countries={countries}
+                cities={cities}
+              />
               <div className="shipping__form">
                 <div className="shipping__form--header">
                   <div
@@ -234,88 +141,20 @@ const PaymentPage = (props) => {
                   </div>
                 </div>
                 {(isDifferenceShipping && (
-                  <div className="shipping__form--body">
-                    <div className="form-row">
-                      <Input
-                        name="firstName"
-                        label="Họ"
-                        placeholder="Họ"
-                        value={bookingInfor?.order?.shipping?.firstName}
-                        onChange={(e) =>
-                          handleChange('shipping.firstName', e.target.value)
-                        }
-                      />
-                      <Input
-                        name="lastName"
-                        label="Tên đệm và tên"
-                        placeholder="Tên đệm và tên"
-                        value={bookingInfor?.order?.shipping?.lastName}
-                        onChange={(e) =>
-                          handleChange('shipping.lastName', e.target.value)
-                        }
-                      />
-                    </div>
-                    <div className="form-row">
-                      <Input
-                        name="phone"
-                        label="Số điện thoại "
-                        placeholder="Số điện thoại"
-                        value={bookingInfor?.order?.shipping?.phone}
-                        onChange={(e) =>
-                          handleChange('shipping.phone', e.target.value)
-                        }
-                      />
-                    </div>
-                    <div className="form-row">
-                      <Select
-                        label="Quốc gia"
-                        options={countries}
-                        defaultSelect={countryDefault}
-                        selected={bookingInfor?.order?.shipping?.country}
-                        onSetSelected={(data) =>
-                          handleChange('shipping.country', data)
-                        }
-                      />
-                      <Select
-                        label="Tỉnh/thành phố"
-                        options={shippingCityOpts}
-                        defaultSelect={cityDefault}
-                        selected={bookingInfor?.order?.shipping?.city}
-                        onSetSelected={(data) =>
-                          handleChange('shipping.city', data)
-                        }
-                      />
-                    </div>
-                    <div className="form-row">
-                      <Select
-                        label="Quận/huyện"
-                        options={shippingDistrictOpt}
-                        selected={bookingInfor?.order?.shipping?.district}
-                        onSetSelected={(data) =>
-                          handleChange('shipping.district', data)
-                        }
-                      />
-                      <Input
-                        name="postcode"
-                        label="Mã bưu điện"
-                        placeholder="Mã bưu điện"
-                        value={bookingInfor?.order?.shipping?.postCode}
-                        onChange={(e) =>
-                          handleChange('shipping.postCode', e.target.value)
-                        }
-                      />
-                    </div>
-                    <Input
-                      name="address"
-                      label="Địa chỉ"
-                      placeholder="Địa chỉ"
-                      value={bookingInfor?.order?.shipping?.address}
-                      onChange={(e) =>
-                        handleChange('shipping.address', e.target.value)
-                      }
-                    />
-                  </div>
+                  <PaymentShippingForm
+                    formKey="shipping"
+                    data={bookingInfor?.order?.shipping}
+                    onChange={handleChange}
+                    countries={countries}
+                    cities={cities}
+                  />
                 )) || <></>}
+              </div>
+
+              <div className="shipping__methods">
+                <div className="section-header">
+                  <h4>Hình thức giao hàng</h4>
+                </div>
               </div>
               <div className="note">
                 <TextArea
@@ -339,7 +178,8 @@ const PaymentPage = (props) => {
             bookingInfor={bookingInfor}
             currency={currency}
             router={router}
-            step="payment"
+            page="payment"
+            isLoading={isLoading}
           />
         </div>
       </div>

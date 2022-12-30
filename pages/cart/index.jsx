@@ -58,7 +58,7 @@ const CartPage = () => {
               bookingInfor={bookingInfor}
               currency={currency}
               router={router}
-              step="cart"
+              page="cart"
             />
           </div>
         </>

@@ -1,8 +1,8 @@
 .booking__summary{
-    .booking__summary--items{
+    &--items{
         padding: 15px;
         border: 1px solid #f1f1f1;
-        border-radius: 10px;
+        border-radius: 5px;
         margin-bottom: 15px;
         p{
             margin-bottom: 0;
@@ -45,12 +45,12 @@
             }
         }
     }
-    .booking__summary--payment-gate{
+    &--payment-gate{
         .payment__type{
             margin-bottom: 15px;
-            background-color: #f4f8ff;
-            border-radius: 10px;
+            border-radius: 5px;
             border: 2px solid transparent;
+            box-shadow: 0px 0px 4px -2px #00000040, 0px 0px 12px -2px #00000020;
             .payment__type--header{
                 display: flex;
                 align-items: center;
@@ -119,10 +119,13 @@
         }
        
     }
-    .booking__summary--subtoal{
+    &--term{
+        padding: 10px 0 20px
+    }
+    &--subtoal{
         border: 1px solid #f1f1f1;
         padding: 15px;
-        border-radius: 10px;
+        border-radius: 5px;
         margin-bottom: 15px;
         .line{
             height: 1px;
@@ -163,7 +166,7 @@
 
     .cart__promotion{
         padding: 15px;
-        border-radius: 10px;
+        border-radius: 5px;
         margin-bottom: 15px;
         background-color:  #d5ecff;
         .cart__promotion--form{

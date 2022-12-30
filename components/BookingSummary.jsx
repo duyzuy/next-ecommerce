@@ -9,21 +9,31 @@ import { toast } from '../lib/toast';
 import { useDispatch, useSelector } from '../providers/hooks';
 import {
   UPDATE_PRICE_ON_CART,
-  CHANGE_PAYMENT_METHOD
+  CHANGE_PAYMENT_METHOD,
+  UPDATE_PAYMENT_TERM
 } from '../constants/actions';
+import PaymentTypeItem from './PaymentTypeItem';
+import ProductSummaryItems from './ProductSummaryItems';
+import SubtotalSummary from './SubtotalSummary';
+import PaymentTerm from './PaymentTerm';
+import Skeleton from 'react-loading-skeleton';
 
 const ACTIONS = {
   REMOVE_CODE: 'removeCode',
   ADD_CODE: 'addCode'
 };
 
-const BookingSummary = ({ bookingInfor, currency, router, step = 'cart' }) => {
+const BookingSummary = ({
+  bookingInfor,
+  currency,
+  router,
+  page = 'cart',
+  isLoading = fasle
+}) => {
   const dispatch = useDispatch();
   const bookingItems = bookingInfor.products.items;
-  const paymentGateWay = useSelector(
-    (state) => state.setting.woocommercePaymentGateWay
-  );
-  console.log(paymentGateWay);
+  const paymentGateWay = useSelector((state) => state.setting.wcPaymentGateWay);
+
   const handleApplyCode = useCallback(async (code) => {
     const response = await client.get(`coupon`, {
       code: code
@@ -154,12 +164,6 @@ const BookingSummary = ({ bookingInfor, currency, router, step = 'cart' }) => {
     });
   }, []);
 
-  // useEffect(() => {
-  //   dispatch({type: ADD_PAYMENT_INFO,
-  //   payload: {
-
-  //   }})
-  // }, [])
   const onSelectPaymentMethod = (payment) => {
     dispatch({
       type: CHANGE_PAYMENT_METHOD,
@@ -169,105 +173,50 @@ const BookingSummary = ({ bookingInfor, currency, router, step = 'cart' }) => {
       }
     });
   };
+  const handleAcceptTerm = (value) => {
+    dispatch({
+      type: UPDATE_PAYMENT_TERM,
+      payload: {
+        isAcceptTerm: value
+      }
+    });
+  };
+
+  const paymentGateWayActive = useMemo(() => {
+    return paymentGateWay.filter((item) => item.enabled);
+  }, [paymentGateWay]);
   return (
-    <div className={`booking__summary ${step}`}>
+    <div className={`booking__summary ${page}`}>
       <PromotionCode
         code={bookingInfor.promotionCode}
         onApplyCode={handleApplyCode}
         hasPromotion={bookingInfor.hasPromotion}
         onRemoveCode={handleRemoveCode}
       />
-      {(step === 'payment' && bookingItems.length > 0 && (
-        <div className="booking__summary--items">
-          <div className="header">
-            <p className="name">Sản phẩm</p>
-            <p className="quantity">Số lượng</p>
-            <p className="price">Giá tiền</p>
-          </div>
-          {bookingItems.map((item, index) => (
-            <div className="item" key={index}>
-              <p className="name">{item.name}</p>
-              <p className="quantity">{item.quantity}</p>
-              <p className="price">
-                {formatPrice(item.price * item.quantity, currency)}
-              </p>
-            </div>
-          ))}
-        </div>
-      )) || <></>}
 
-      <div className="booking__summary--subtoal">
-        <div className="subtotal">
-          <p className="subtotal-label">Tạm tính</p>
-          <p className="subtotal-value">
-            {formatPrice(bookingInfor.products.subTotal, currency)}
-          </p>
-        </div>
-        <div className="shipping">
-          <p className="subtotal-label">Phí giao hàng</p>
-          <p className="subtotal-value">
-            {formatPrice(bookingInfor.products.subTotal, currency)}
-          </p>
-        </div>
-        <div
-          className={
-            bookingInfor.discountValue !== 0 ? 'discount valid' : 'discount'
-          }
-        >
-          <p className="discount-label">
-            Giảm giá
-            {bookingInfor.promotionCode ? (
-              <>
-                <span className="code">{bookingInfor.promotionCode}</span>
-              </>
-            ) : (
-              <></>
-            )}
-          </p>
-          <p className="discount-value">
-            {(bookingInfor.discountValue !== 0 &&
-              `-${formatPrice(bookingInfor.discountValue, currency)}`) ||
-              0}
-          </p>
-        </div>
-        <span className="line"></span>
-        <div className="total">
-          <p className="total-label">Tổng tiền</p>
-          <p className="total-value">
-            {formatPrice(bookingInfor.total, currency)}
-          </p>
-        </div>
-      </div>
+      {(page === 'payment' && (
+        <ProductSummaryItems data={bookingItems} currency={currency} />
+      )) || <></>}
+      <SubtotalSummary bookingInfor={bookingInfor} currency={currency} />
+
       <div className="booking__summary--payment-gate">
-        {paymentGateWay.map((item, index) => {
-          if (item.enabled) {
-            return (
-              <div
-                className={
-                  (bookingInfor.order.payment_method === item.id &&
-                    `payment__type active`) ||
-                  'payment__type'
-                }
-                key={index}
-              >
-                <div
-                  className="payment__type--header"
-                  onClick={() => onSelectPaymentMethod(item)}
-                >
-                  <span className="check"></span>
-                  <p className="title">{item.title}</p>
-                </div>
-                <div className="payment__type--body">
-                  <div className="content">{item.description}</div>
-                </div>
-              </div>
-            );
-          }
-        })}
+        {(isLoading && <Skeleton height={60} />) ||
+          paymentGateWayActive.map((item, index) => (
+            <PaymentTypeItem
+              data={item}
+              key={item.id}
+              active={bookingInfor.order.payment_method}
+              onSelectPaymentMethod={onSelectPaymentMethod}
+            />
+          ))}
       </div>
+      <PaymentTerm
+        onAcceptTerm={handleAcceptTerm}
+        isAccept={bookingInfor.order.isAcceptTerm}
+      />
       <div className="booking__summary--actions">
         <Button color="primary" onClick={() => router.push('/payment')}>
-          Tiến hành thanh toán
+          Tiến hành thanh toán ?
         </Button>
       </div>
     </div>

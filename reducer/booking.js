@@ -6,7 +6,8 @@ import {
   UPDATE_PRICE_ON_CART,
   ADD_PAYMENT_INFO,
   CHANGE_PAYMENT_METHOD,
-  UPDATE_PAYMENT_INFOR
+  UPDATE_PAYMENT_INFOR,
+  UPDATE_PAYMENT_TERM
 } from '../constants/actions';
 
 const bookingState = {
@@ -25,7 +26,8 @@ const bookingState = {
     billing: {},
     shipping: {},
     line_items: [],
-    shipping_lines: []
+    shipping_lines: [],
+    isAcceptTerm: false
   }
 };
 
@@ -210,6 +212,17 @@ const bookingReducer = (state, action) => {
         };
       }
       return state;
+    }
+    case UPDATE_PAYMENT_TERM: {
+      const data = action.payload;
+      console.log(data);
+      return {
+        ...state,
+        order: {
+          ...state.order,
+          isAcceptTerm: data.isAcceptTerm
+        }
+      };
     }
     default:
       return state;

@@ -1,31 +1,32 @@
 import {
   LOAD_ECOM_SETTING,
-  LOAD_SHIPPING,
-  LOADING_PAYMENT_GATEWAY
+  FETCH_SHIPPING_SETTING,
+  FETCH_PAYMENT_GATEWAY_SETTING
 } from '../constants/actions';
 export const settingState = {
-  woocommerceShipping: [],
-  woocommercePaymentGateWay: []
+  wcShipping: [],
+  wcPaymentGateWay: []
 };
 
 const settingReducer = (state, action) => {
   switch (action.type) {
     case LOAD_ECOM_SETTING: {
+      const { settingType, settingValue } = action.payload;
       return {
         ...state,
-        ...action.payload
+        [settingType]: { ...settingValue }
       };
     }
-    case LOAD_SHIPPING: {
+    case FETCH_SHIPPING_SETTING: {
       return {
         ...state,
-        woocommerceShipping: [...action.payload]
+        wcShipping: [...action.payload]
       };
     }
-    case LOADING_PAYMENT_GATEWAY: {
+    case FETCH_PAYMENT_GATEWAY_SETTING: {
       return {
         ...state,
-        woocommercePaymentGateWay: [...action.payload]
+        wcPaymentGateWay: [...action.payload]
       };
     }
 

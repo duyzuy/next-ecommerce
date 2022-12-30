@@ -6,7 +6,6 @@ import Pagination from '../../container/Pagination';
 import ProductToolBar from '../ProductToolBar';
 import { contentType } from '../../constants/constants';
 import { productFilterValue, productFilterKeys } from '../../constants/product';
-import { isEmpty, isExists } from '../../utils/helper';
 import { updateQueryFromString } from '../../utils';
 import styles from '../../styles/product.module.scss';
 import Breadcrumb from '../../components/BreadCrumb';

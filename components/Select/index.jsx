@@ -1,8 +1,15 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import * as Icon from 'react-feather';
-
+import { Loader } from 'semantic-ui-react';
 const Select = (props) => {
-  const { options, selected = {}, onSetSelected, label, defaultSelect } = props;
+  const {
+    options,
+    selected = {},
+    onSetSelected,
+    label,
+    defaultSelect,
+    isLoading
+  } = props;
   const selectRef = useRef();
 
   const onSelectionChange = (e, opt) => {
@@ -52,7 +59,9 @@ const Select = (props) => {
         <div className="select-item">
           <span className="text">{selected.text || label || 'Select'}</span>
           <span className="icon">
-            <Icon.ArrowDown size={12} />
+            {(isLoading && <Loader size="mini" active />) || (
+              <Icon.ArrowDown size={12} />
+            )}
           </span>
         </div>
         <div className="select-options">

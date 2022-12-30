@@ -1,12 +1,11 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
-
+import { useCallback, useEffect, useMemo, memo } from 'react';
 import CustomImage from '../CustomImage';
 import * as Icon from 'react-feather';
 import { useRouter } from 'next/router';
 import Skeleton, { SkeletonTheme } from 'react-loading-skeleton';
 import Price from '../Price';
 import Rating from '../Rating';
-import Link from 'next/link';
+
 const Card = (props) => {
   const { type, isLoading, data } = props;
 
@@ -80,4 +79,4 @@ const Card = (props) => {
   );
 };
 
-export default Card;
+export default memo(Card);

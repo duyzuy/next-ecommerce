@@ -10,9 +10,9 @@
         display: flex;
         flex-wrap: wrap;
         .section-header{
-            text-align: center;
             font-weight: bold;
             margin-bottom: 30px;
+            color: #3f53b6;
             h4{
                 font-size: 1.3rem;
             }
@@ -41,45 +41,46 @@
         .shipping__form--header{
             padding: 10px 0;
             margin-bottom: 10px;
-            .form__check{
-                display: inline-flex;
-                cursor: pointer;
-                p{
-                    flex: 1
-                }
-                span.icon{
-                    display: inline-block;
-                    width: 20px;
-                    height: 20px;
-                    border: 2px solid #f1f1f1;
-                    margin-right: 10px;
-                    border-radius: 3px;
-                    position: relative;
-                    &:after{
-                        content: "";
-                        position: absolute;
-                        height: 10px;
-                        width: 8px;
-                        border-width: 2px 2px 0 0;
-                        border-color: #3d5abb #3d5abb transparent transparent;
-                        border-style: solid;
-                        transform: rotate(135deg);
-                        top: calc(50% - 7px);
-                        left: calc(50% - 4px);
-                        opacity: 0;
-                    }
-                }
-          
-                &.checked{
-                    span.icon{
-                        border-color: #3d5abb;
-                        &:after{
-                            opacity: 1;
-                        }
-                    }
-                
+            
+        }
+    }
+    :global .form__check{
+        display: inline-flex;
+        cursor: pointer;
+        p{
+            flex: 1
+        }
+        span.icon{
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f1f1f1;
+            margin-right: 10px;
+            border-radius: 3px;
+            position: relative;
+            &:after{
+                content: "";
+                position: absolute;
+                height: 10px;
+                width: 8px;
+                border-width: 2px 2px 0 0;
+                border-color: #3d5abb #3d5abb transparent transparent;
+                border-style: solid;
+                transform: rotate(135deg);
+                top: calc(50% - 7px);
+                left: calc(50% - 4px);
+                opacity: 0;
+            }
+        }
+  
+        &.checked{
+            span.icon{
+                border-color: #3d5abb;
+                &:after{
+                    opacity: 1;
                 }
             }
+        
         }
     }
 }

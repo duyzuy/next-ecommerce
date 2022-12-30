@@ -6,16 +6,19 @@ const settingHandler = async (req, res) => {
   await wcApi
     .get(`shipping/zones/${id}/methods`)
     .then((response) => {
-      console.log(response);
+      let data = response.data;
+      data.map((item) => {
+        delete item._links;
+        return item;
+      });
       res.status(200).json({
-        data: response.data
+        data: data
       });
     })
     .catch((error) => {
-      console.log(error);
-      console.log('Response Status:', error.status);
-      console.log('Response Headers:', error.headers);
-      console.log('Response Data:', error.data);
+      res.status(404).json({
+        ...error.response.data
+      });
     });
 };
 

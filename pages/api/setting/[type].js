@@ -4,7 +4,7 @@ const settingHandler = async (req, res) => {
   const { query } = req;
 
   await wcApi
-    .get('settings/general')
+    .get(`settings/${query.type}`)
     .then((response) => {
       const data = response.data.reduce((acc, dt) => {
         delete dt._links;
@@ -26,9 +26,9 @@ const settingHandler = async (req, res) => {
       });
     })
     .catch((error) => {
-      console.log('Response Status:', error.status);
-      console.log('Response Headers:', error.headers);
-      console.log('Response Data:', error.data);
+      res.status(404).json({
+        ...error.response.data
+      });
     });
 };
 
