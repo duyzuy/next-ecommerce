@@ -1,6 +1,6 @@
 import { client } from '../api/client';
 
-export const loadSetting = async (type) => {
+export const getSetting = async (type) => {
   return await client
     .get(`setting/${type}`)
     .then((response) => response.data)
@@ -9,7 +9,7 @@ export const loadSetting = async (type) => {
     });
 };
 
-export const loadShipping = async () => {
+export const getShipping = async () => {
   return await client
     .get('shipping')
     .then((response) => response.data)
@@ -18,7 +18,7 @@ export const loadShipping = async () => {
     });
 };
 
-export const loadPaymentGateway = async () => {
+export const getPaymentGateway = async () => {
   return await client
     .get('paymentGateway')
     .then((response) => response.data)
@@ -27,7 +27,7 @@ export const loadPaymentGateway = async () => {
     });
 };
 
-export const loadShippingZone = async () => {
+export const getShippingZone = async () => {
   return await client
     .get('shipping/zones')
     .then((response) => response.data)
@@ -36,7 +36,7 @@ export const loadShippingZone = async () => {
     });
 };
 
-export const loadShippingLocationsByZoneId = async (id) => {
+export const getShippingLocationsByZoneId = async (id) => {
   return await client
     .get(`shipping/zones/${id}/locations`)
     .then((response) => response.data)
@@ -45,7 +45,7 @@ export const loadShippingLocationsByZoneId = async (id) => {
     });
 };
 
-export const loadShippingMethodsByZoneId = async (id) => {
+export const getShippingMethodsByZoneId = async (id) => {
   return await client
     .get(`shipping/zones/${id}/methods`)
     .then((response) => response.data)

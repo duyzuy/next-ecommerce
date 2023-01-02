@@ -9,12 +9,12 @@ const PaymentBillingForm = ({
   countries,
   cities
 }) => {
-  const countryDefault = { value: '', key: '', text: 'Chọn quốc gia' };
-  const cityDefault = { value: '', key: '', text: 'Chọn thành phố' };
-  const emptyData = { value: 'n/a', key: 'n/a', text: 'N/A' };
+  const countryEmptyOpt = { value: '', key: '', text: 'Chọn quốc gia' };
+  const cityEmtyOpt = { value: '', key: '', text: 'Chọn thành phố' };
+  const naData = { value: 'n/a', key: 'n/a', text: 'N/A' };
 
   const citiesOpts = useMemo(() => {
-    let arrCities = [{ ...cityDefault }];
+    let arrCities = [{ ...cityEmtyOpt }];
     cities.forEach((item, index) => {
       let districts = [];
       item.districts.forEach((subItem, subIndex) => {
@@ -41,7 +41,7 @@ const PaymentBillingForm = ({
     });
 
     if (!data.country || data.country.key !== 'VN') {
-      return [{ ...cityDefault }, { ...emptyData }];
+      return [{ ...cityEmtyOpt }, { ...naData }];
     }
     return arrCities;
   }, [data.country]);
@@ -49,6 +49,7 @@ const PaymentBillingForm = ({
   const districtOpts = useMemo(() => {
     return data.city?.districts || [];
   }, [data?.city]);
+
   return (
     <div className="billing__form">
       <div className="form-row">
@@ -86,25 +87,37 @@ const PaymentBillingForm = ({
       <div className="form-row">
         <Select
           label="Quốc gia"
+          isShowSearch
           options={countries}
-          defaultSelect={countryDefault}
+          defaultSelect={countryEmptyOpt}
           selected={data.country || {}}
           onSetSelected={(value) => onChange(`${formKey}.country`, value)}
         />
         <Select
           label="Tỉnh/thành phố"
+          isShowSearch
           options={citiesOpts}
-          defaultSelect={cityDefault}
+          defaultSelect={cityEmtyOpt}
           selected={data.city || ''}
           onSetSelected={(value) => onChange(`${formKey}.city`, value)}
         />
       </div>
-      <Select
-        label="Quận/huyện"
-        options={districtOpts}
-        selected={data.district || {}}
-        onSetSelected={(value) => onChange(`${formKey}.district`, value)}
-      />
+      <div className="form-row">
+        <Select
+          label="Quận/huyện"
+          isShowSearch
+          options={districtOpts}
+          selected={data.district || {}}
+          onSetSelected={(value) => onChange(`${formKey}.district`, value)}
+        />
+        <Input
+          name="postCode"
+          label="Mã bưu điện"
+          placeholder="Mã bưu điện"
+          value={data.postCode || ''}
+          onChange={(e) => onChange(`${formKey}.postCode`, e.target.value)}
+        />
+      </div>
       <Input
         name="address"
         label="Địa chỉ"

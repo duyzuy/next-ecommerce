@@ -23,6 +23,11 @@
 
         &.select{
             display: block !important;
+            &.has-search{
+                .select-options{
+                    max-height: 260px;
+                }
+            }
             label{
                 display: block;
             }
@@ -46,6 +51,25 @@
                 > div{ 
                     scroll-snap-stop: normal;
                     scroll-snap-align: start;
+                    &.search__control{
+                        display: block;
+                        padding: 10px 15px;
+                        input{
+                            padding: 10px 15px;
+                            border: 1px solid #f1f1f1;
+                            width: 100%;
+                            display: block;
+                            border-radius: 3px;
+                            &:focus, &:focus-within, &:visited, &:active, &:focus-visible{
+                                border-color: #c8c8c8;
+                                outline: none;
+                            }
+                        }
+                    }
+                }
+                .empty{
+                    padding: 20px 15px;
+                    text-align: center;
                 }
                 &::-webkit-scrollbar-thumb{
                     background-color: #4167c3;
@@ -130,6 +154,10 @@
                 border-color: #f1f1f1;
                 padding: 10px;
                 border-radius: 5px;
+                &:focus, &:focus-within, &:visited, &:active, &:focus-visible{
+                    border-color: #4167c3;
+                    outline: none;
+                }
             }
             &.no-resize {
                 textarea{

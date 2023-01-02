@@ -1,6 +1,6 @@
 import { memo, useMemo } from 'react';
 const TextArea = (props) => {
-  const { rows, columns, onChange, value, label, noResize } = props;
+  const { rows, columns, onChange, value, label, noResize, ...rests } = props;
 
   const classes = useMemo(() => {
     let clss = 'ec__form--control textarea';
@@ -12,6 +12,7 @@ const TextArea = (props) => {
     <div className={classes}>
       {(label && <label>{label}</label>) || <></>}
       <textarea
+        {...rests}
         rows={rows}
         columns={columns}
         onChange={(e) => onChange(e.target.value)}

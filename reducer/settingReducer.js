@@ -1,7 +1,8 @@
 import {
-  LOAD_ECOM_SETTING,
   FETCH_SHIPPING_SETTING,
-  FETCH_PAYMENT_GATEWAY_SETTING
+  FETCH_PAYMENT_GATEWAY_SETTING,
+  FETCH_SHIPPING_ZONE_SETTING,
+  FETCH_GENERAL_SETTING
 } from '../constants/actions';
 export const settingState = {
   wcShipping: [],
@@ -10,7 +11,7 @@ export const settingState = {
 
 const settingReducer = (state, action) => {
   switch (action.type) {
-    case LOAD_ECOM_SETTING: {
+    case FETCH_GENERAL_SETTING: {
       const { settingType, settingValue } = action.payload;
       return {
         ...state,
@@ -29,7 +30,12 @@ const settingReducer = (state, action) => {
         wcPaymentGateWay: [...action.payload]
       };
     }
-
+    case FETCH_SHIPPING_ZONE_SETTING: {
+      return {
+        ...state,
+        wcShippingZones: [...action.payload]
+      };
+    }
     default:
       return state;
   }

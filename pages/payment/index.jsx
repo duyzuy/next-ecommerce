@@ -1,10 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/router';
 
-import Input from '../../components/Input';
 import styles from '../../styles/payment.module.scss';
-import Select from '../../components/Select';
-// import { Select } from 'semantic-ui-react';
+
 import { useSelector, useDispatch } from '../../providers/hooks';
 import { withBookingLayout } from '../../HOCs/withBookingLayout';
 import BookingSummary from '../../components/BookingSummary';
@@ -12,10 +10,11 @@ import TextArea from '../../components/TextArea';
 import PaymentBillingForm from '../../components/PaymentBillingForm';
 import PaymentShippingForm from '../../components/PaymentShippingForm';
 import {
-  loadShipping,
-  loadShippingLocationsByZoneId,
-  loadPaymentGateway,
-  loadShippingMethodsByZoneId
+  getShipping,
+  getShippingLocationsByZoneId,
+  getPaymentGateway,
+  getShippingMethodsByZoneId,
+  getShippingZone
 } from '../../actions/setting';
 
 import {
@@ -23,7 +22,8 @@ import {
   FETCH_SHIPPING_SETTING,
   FETCH_PAYMENT_GATEWAY_SETTING,
   FETCH_SHIPPING_METHODS_SETTING,
-  FETCH_SHIPPING_LOCATIONS_SETTING
+  FETCH_SHIPPING_LOCATIONS_SETTING,
+  FETCH_SHIPPING_ZONE_SETTING
 } from '../../constants/actions';
 
 const PaymentPage = (props) => {
@@ -33,6 +33,7 @@ const PaymentPage = (props) => {
   const dispatch = useDispatch();
   const [isDifferenceShipping, setIsDifferenceShipping] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingShipping, setIsLoadingShipping] = useState(false);
   const generalSetting = useSelector((state) => state.setting.general);
   const bookingInfor = useSelector((state) => state.booking);
   const currency = useSelector((state) => {
@@ -41,7 +42,13 @@ const PaymentPage = (props) => {
       state.setting.general?.woocommerceCurrency.default
     );
   });
-
+  const userInfor = useMemo(() => {
+    if (bookingInfor.order.isDifferenceShipping) {
+      return bookingInfor.order.shipping.city || '';
+    }
+    return bookingInfor.order.billing.city || '';
+  }, [bookingInfor.order]);
+  console.log(userInfor);
   const {
     woocommerceShipToCountries,
     woocommerceSpecificShipToCountries,
@@ -84,12 +91,43 @@ const PaymentPage = (props) => {
       [{ ...countryDefault }]
     );
   }, [woocommerceSpecificAllowedCountries]);
+  console.log(countries);
+  const fetchShippingZone = async () => {
+    setIsLoadingShipping(true);
+    try {
+      const shippingZone = await getShippingZone().then((response) =>
+        Promise.all(
+          response.map(async (zone) => {
+            const shippingLocations = await getShippingLocationsByZoneId(
+              zone.id
+            );
+            const shippingMethods = await getShippingMethodsByZoneId(zone.id);
+            return {
+              ...zone,
+              locations: shippingLocations,
+              methods: shippingMethods
+            };
+          })
+        )
+      );
+
+      dispatch({
+        type: FETCH_SHIPPING_ZONE_SETTING,
+        payload: shippingZone
+      });
+      console.log({ shippingZone });
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoadingShipping(false);
+    }
+  };
 
   const onGetPaymentSetting = useCallback(async () => {
     try {
       setIsLoading(true);
-      const shipping = await loadShipping();
-      const payment = await loadPaymentGateway();
+      const shipping = await getShipping();
+      const payment = await getPaymentGateway();
 
       dispatch({
         type: FETCH_SHIPPING_SETTING,
@@ -109,6 +147,7 @@ const PaymentPage = (props) => {
 
   useEffect(() => {
     onGetPaymentSetting();
+    fetchShippingZone();
   }, []);
 
   return (
@@ -155,11 +194,13 @@ const PaymentPage = (props) => {
                 <div className="section-header">
                   <h4>Hình thức giao hàng</h4>
                 </div>
+                <div className="section-body"></div>
               </div>
               <div className="note">
                 <TextArea
                   noResize
                   label="Ghi chú"
+                  placeholder="Lưu ý khi giao hàng..."
                   value={bookingInfor?.order?.orderNote}
                   rows={4}
                   onChange={(value) => handleChange('orderNote', value)}

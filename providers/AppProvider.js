@@ -1,8 +1,8 @@
 import { useEffect, useCallback } from 'react';
 import { AppContext } from '../contexts';
 import { useDispatch } from './hooks';
-import { LOAD_ECOM_SETTING, FETCH_USER_DATA } from '../constants/actions';
-import { loadSetting } from '../actions/setting';
+import { FETCH_GENERAL_SETTING, FETCH_USER_DATA } from '../constants/actions';
+import { getSetting } from '../actions/setting';
 import { useSession } from 'next-auth/react';
 import { client } from '../api/client';
 import { settingType } from '../constants/constants';
@@ -11,10 +11,10 @@ const AppProvider = (props) => {
   const { data: session, status } = useSession();
 
   const onDispatchSetting = useCallback(async () => {
-    const generalSetting = await loadSetting(settingType.GENERAL);
+    const generalSetting = await getSetting(settingType.GENERAL);
 
     disPatch({
-      type: LOAD_ECOM_SETTING,
+      type: FETCH_GENERAL_SETTING,
       payload: {
         settingValue: generalSetting,
         settingType: settingType.GENERAL

@@ -20,6 +20,7 @@ const bookingState = {
   hasPromotion: false,
   promotionCode: '',
   discountValue: 0,
+  shippingCost: 0,
   discountType: '',
   order: {
     payment_method: 'bacs',
