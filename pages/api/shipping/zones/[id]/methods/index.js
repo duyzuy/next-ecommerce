@@ -1,10 +1,12 @@
 import { wcApi } from '../../../../../../api/woo';
 
 const settingHandler = async (req, res) => {
-  const { id } = req.query;
-  console.log(req);
+  const { id, ...query } = req.query;
+  console.log({ req });
   await wcApi
-    .get(`shipping/zones/${id}/methods`)
+    .get(`shipping/zones/${id}/methods`, {
+      ...query
+    })
     .then((response) => {
       let data = response.data;
       data.map((item) => {

@@ -2,7 +2,7 @@ import { wcApi } from '../../../../../../api/woo';
 
 const settingHandler = async (req, res) => {
   const { id } = req.query;
-  console.log(req);
+
   await wcApi
     .get(`shipping/zones/${id}/locations`)
     .then((response) => {

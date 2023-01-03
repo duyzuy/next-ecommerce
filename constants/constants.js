@@ -79,3 +79,9 @@ export const settingType = {
   EMAIL_CUSTOMER_RESET_PASSWORD: 'email_customer_reset_password',
   EMAIL_CUSTOMER_NEW_ACCOUNT: 'email_customer_new_account'
 };
+
+export const shippingMethodType = {
+  FLAT_RATE: 'flat_rate',
+  LOCAL_PICKUP: 'local_pickup',
+  FREE_SHIPPING: 'free_shipping'
+};

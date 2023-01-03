@@ -45,9 +45,11 @@ export const getShippingLocationsByZoneId = async (id) => {
     });
 };
 
-export const getShippingMethodsByZoneId = async (id) => {
+export const getShippingMethodsByZoneId = async (id, params = {}) => {
   return await client
-    .get(`shipping/zones/${id}/methods`)
+    .get(`shipping/zones/${id}/methods`, {
+      ...params
+    })
     .then((response) => response.data)
     .catch((error) => {
       return error;

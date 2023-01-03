@@ -21,11 +21,10 @@ import {
   UPDATE_PAYMENT_INFOR,
   FETCH_SHIPPING_SETTING,
   FETCH_PAYMENT_GATEWAY_SETTING,
-  FETCH_SHIPPING_METHODS_SETTING,
-  FETCH_SHIPPING_LOCATIONS_SETTING,
-  FETCH_SHIPPING_ZONE_SETTING
+  FETCH_SHIPPING_ZONE_SETTING,
+  ADD_SHIPPING_LINES
 } from '../../constants/actions';
-
+import { shippingMethodType } from '../../constants/constants';
 const PaymentPage = (props) => {
   const { cities } = props;
 
@@ -35,6 +34,7 @@ const PaymentPage = (props) => {
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingShipping, setIsLoadingShipping] = useState(false);
   const generalSetting = useSelector((state) => state.setting.general);
+  const shippingZones = useSelector((state) => state.setting.wcShippingZones);
   const bookingInfor = useSelector((state) => state.booking);
   const currency = useSelector((state) => {
     return (
@@ -42,13 +42,17 @@ const PaymentPage = (props) => {
       state.setting.general?.woocommerceCurrency.default
     );
   });
-  const userInfor = useMemo(() => {
-    if (bookingInfor.order.isDifferenceShipping) {
-      return bookingInfor.order.shipping.city || '';
-    }
-    return bookingInfor.order.billing.city || '';
-  }, [bookingInfor.order]);
-  console.log(userInfor);
+  const shippingZoneByUserAddress = useMemo(() => {
+    const orderInfor = bookingInfor.order;
+    const userAddShipping =
+      (orderInfor.isDifferenceShipping && orderInfor.shipping) ||
+      orderInfor.billing;
+
+    // shippingZones?.forEach((zone) => {
+
+    // });
+  }, [bookingInfor.order, shippingZones]);
+
   const {
     woocommerceShipToCountries,
     woocommerceSpecificShipToCountries,
@@ -91,7 +95,7 @@ const PaymentPage = (props) => {
       [{ ...countryDefault }]
     );
   }, [woocommerceSpecificAllowedCountries]);
-  console.log(countries);
+
   const fetchShippingZone = async () => {
     setIsLoadingShipping(true);
     try {
@@ -101,7 +105,12 @@ const PaymentPage = (props) => {
             const shippingLocations = await getShippingLocationsByZoneId(
               zone.id
             );
-            const shippingMethods = await getShippingMethodsByZoneId(zone.id);
+            let shippingMethods = await getShippingMethodsByZoneId(zone.id, {
+              enabled: true
+            });
+            shippingMethods = shippingMethods.filter(
+              (method) => method.enabled
+            );
             return {
               ...zone,
               locations: shippingLocations,
@@ -115,7 +124,6 @@ const PaymentPage = (props) => {
         type: FETCH_SHIPPING_ZONE_SETTING,
         payload: shippingZone
       });
-      console.log({ shippingZone });
     } catch (error) {
       console.log(error);
     } finally {
@@ -144,7 +152,40 @@ const PaymentPage = (props) => {
       setIsLoading(false);
     }
   }, []);
+  const getValueFromRegexKey = ({ string, key }) => {
+    // const reg = /(max_fee|max_fee|percent\=\"[0-9]*\")/;
+    const reg = new RegExp(`(${key}\=\"[0-9]*\")`, 'i');
+    const dataVal = string.match(reg);
 
+    return dataVal;
+  };
+  const onSelectShippingMethod = (method) => {
+    const { settings } = method;
+
+    switch (method.method_id) {
+      case shippingMethodType.FLAT_RATE: {
+        const cost = method.settings.cost.value;
+        console.log(cost, cost.includes('max_fee'));
+        let minFee = 0;
+        let maxFee = 0;
+        let percent = 0;
+        if (cost.includes('max_fee')) {
+          maxFee = getValueFromRegexKey({ string: cost, key: 'max_fee' });
+          console.log({ maxFee });
+        }
+        break;
+      }
+      case shippingMethodType.LOCAL_PICKUP: {
+        break;
+      }
+      case shippingMethodType.FREE_SHIPPING: {
+        break;
+      }
+    }
+
+    console.log({ method });
+    // dispatch({ type: ADD_SHIPPING_LINES, payload: { ...method } });
+  };
   useEffect(() => {
     onGetPaymentSetting();
     fetchShippingZone();
@@ -190,11 +231,35 @@ const PaymentPage = (props) => {
                 )) || <></>}
               </div>
 
-              <div className="shipping__methods">
+              <div className="shipping__selections">
                 <div className="section-header">
                   <h4>Hình thức giao hàng</h4>
                 </div>
-                <div className="section-body"></div>
+                <div className="section-body">
+                  {shippingZones?.map((zone) => (
+                    <div className="shipping__zone" key={zone.name}>
+                      <div className="shipping__zone--title">
+                        <h5>{zone.name}</h5>
+                      </div>
+                      <div className="shipping__zone--methods">
+                        {zone.methods.map((method) => (
+                          <div className="shipping__method" key={method.id}>
+                            <div
+                              className="shipping__method--wrapper"
+                              onClick={() => onSelectShippingMethod(method)}
+                            >
+                              <p
+                                dangerouslySetInnerHTML={{
+                                  __html: method.title
+                                }}
+                              />
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
               <div className="note">
                 <TextArea
