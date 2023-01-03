@@ -25,6 +25,7 @@ import {
   ADD_SHIPPING_LINES
 } from '../../constants/actions';
 import { shippingMethodType } from '../../constants/constants';
+import { getFeeFromShortCode } from '../../utils/helper';
 const PaymentPage = (props) => {
   const { cities } = props;
 
@@ -152,38 +153,99 @@ const PaymentPage = (props) => {
       setIsLoading(false);
     }
   }, []);
-  const getValueFromRegexKey = ({ string, key }) => {
-    // const reg = /(max_fee|max_fee|percent\=\"[0-9]*\")/;
-    const reg = new RegExp(`(${key}\=\"[0-9]*\")`, 'i');
-    const dataVal = string.match(reg);
+  const shippingZonesFilter = useMemo(() => {
+    const userShippingInfor =
+      (bookingInfor.order.isDifferenceShipping &&
+        bookingInfor.order.shipping) ||
+      bookingInfor.order.billing;
 
-    return dataVal;
-  };
+    console.log(userShippingInfor);
+    let shippingMethods = [];
+    const isExistsPostCode = (arr) => {
+      return arr.some((el) => el.type === 'postcode');
+    };
+    const isValidUserAddress = ({ code, countries: [] }) => {
+      console.log({ code, countries });
+      return countries.some((el) => el.key === code);
+    };
+
+    shippingZones?.forEach((zone) => {
+      if (isExistsPostCode(zone.locations)) {
+        if (
+          isValidUserAddress({
+            code: userShippingInfor.postCode,
+            countries: zone.locations
+          }) &&
+          isValidUserAddress({
+            code: userShippingInfor.country.key,
+            countries: zone.locations
+          })
+        ) {
+          console.log('postcode');
+          shippingMethods = [{ ...zone }];
+        }
+      } else {
+        if (
+          isValidUserAddress({
+            code: userShippingInfor?.country?.key,
+            countries: zone.locations
+          })
+        ) {
+          console.log('city');
+          shippingMethods = [{ ...zone }];
+        }
+      }
+    });
+    return shippingMethods;
+  }, [shippingZones, bookingInfor]);
+
   const onSelectShippingMethod = (method) => {
     const { settings } = method;
-
+    const totalPrice = bookingInfor.total;
+    console.log(method);
+    let shippingLines = { ...method };
     switch (method.method_id) {
       case shippingMethodType.FLAT_RATE: {
-        const cost = method.settings.cost.value;
-        console.log(cost, cost.includes('max_fee'));
+        const costStr = method.settings.cost.value;
+
         let minFee = 0;
         let maxFee = 0;
         let percent = 0;
-        if (cost.includes('max_fee')) {
-          maxFee = getValueFromRegexKey({ string: cost, key: 'max_fee' });
-          console.log({ maxFee });
+        if (costStr.includes('max_fee')) {
+          maxFee = getFeeFromShortCode({ str: costStr, key: 'max_fee' });
         }
+        if (costStr.includes('min_fee')) {
+          minFee = getFeeFromShortCode({ str: costStr, key: 'min_fee' });
+        }
+        if (costStr.includes('percent')) {
+          percent = getFeeFromShortCode({ str: costStr, key: 'percent' });
+        }
+        let feeAddition = (percent * Number(totalPrice)) / 100;
+        if (feeAddition > maxFee) {
+          feeAddition = maxFee;
+        }
+        if (feeAddition < minFee) {
+          feeAddition = minFee;
+        }
+        shippingLines = {
+          ...shippingLines,
+          totalFee: feeAddition
+        };
         break;
       }
       case shippingMethodType.LOCAL_PICKUP: {
         break;
       }
       case shippingMethodType.FREE_SHIPPING: {
+        shippingLines = {
+          ...shippingLines,
+          totalFee: 0
+        };
         break;
       }
     }
 
-    console.log({ method });
+    console.log({ shippingLines });
     // dispatch({ type: ADD_SHIPPING_LINES, payload: { ...method } });
   };
   useEffect(() => {
@@ -236,7 +298,7 @@ const PaymentPage = (props) => {
                   <h4>Hình thức giao hàng</h4>
                 </div>
                 <div className="section-body">
-                  {shippingZones?.map((zone) => (
+                  {shippingZonesFilter?.map((zone) => (
                     <div className="shipping__zone" key={zone.name}>
                       <div className="shipping__zone--title">
                         <h5>{zone.name}</h5>

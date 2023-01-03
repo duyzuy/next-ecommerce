@@ -80,3 +80,23 @@ export const removeVietnameseTones = (str) => {
   );
   return str;
 };
+
+export const getFeeFromShortCode = ({ str, key }) => {
+  // const reg = /(max_fee|max_fee|percent\=\"[0-9]*\")/;
+  const reg = new RegExp(`(${key}\=\"[0-9]*\")`, 'i');
+  const stringData = str.match(reg);
+
+  if (stringData) {
+    const val = stringData[0].substring(
+      stringData[0].indexOf('"') + 1,
+      stringData[0].lastIndexOf('"')
+    );
+
+    if (!isNaN(val)) {
+      return Number(val);
+    }
+    return val;
+  }
+
+  return null;
+};
