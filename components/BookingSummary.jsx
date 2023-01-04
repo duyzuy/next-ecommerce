@@ -16,7 +16,7 @@ import PaymentTypeItem from './PaymentTypeItem';
 import ProductSummaryItems from './ProductSummaryItems';
 import SubtotalSummary from './SubtotalSummary';
 import PaymentTerm from './PaymentTerm';
-import Skeleton from 'react-loading-skeleton';
+import CustomLoader from './CustomLoader';
 
 const ACTIONS = {
   REMOVE_CODE: 'removeCode',
@@ -28,7 +28,8 @@ const BookingSummary = ({
   currency,
   router,
   page = 'cart',
-  isLoading = fasle
+  isLoading = fasle,
+  onSubmitOrder
 }) => {
   const dispatch = useDispatch();
   const bookingItems = bookingInfor.products.items;
@@ -168,8 +169,8 @@ const BookingSummary = ({
     dispatch({
       type: CHANGE_PAYMENT_METHOD,
       payload: {
-        payment_method: payment.id,
-        payment_method_title: payment.title
+        paymentMethod: payment.id,
+        paymentMethodTitle: payment.title
       }
     });
   };
@@ -185,6 +186,14 @@ const BookingSummary = ({
   const paymentGateWayActive = useMemo(() => {
     return paymentGateWay.filter((item) => item.enabled);
   }, [paymentGateWay]);
+
+  const onSubmitButton = useCallback(() => {
+    if (page === 'cart') {
+      router.push('/payment');
+    } else {
+      onSubmitOrder();
+    }
+  }, [page, bookingInfor]);
   return (
     <div className={`booking__summary ${page}`}>
       <PromotionCode
@@ -200,23 +209,23 @@ const BookingSummary = ({
       <SubtotalSummary bookingInfor={bookingInfor} currency={currency} />
 
       <div className="booking__summary--payment-gate">
-        {(isLoading && <Skeleton height={60} />) ||
+        {(isLoading && <CustomLoader inline="centered" size="small" />) ||
           paymentGateWayActive.map((item, index) => (
             <PaymentTypeItem
               data={item}
               key={item.id}
-              active={bookingInfor.order.payment_method}
+              active={bookingInfor.order.paymentMethod}
               onSelectPaymentMethod={onSelectPaymentMethod}
             />
           ))}
       </div>
       <PaymentTerm
         onAcceptTerm={handleAcceptTerm}
-        isAccept={bookingInfor.order.isAcceptTerm}
+        isAccept={bookingInfor.isAcceptTerm}
       />
       <div className="booking__summary--actions">
-        <Button color="primary" onClick={() => router.push('/payment')}>
-          Tiến hành thanh toán ?
+        <Button color="primary" onClick={onSubmitButton}>
+          {(page === 'cart' && 'Tiến hành thanh toán ?') || 'Thanh toán ngay'}
         </Button>
       </div>
     </div>

@@ -5,9 +5,11 @@ import {
   UPDATE_CART,
   UPDATE_PRICE_ON_CART,
   ADD_PAYMENT_INFO,
+  ADD_SHIPPING_METHOD,
   CHANGE_PAYMENT_METHOD,
   UPDATE_PAYMENT_INFOR,
-  UPDATE_PAYMENT_TERM
+  UPDATE_PAYMENT_TERM,
+  UPDATE_SHIPPING_ADDRESS
 } from '../constants/actions';
 
 const bookingState = {
@@ -22,14 +24,16 @@ const bookingState = {
   discountValue: 0,
   shippingCost: 0,
   discountType: '',
+  method: {},
   order: {
-    payment_method: 'bacs',
+    paymentMethod: 'bacs',
+    paymentMethodTitle: 'Chuyển khoản ngân hàng',
     billing: {},
     shipping: {},
-    line_items: [],
-    shipping_lines: [],
-    isAcceptTerm: false
-  }
+    lineItems: [],
+    shippingLine: []
+  },
+  isAcceptTerm: false
 };
 
 const bookingReducer = (state, action) => {
@@ -69,7 +73,7 @@ const bookingReducer = (state, action) => {
         },
         order: {
           ...state.order,
-          line_items: [...lineItems]
+          lineItems: [...lineItems]
         },
         total: state.total + totalPrice
       };
@@ -134,7 +138,7 @@ const bookingReducer = (state, action) => {
         },
         order: {
           ...state.order,
-          line_items: [...lineItems]
+          lineItems: [...lineItems]
         },
         total: newTotal
       };
@@ -214,14 +218,35 @@ const bookingReducer = (state, action) => {
       }
       return state;
     }
+    case UPDATE_SHIPPING_ADDRESS: {
+      return {
+        ...state,
+        [key]: value
+      };
+    }
     case UPDATE_PAYMENT_TERM: {
       const data = action.payload;
-      console.log(data);
+      return {
+        ...state,
+        isAcceptTerm: data.isAcceptTerm
+      };
+    }
+    case ADD_SHIPPING_METHOD: {
+      const data = action.payload;
       return {
         ...state,
         order: {
           ...state.order,
-          isAcceptTerm: data.isAcceptTerm
+          shippingLine: [
+            {
+              method_id: data.method_id,
+              method_title: data.method_title,
+              total: data.total
+            }
+          ],
+          method: {
+            ...data
+          }
         }
       };
     }

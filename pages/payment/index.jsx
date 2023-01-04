@@ -22,10 +22,15 @@ import {
   FETCH_SHIPPING_SETTING,
   FETCH_PAYMENT_GATEWAY_SETTING,
   FETCH_SHIPPING_ZONE_SETTING,
-  ADD_SHIPPING_LINES
+  ADD_SHIPPING_LINES,
+  ADD_SHIPPING_METHOD,
+  UPDATE_SHIPPING_ADDRESS
 } from '../../constants/actions';
 import { shippingMethodType } from '../../constants/constants';
 import { getFeeFromShortCode } from '../../utils/helper';
+import CustomLoader from '../../components/CustomLoader';
+import { client } from '../../api/client';
+import { toast } from '../../lib/toast';
 const PaymentPage = (props) => {
   const { cities } = props;
 
@@ -37,6 +42,7 @@ const PaymentPage = (props) => {
   const generalSetting = useSelector((state) => state.setting.general);
   const shippingZones = useSelector((state) => state.setting.wcShippingZones);
   const bookingInfor = useSelector((state) => state.booking);
+  const [formData, setFormData] = useState({});
   const currency = useSelector((state) => {
     return (
       state.setting.general?.woocommerceCurrency.value ||
@@ -72,7 +78,7 @@ const PaymentPage = (props) => {
   const onSelectDifferenceShipping = () => {
     setIsDifferenceShipping((prevState) => !prevState);
     dispatch({
-      type: UPDATE_PAYMENT_INFOR,
+      type: UPDATE_SHIPPING_ADDRESS,
       payload: {
         key: 'isDifferenceShipping',
         value: !isDifferenceShipping
@@ -153,20 +159,19 @@ const PaymentPage = (props) => {
       setIsLoading(false);
     }
   }, []);
-  const shippingZonesFilter = useMemo(() => {
+
+  const shippingMethodsFilter = useMemo(() => {
     const userShippingInfor =
       (bookingInfor.order.isDifferenceShipping &&
         bookingInfor.order.shipping) ||
       bookingInfor.order.billing;
 
-    console.log(userShippingInfor);
-    let shippingMethods = [];
+    let zonesShipping = {};
     const isExistsPostCode = (arr) => {
       return arr.some((el) => el.type === 'postcode');
     };
-    const isValidUserAddress = ({ code, countries: [] }) => {
-      console.log({ code, countries });
-      return countries.some((el) => el.key === code);
+    const isValidUserAddress = ({ code, countryList }) => {
+      return countryList.some((el) => el.code === code);
     };
 
     shippingZones?.forEach((zone) => {
@@ -174,39 +179,61 @@ const PaymentPage = (props) => {
         if (
           isValidUserAddress({
             code: userShippingInfor.postCode,
-            countries: zone.locations
+            countryList: zone.locations
           }) &&
           isValidUserAddress({
             code: userShippingInfor.country.key,
-            countries: zone.locations
+            countryList: zone.locations
           })
         ) {
-          console.log('postcode');
-          shippingMethods = [{ ...zone }];
+          zonesShipping = { ...zone };
+          return;
         }
       } else {
         if (
           isValidUserAddress({
             code: userShippingInfor?.country?.key,
-            countries: zone.locations
+            countryList: zone.locations
           })
         ) {
-          console.log('city');
-          shippingMethods = [{ ...zone }];
+          zonesShipping = { ...zone };
+          return;
         }
       }
     });
-    return shippingMethods;
+    let { methods } = zonesShipping;
+    const totalPrice = bookingInfor.total;
+
+    methods?.forEach((method) => {
+      const { settings } = method;
+      switch (method.method_id) {
+        case shippingMethodType.FLAT_RATE: {
+          break;
+        }
+        case shippingMethodType.LOCAL_PICKUP: {
+          break;
+        }
+        case shippingMethodType.FREE_SHIPPING: {
+          if (Number(settings.min_amount.value) > totalPrice) {
+            const indexOfMethod = methods.findIndex(
+              (item) => item.id === method.id
+            );
+            methods.splice(indexOfMethod, 1);
+          }
+          break;
+        }
+      }
+    });
+    return methods;
   }, [shippingZones, bookingInfor]);
 
   const onSelectShippingMethod = (method) => {
-    const { settings } = method;
     const totalPrice = bookingInfor.total;
-    console.log(method);
-    let shippingLines = { ...method };
+    const { settings } = method;
+    let shippingLine = { ...method };
     switch (method.method_id) {
       case shippingMethodType.FLAT_RATE: {
-        const costStr = method.settings.cost.value;
+        const costStr = settings.cost.value;
 
         let minFee = 0;
         let maxFee = 0;
@@ -220,33 +247,102 @@ const PaymentPage = (props) => {
         if (costStr.includes('percent')) {
           percent = getFeeFromShortCode({ str: costStr, key: 'percent' });
         }
-        let feeAddition = (percent * Number(totalPrice)) / 100;
-        if (feeAddition > maxFee) {
-          feeAddition = maxFee;
+        let flatFee = (percent * Number(totalPrice)) / 100;
+        if (flatFee > maxFee) {
+          flatFee = maxFee;
         }
-        if (feeAddition < minFee) {
-          feeAddition = minFee;
+        if (flatFee < minFee) {
+          flatFee = minFee;
         }
-        shippingLines = {
-          ...shippingLines,
-          totalFee: feeAddition
+        shippingLine = {
+          ...shippingLine,
+          total: flatFee
         };
         break;
       }
       case shippingMethodType.LOCAL_PICKUP: {
+        const localFee = Number(settings.cost.value);
+        shippingLine = {
+          ...shippingLine,
+          total: localFee
+        };
         break;
       }
       case shippingMethodType.FREE_SHIPPING: {
-        shippingLines = {
-          ...shippingLines,
-          totalFee: 0
+        let freFee = 0;
+        shippingLine = {
+          ...shippingLine,
+          total: freFee
         };
         break;
       }
     }
+    console.log(method);
+    dispatch({ type: ADD_SHIPPING_METHOD, payload: { ...shippingLine } });
+  };
 
-    console.log({ shippingLines });
-    // dispatch({ type: ADD_SHIPPING_LINES, payload: { ...method } });
+  const onSubmitOrder = async () => {
+    //handle validate data before create;
+    console.log({ bookingInfor });
+    if (!bookingInfor.isAcceptTerm) {
+      toast({
+        type: 'error',
+        message: 'Vui long chap nhan dieu kien dieu khoan'
+      });
+      return;
+    }
+
+    if (
+      !bookingInfor.order.billing.firstName ||
+      bookingInfor.order.billing.firstName === '' ||
+      !bookingInfor.order.billing.lastName ||
+      bookingInfor.order.billing.lastName === ''
+    ) {
+      toast({
+        type: 'error',
+        message: 'Vui long nhap day du ho va ten'
+      });
+      return;
+    }
+
+    if (
+      !bookingInfor.order.billing.email ||
+      bookingInfor.order.billing.email === ''
+    ) {
+      toast({
+        type: 'error',
+        message: 'Vui long nhap email'
+      });
+      return;
+    }
+    if (
+      !bookingInfor.order.billing.phone ||
+      bookingInfor.order.billing.phone === ''
+    ) {
+      toast({
+        type: 'error',
+        message: 'Vui long nhap so dien thoai'
+      });
+      return;
+    }
+
+    if (bookingInfor.order.isDifferenceShipping) {
+      if (
+        !bookingInfor.order.shipping.firstName ||
+        bookingInfor.order.shipping.firstName === '' ||
+        !bookingInfor.order.shipping.lastName ||
+        bookingInfor.order.shipping.lastName === ''
+      ) {
+        toast({
+          type: 'error',
+          message: 'Vui long nhap day du ho va ten'
+        });
+        return;
+      }
+    }
+
+    // const orderResponse = await client.post(`order/create`, { ...data });
+    // return orderResponse;
   };
   useEffect(() => {
     onGetPaymentSetting();
@@ -298,29 +394,32 @@ const PaymentPage = (props) => {
                   <h4>Hình thức giao hàng</h4>
                 </div>
                 <div className="section-body">
-                  {shippingZonesFilter?.map((zone) => (
-                    <div className="shipping__zone" key={zone.name}>
-                      <div className="shipping__zone--title">
-                        <h5>{zone.name}</h5>
-                      </div>
-                      <div className="shipping__zone--methods">
-                        {zone.methods.map((method) => (
-                          <div className="shipping__method" key={method.id}>
-                            <div
-                              className="shipping__method--wrapper"
-                              onClick={() => onSelectShippingMethod(method)}
-                            >
-                              <p
-                                dangerouslySetInnerHTML={{
-                                  __html: method.title
-                                }}
-                              />
-                            </div>
+                  <div className="shipping__zone--methods">
+                    {(isLoadingShipping && (
+                      <CustomLoader inline="centered" size="small" />
+                    )) ||
+                      shippingMethodsFilter?.map((method) => (
+                        <div
+                          className={`shipping__method ${
+                            bookingInfor?.order?.method?.id === method.id
+                              ? 'active'
+                              : ''
+                          }`}
+                          key={method.id}
+                        >
+                          <div
+                            className="shipping__method--wrapper"
+                            onClick={() => onSelectShippingMethod(method)}
+                          >
+                            <p
+                              dangerouslySetInnerHTML={{
+                                __html: method.title
+                              }}
+                            />
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  ))}
+                        </div>
+                      ))}
+                  </div>
                 </div>
               </div>
               <div className="note">
@@ -348,6 +447,7 @@ const PaymentPage = (props) => {
             router={router}
             page="payment"
             isLoading={isLoading}
+            onSubmitOrder={onSubmitOrder}
           />
         </div>
       </div>
