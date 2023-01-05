@@ -31,34 +31,25 @@ import { getFeeFromShortCode } from '../../utils/helper';
 import CustomLoader from '../../components/CustomLoader';
 import { client } from '../../api/client';
 import { toast } from '../../lib/toast';
+import { bookingSchema } from '../../utils/validate';
 const PaymentPage = (props) => {
   const { cities } = props;
 
   const router = useRouter();
   const dispatch = useDispatch();
-  const [isDifferenceShipping, setIsDifferenceShipping] = useState(false);
+
   const [isLoading, setIsLoading] = useState(false);
   const [isLoadingShipping, setIsLoadingShipping] = useState(false);
   const generalSetting = useSelector((state) => state.setting.general);
   const shippingZones = useSelector((state) => state.setting.wcShippingZones);
   const bookingInfor = useSelector((state) => state.booking);
-  const [formData, setFormData] = useState({});
+  const [errors, setErrors] = useState([]);
   const currency = useSelector((state) => {
     return (
       state.setting.general?.woocommerceCurrency.value ||
       state.setting.general?.woocommerceCurrency.default
     );
   });
-  const shippingZoneByUserAddress = useMemo(() => {
-    const orderInfor = bookingInfor.order;
-    const userAddShipping =
-      (orderInfor.isDifferenceShipping && orderInfor.shipping) ||
-      orderInfor.billing;
-
-    // shippingZones?.forEach((zone) => {
-
-    // });
-  }, [bookingInfor.order, shippingZones]);
 
   const {
     woocommerceShipToCountries,
@@ -72,16 +63,6 @@ const PaymentPage = (props) => {
       payload: {
         key,
         value
-      }
-    });
-  };
-  const onSelectDifferenceShipping = () => {
-    setIsDifferenceShipping((prevState) => !prevState);
-    dispatch({
-      type: UPDATE_SHIPPING_ADDRESS,
-      payload: {
-        key: 'isDifferenceShipping',
-        value: !isDifferenceShipping
       }
     });
   };
@@ -256,7 +237,7 @@ const PaymentPage = (props) => {
         }
         shippingLine = {
           ...shippingLine,
-          total: flatFee
+          total: flatFee.toString()
         };
         break;
       }
@@ -264,7 +245,7 @@ const PaymentPage = (props) => {
         const localFee = Number(settings.cost.value);
         shippingLine = {
           ...shippingLine,
-          total: localFee
+          total: localFee.toString()
         };
         break;
       }
@@ -272,78 +253,91 @@ const PaymentPage = (props) => {
         let freFee = 0;
         shippingLine = {
           ...shippingLine,
-          total: freFee
+          total: freFee.toString()
         };
         break;
       }
     }
-    console.log(method);
     dispatch({ type: ADD_SHIPPING_METHOD, payload: { ...shippingLine } });
   };
 
-  const onSubmitOrder = async () => {
+  const onSubmitOrder = useCallback(async () => {
     //handle validate data before create;
     console.log({ bookingInfor });
-    if (!bookingInfor.isAcceptTerm) {
-      toast({
-        type: 'error',
-        message: 'Vui long chap nhan dieu kien dieu khoan'
-      });
-      return;
-    }
 
-    if (
-      !bookingInfor.order.billing.firstName ||
-      bookingInfor.order.billing.firstName === '' ||
-      !bookingInfor.order.billing.lastName ||
-      bookingInfor.order.billing.lastName === ''
-    ) {
-      toast({
-        type: 'error',
-        message: 'Vui long nhap day du ho va ten'
-      });
-      return;
-    }
-
-    if (
-      !bookingInfor.order.billing.email ||
-      bookingInfor.order.billing.email === ''
-    ) {
-      toast({
-        type: 'error',
-        message: 'Vui long nhap email'
-      });
-      return;
-    }
-    if (
-      !bookingInfor.order.billing.phone ||
-      bookingInfor.order.billing.phone === ''
-    ) {
-      toast({
-        type: 'error',
-        message: 'Vui long nhap so dien thoai'
-      });
-      return;
-    }
-
-    if (bookingInfor.order.isDifferenceShipping) {
-      if (
-        !bookingInfor.order.shipping.firstName ||
-        bookingInfor.order.shipping.firstName === '' ||
-        !bookingInfor.order.shipping.lastName ||
-        bookingInfor.order.shipping.lastName === ''
-      ) {
-        toast({
-          type: 'error',
-          message: 'Vui long nhap day du ho va ten'
+    bookingSchema
+      .validate(
+        {
+          firstName: bookingInfor.order.billing.firstName,
+          lastName: bookingInfor.order.billing.lastName,
+          phone: bookingInfor.order.billing.phone,
+          city: bookingInfor.order.billing.city.value,
+          country: bookingInfor.order.billing.country.value,
+          email: bookingInfor.order.billing.email,
+          shippingLine: bookingInfor.order.shippingLine,
+          isAcceptTerm: bookingInfor.isAcceptTerm,
+          paymentMethod: bookingInfor.order.paymentMethod,
+          paymentMethodTitle: bookingInfor.order.paymentMethodTitle,
+          postCode: bookingInfor.order.billing.postCode
+        },
+        { abortEarly: false }
+      )
+      .then(async (data) => {
+        const orderResponse = await client.post(`order/create`, {
+          payment_method: data.paymentMethod,
+          payment_method_title: data.paymentMethodTitle,
+          set_paid: false,
+          billing: {
+            first_name: data.firstName,
+            last_name: data.lastName,
+            address_1: bookingInfor.order.billing.address,
+            address_2: bookingInfor.order.billing.address,
+            city: data.city,
+            state: bookingInfor.order.billing.district,
+            postcode: data.postCode,
+            country: data.country,
+            email: data.email,
+            phone: data.phone
+          },
+          shipping: {
+            first_name: 'John',
+            last_name: 'Doe',
+            address_1: '969 Market',
+            address_2: '',
+            city: 'San Francisco',
+            state: 'CA',
+            postcode: '94103',
+            country: 'US',
+            email: 'john.doe@example.com',
+            phone: '(555) 555-5555'
+          },
+          line_items: [...bookingInfor.order.lineItems],
+          shipping_lines: [...data.shippingLine],
+          coupon_lines: []
         });
-        return;
-      }
-    }
+        console.log({ orderResponse, data });
+      })
+      .catch((err) => {
+        let formError = {};
+        err.inner.forEach((err) => {
+          Object.assign(formError, { [err.path]: err.message });
+        });
+        setErrors(formError);
+        console.log(formError);
+      });
+
+    // if (!bookingInfor.isAcceptTerm) {
+    //   toast({
+    //     type: 'error',
+    //     message: 'Vui long chap nhan dieu kien dieu khoan'
+    //   });
+    //   return;
+    // }
 
     // const orderResponse = await client.post(`order/create`, { ...data });
     // return orderResponse;
-  };
+  }, [bookingInfor]);
+
   useEffect(() => {
     onGetPaymentSetting();
     fetchShippingZone();
@@ -364,21 +358,28 @@ const PaymentPage = (props) => {
                 onChange={handleChange}
                 countries={countries}
                 cities={cities}
+                errors={errors}
               />
               <div className="shipping__form">
                 <div className="shipping__form--header">
                   <div
                     className={
-                      (isDifferenceShipping && 'form__check checked') ||
+                      (bookingInfor.order.isDifferenceShipping &&
+                        'form__check checked') ||
                       'form__check'
                     }
-                    onClick={onSelectDifferenceShipping}
+                    onClick={() =>
+                      handleChange(
+                        'isDifferenceShipping',
+                        !bookingInfor.order.isDifferenceShipping
+                      )
+                    }
                   >
                     <span className="icon"></span>
                     <p>Giao hàng tới địa chỉ khác ?</p>
                   </div>
                 </div>
-                {(isDifferenceShipping && (
+                {(bookingInfor.order.isDifferenceShipping && (
                   <PaymentShippingForm
                     formKey="shipping"
                     data={bookingInfor?.order?.shipping}
@@ -420,6 +421,9 @@ const PaymentPage = (props) => {
                         </div>
                       ))}
                   </div>
+                  {(errors.shippingLine && (
+                    <p className="error-message">{errors.shippingLine}</p>
+                  )) || <></>}
                 </div>
               </div>
               <div className="note">
@@ -448,6 +452,7 @@ const PaymentPage = (props) => {
             page="payment"
             isLoading={isLoading}
             onSubmitOrder={onSubmitOrder}
+            errors={errors}
           />
         </div>
       </div>

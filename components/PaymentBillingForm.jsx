@@ -7,7 +7,8 @@ const PaymentBillingForm = ({
   isLoading,
   data,
   countries,
-  cities
+  cities,
+  errors
 }) => {
   const countryEmptyOpt = { value: '', key: '', text: 'Chọn quốc gia' };
   const cityEmtyOpt = { value: '', key: '', text: 'Chọn thành phố' };
@@ -28,7 +29,6 @@ const PaymentBillingForm = ({
           wards: subItem.wards
         };
       });
-
       arrCities.push({
         code: item.code,
         codeName: item.codename,
@@ -59,6 +59,8 @@ const PaymentBillingForm = ({
           placeholder="Họ"
           value={data.firstName || ''}
           onChange={(e) => onChange(`${formKey}.firstName`, e.target.value)}
+          error={errors.firstName}
+          tabIndex={1}
         />
         <Input
           name="lastName"
@@ -66,6 +68,8 @@ const PaymentBillingForm = ({
           placeholder="Tên đệm và tên"
           value={data.lastName || ''}
           onChange={(e) => onChange(`${formKey}.lastName`, e.target.value)}
+          error={errors.lastName}
+          tabIndex={2}
         />
       </div>
       <div className="form-row">
@@ -75,6 +79,8 @@ const PaymentBillingForm = ({
           placeholder="Email"
           value={data.email || ''}
           onChange={(e) => onChange(`${formKey}.email`, e.target.value)}
+          error={errors.email}
+          tabIndex={3}
         />
         <Input
           name="phone"
@@ -82,6 +88,8 @@ const PaymentBillingForm = ({
           placeholder="Số điện thoại"
           value={data.phone || ''}
           onChange={(e) => onChange(`${formKey}.phone`, e.target.value)}
+          error={errors.phone}
+          tabIndex={4}
         />
       </div>
       <div className="form-row">
@@ -92,6 +100,8 @@ const PaymentBillingForm = ({
           defaultSelect={countryEmptyOpt}
           selected={data.country || {}}
           onSetSelected={(value) => onChange(`${formKey}.country`, value)}
+          error={errors.country}
+          tabIndex={5}
         />
         <Select
           label="Tỉnh/thành phố"
@@ -100,6 +110,8 @@ const PaymentBillingForm = ({
           defaultSelect={cityEmtyOpt}
           selected={data.city || ''}
           onSetSelected={(value) => onChange(`${formKey}.city`, value)}
+          error={errors.city}
+          tabIndex={6}
         />
       </div>
       <div className="form-row">
@@ -109,6 +121,8 @@ const PaymentBillingForm = ({
           options={districtOpts}
           selected={data.district || {}}
           onSetSelected={(value) => onChange(`${formKey}.district`, value)}
+          error={errors.district}
+          tabIndex={7}
         />
         <Input
           name="postCode"
@@ -116,6 +130,8 @@ const PaymentBillingForm = ({
           placeholder="Mã bưu điện"
           value={data.postCode || ''}
           onChange={(e) => onChange(`${formKey}.postCode`, e.target.value)}
+          error={errors.postCode}
+          tabIndex={8}
         />
       </div>
       <Input
@@ -124,6 +140,7 @@ const PaymentBillingForm = ({
         placeholder="Địa chỉ"
         value={data.address || ''}
         onChange={(e) => onChange(`${formKey}.address`, e.target.value)}
+        tabIndex={9}
       />
     </div>
   );

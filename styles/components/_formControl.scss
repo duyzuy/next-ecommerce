@@ -1,6 +1,16 @@
 .ec__form{
     &--control{
-        margin-bottom: 20px;
+        margin-bottom: 30px;
+        .error-message{
+            color: #d70000;
+            font-size: 12px;
+            padding: 5px 0;
+        }
+        &.invalid{
+            input{
+                border-color: #d70000;
+            }
+        }
         &.checkbox, &.radio{
             label{
                 margin-bottom: 0;
@@ -23,6 +33,11 @@
 
         &.select{
             display: block !important;
+            &.invalid{
+                .select-item{
+                    border-color: #d70000;
+                }
+            }
             &.has-search{
                 .select-options{
                     max-height: 260px;

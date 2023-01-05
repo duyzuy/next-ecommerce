@@ -11,7 +11,9 @@ const Select = (props) => {
     defaultSelect,
     isLoading,
     isShowSearch,
-    isMultiple
+    isMultiple,
+    error,
+    tabIndex
   } = props;
   const selectRef = useRef();
   const [searchInput, setSearchInput] = useState('');
@@ -50,8 +52,11 @@ const Select = (props) => {
     if (isShowSearch) {
       clss = clss.concat(' ', 'has-search');
     }
+    if (error) {
+      clss = clss.concat(' ', 'invalid');
+    }
     return clss;
-  }, [isShowSearch]);
+  }, [isShowSearch, error]);
 
   useEffect(() => {
     const outSideClick = (e) => {
@@ -74,11 +79,16 @@ const Select = (props) => {
   useEffect(() => {
     if (defaultSelect) onSetSelected(defaultSelect);
   }, []);
+  const onKeyDown = (e) => {
+    if (e.key || e.keyCode === 13) {
+      selectRef.current.closest('.ec__form--control').classList.toggle('open');
+    }
+  };
   return (
     <div className={classes}>
       {(label && <label className="select-label">{label}</label>) || <></>}
       <div className="select-wrapper" ref={selectRef}>
-        <div className="select-item">
+        <div className="select-item" tabIndex={tabIndex} onKeyDown={onKeyDown}>
           <span className="text">{selected.text || label || 'Select'}</span>
           <span className="icon">
             {(isLoading && <Loader size="mini" active />) || (
@@ -108,6 +118,7 @@ const Select = (props) => {
           )}
         </div>
       </div>
+      {error && <p className="error-message">{error}</p>}
     </div>
   );
 };

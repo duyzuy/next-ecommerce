@@ -9,6 +9,7 @@ const Input = (props) => {
     label,
     onChange,
     iconPosition,
+    error,
     ...rest
   } = props;
 
@@ -20,8 +21,11 @@ const Input = (props) => {
     if (type !== undefined) {
       classes = classes.concat(' ', `${type}`);
     }
+    if (error) {
+      classes = classes.concat(' ', `invalid`);
+    }
     return classes;
-  }, [type, icon]);
+  }, [type, icon, error]);
   const handleChange = (e) => {
     if (onChange !== undefined && typeof onChange === 'function') {
       onChange(e);
@@ -52,6 +56,7 @@ const Input = (props) => {
           <span className="ec__form--icon">{icon()}</span>
         ) : null}
         <input {...rest} type={type} onChange={handleChange} />
+        {(error && <p className="error-message">{error}</p>) || <></>}
       </div>
     </div>
   );

@@ -1,5 +1,5 @@
 import { memo } from 'react';
-const PaymentTerm = ({ onAcceptTerm, isAccept }) => {
+const PaymentTerm = ({ onAcceptTerm, isAccept, error }) => {
   return (
     <div className="booking__summary--term">
       <div
@@ -11,6 +11,7 @@ const PaymentTerm = ({ onAcceptTerm, isAccept }) => {
           Tôi đã đọc và đồng ý với <a href="#">điều kiện và điều khoản</a>
         </p>
       </div>
+      {(error && <p className="error-message">{error}</p>) || <></>}
     </div>
   );
 };

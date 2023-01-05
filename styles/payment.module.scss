@@ -84,7 +84,13 @@
         }
     }
     :global .shipping__selections{
-       
+        .section-body{
+            margin-bottom: 30px;
+            .error-message{
+                color: #d70000;
+                font-size: 12px;
+            }
+        }
         .shipping__zone--methods{
             display: flex;
             flex-wrap: wrap;

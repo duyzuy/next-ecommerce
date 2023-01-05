@@ -29,10 +29,12 @@ const BookingSummary = ({
   router,
   page = 'cart',
   isLoading = fasle,
-  onSubmitOrder
+  onSubmitOrder,
+  errors
 }) => {
   const dispatch = useDispatch();
   const bookingItems = bookingInfor.products.items;
+
   const paymentGateWay = useSelector((state) => state.setting.wcPaymentGateWay);
 
   const handleApplyCode = useCallback(async (code) => {
@@ -42,6 +44,7 @@ const BookingSummary = ({
 
     if (response.status === 200 && response.data.length > 0) {
       const coupon = response.data[0];
+      const subTotal = bookingInfor.products.subTotal;
       //handle expired date
       if (coupon.date_expires !== null && isExpired(coupon.date_expires)) {
         toast({
@@ -62,26 +65,47 @@ const BookingSummary = ({
 
       //check minimum amount
       let nummberOfDiscount = minimumAmount;
-
-      //check type discount
-      if (coupon.discount_type === DISCOUNT_TYPE.PERCENT) {
-        const discountNumber = (amount * bookingInfor.products.subTotal) / 100;
-        if (discountNumber > minimumAmount && minimumAmount !== 0) {
-          nummberOfDiscount = discountNumber;
-        }
-
-        if (discountNumber > maximumAmount && maximumAmount !== 0) {
-          nummberOfDiscount = maximumAmount;
-        }
+      if (minimumAmount > subTotal) {
+        toast({
+          type: 'error',
+          message: `Số tiền mua tối thiểu để sử dụng mã ưu đãi này là ${formatPrice(
+            minimumAmount
+          )}`
+        });
+        return;
+      }
+      if (subTotal > maximumAmount) {
+        toast({
+          type: 'error',
+          message: `Số tiền mua tối đa để sử dụng mã ưu đãi này là ${formatPrice(
+            maximumAmount
+          )}`
+        });
+        return;
       }
 
-      if (coupon.discount_type === DISCOUNT_TYPE.FIXED_CART) {
-        if (amount > minimumAmount && minimumAmount !== 0) {
-          nummberOfDiscount = amount;
-        }
+      //check type discount
+      switch (coupon.discount_type) {
+        case DISCOUNT_TYPE.PERCENT: {
+          const discountNumber = (amount * subTotal) / 100;
+          if (discountNumber > minimumAmount && minimumAmount !== 0) {
+            nummberOfDiscount = discountNumber;
+          }
 
-        if (amount > maximumAmount && maximumAmount !== 0) {
-          nummberOfDiscount = maximumAmount;
+          if (discountNumber > maximumAmount && maximumAmount !== 0) {
+            nummberOfDiscount = maximumAmount;
+          }
+          break;
+        }
+        case DISCOUNT_TYPE.FIXED_CART: {
+          if (amount > minimumAmount && minimumAmount !== 0) {
+            nummberOfDiscount = amount;
+          }
+
+          if (amount > maximumAmount && maximumAmount !== 0) {
+            nummberOfDiscount = maximumAmount;
+          }
+          break;
         }
       }
 
@@ -133,9 +157,13 @@ const BookingSummary = ({
       dispatch({
         type: UPDATE_PRICE_ON_CART,
         payload: {
-          couponCode: code,
-          discountValue: nummberOfDiscount,
-          discountType: discountType,
+          data: {
+            id: coupon.id,
+            couponCode: coupon.code,
+            discountValue: nummberOfDiscount,
+            amount: coupon.amount,
+            discountType: coupon.discount_type
+          },
           type: ACTIONS.ADD_CODE
         }
       });
@@ -222,6 +250,7 @@ const BookingSummary = ({
       <PaymentTerm
         onAcceptTerm={handleAcceptTerm}
         isAccept={bookingInfor.isAcceptTerm}
+        error={errors.isAcceptTerm}
       />
       <div className="booking__summary--actions">
         <Button color="primary" onClick={onSubmitButton}>

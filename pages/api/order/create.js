@@ -3,13 +3,14 @@ import checkAuthenticated from '../../../lib/checkAuthenticated';
 
 const orderDetailHandler = async (req, res) => {
   const { query } = req;
-  console.log({ query });
+  console.log({ body: req.body });
   //   const isAuthenticated = await checkAuthenticated(req, res);
 
   await wcApi
-    .post(`orders`)
+    .post(`orders`, {
+      ...req.body
+    })
     .then((response) => {
-      console.log({ response });
       res.status(200).json({
         status: 'oke',
         stattusCode: 200,
@@ -20,9 +21,9 @@ const orderDetailHandler = async (req, res) => {
       res.status(400).json({
         data: error.response.data
       });
-      console.log('Response Status:', error.status);
-      console.log('Response Headers:', error.headers);
-      console.log('Response Data:', error.data);
+      console.log('Response Status:', error.response.status);
+      console.log('Response Headers:', error.response.headers);
+      console.log('Response Data:', error.response.data);
     });
 };
 

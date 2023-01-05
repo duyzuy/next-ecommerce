@@ -25,9 +25,18 @@ const bookingState = {
   shippingCost: 0,
   discountType: '',
   method: {},
+  couponLine: [
+    {
+      id: 0,
+      code: '',
+      discount: '',
+      discountTax: ''
+    }
+  ],
   order: {
     paymentMethod: 'bacs',
     paymentMethodTitle: 'Chuyển khoản ngân hàng',
+    isDifferenceShipping: false,
     billing: {},
     shipping: {},
     lineItems: [],
@@ -168,18 +177,27 @@ const bookingReducer = (state, action) => {
             discountValue: 0,
             promotionCode: '',
             total: state.total + valueCode,
-            hasPromotion: false
+            hasPromotion: false,
+            couponLine: []
           };
         }
       }
       if (payload.type === 'addCode') {
         state = {
           ...state,
-          discountType: payload.discountType,
-          discountValue: payload.discountValue,
-          promotionCode: payload.couponCode,
-          total: state.total - payload.discountValue,
-          hasPromotion: true
+          discountType: payload.data.discountType,
+          discountValue: payload.data.discountValue,
+          promotionCode: payload.data.couponCode,
+          total: state.total - payload.data.discountValue,
+          hasPromotion: true,
+          couponLine: [
+            {
+              id: payload.data.id,
+              code: payload.data.couponCode,
+              discount: payload.data.discountValue,
+              discountTax: ''
+            }
+          ]
         };
       }
       return state;
@@ -219,6 +237,7 @@ const bookingReducer = (state, action) => {
       return state;
     }
     case UPDATE_SHIPPING_ADDRESS: {
+      const { key, value } = action.payload;
       return {
         ...state,
         [key]: value
