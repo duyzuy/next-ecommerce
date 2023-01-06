@@ -41,7 +41,7 @@ const BookingSummary = ({
     const response = await client.get(`coupon`, {
       code: code
     });
-
+    console.log(response);
     if (response.status === 200 && response.data.length > 0) {
       const coupon = response.data[0];
       const subTotal = bookingInfor.products.subTotal;
@@ -54,15 +54,15 @@ const BookingSummary = ({
         return;
       }
       const discountType = coupon.discount_type;
-      const amount = Number.parseFloat(coupon.amount).toFixed();
-      const minimumAmount = Number.parseFloat(coupon.minimum_amount).toFixed();
-      const maximumAmount = Number.parseFloat(coupon.maximum_amount).toFixed();
+      const amount = Number.parseFloat(coupon.amount);
+      const minimumAmount = Number.parseFloat(coupon.minimum_amount);
+      const maximumAmount = Number.parseFloat(coupon.maximum_amount);
       const usageLimit = coupon.usage_limit;
       const usageLimitPerUser = coupon.usage_limit_per_user;
       const usageCount = coupon.usage_count;
       const usedBy = coupon.used_by;
       const prdCategoryApply = coupon.product_categories;
-
+      console.log({ maximumAmount });
       //check minimum amount
       let nummberOfDiscount = minimumAmount;
       if (minimumAmount > subTotal) {
@@ -74,7 +74,7 @@ const BookingSummary = ({
         });
         return;
       }
-      if (subTotal > maximumAmount) {
+      if (subTotal > maximumAmount && maximumAmount !== 0) {
         toast({
           type: 'error',
           message: `Số tiền mua tối đa để sử dụng mã ưu đãi này là ${formatPrice(
@@ -87,12 +87,12 @@ const BookingSummary = ({
       //check type discount
       switch (coupon.discount_type) {
         case DISCOUNT_TYPE.PERCENT: {
-          const discountNumber = (amount * subTotal) / 100;
-          if (discountNumber > minimumAmount && minimumAmount !== 0) {
-            nummberOfDiscount = discountNumber;
+          const discountAmount = (amount * subTotal) / 100;
+          if (discountAmount > minimumAmount && minimumAmount !== 0) {
+            nummberOfDiscount = discountAmount;
           }
 
-          if (discountNumber > maximumAmount && maximumAmount !== 0) {
+          if (discountAmount > maximumAmount && maximumAmount !== 0) {
             nummberOfDiscount = maximumAmount;
           }
           break;
@@ -242,7 +242,7 @@ const BookingSummary = ({
             <PaymentTypeItem
               data={item}
               key={item.id}
-              active={bookingInfor.order.paymentMethod}
+              active={bookingInfor.orderInfor.paymentMethod}
               onSelectPaymentMethod={onSelectPaymentMethod}
             />
           ))}

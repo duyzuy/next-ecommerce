@@ -24,23 +24,17 @@ const bookingState = {
   discountValue: 0,
   shippingCost: 0,
   discountType: '',
-  method: {},
-  couponLine: [
-    {
-      id: 0,
-      code: '',
-      discount: '',
-      discountTax: ''
-    }
-  ],
-  order: {
+  orderInfor: {
     paymentMethod: 'bacs',
     paymentMethodTitle: 'Chuyển khoản ngân hàng',
     isDifferenceShipping: false,
     billing: {},
     shipping: {},
     lineItems: [],
-    shippingLine: []
+    shippingLines: [],
+    couponLines: [],
+    taxLines: [],
+    feeLines: []
   },
   isAcceptTerm: false
 };
@@ -80,8 +74,8 @@ const bookingReducer = (state, action) => {
           count: state.products.count + payload.quantity,
           subTotal: state.products.subTotal + totalPrice
         },
-        order: {
-          ...state.order,
+        orderInfor: {
+          ...state.orderInfor,
           lineItems: [...lineItems]
         },
         total: state.total + totalPrice
@@ -145,8 +139,8 @@ const bookingReducer = (state, action) => {
           subTotal: newSubtotal,
           count: newCount
         },
-        order: {
-          ...state.order,
+        orderInfor: {
+          ...state.orderInfor,
           lineItems: [...lineItems]
         },
         total: newTotal
@@ -178,7 +172,10 @@ const bookingReducer = (state, action) => {
             promotionCode: '',
             total: state.total + valueCode,
             hasPromotion: false,
-            couponLine: []
+            orderInfor: {
+              ...state.orderInfor,
+              couponLines: []
+            }
           };
         }
       }
@@ -190,14 +187,17 @@ const bookingReducer = (state, action) => {
           promotionCode: payload.data.couponCode,
           total: state.total - payload.data.discountValue,
           hasPromotion: true,
-          couponLine: [
-            {
-              id: payload.data.id,
-              code: payload.data.couponCode,
-              discount: payload.data.discountValue,
-              discountTax: ''
-            }
-          ]
+          orderInfor: {
+            ...state.orderInfor,
+            couponLines: [
+              {
+                id: payload.data.id,
+                code: payload.data.couponCode,
+                discount: payload.data.discountValue,
+                discountTax: ''
+              }
+            ]
+          }
         };
       }
       return state;
@@ -205,8 +205,8 @@ const bookingReducer = (state, action) => {
     case CHANGE_PAYMENT_METHOD: {
       return {
         ...state,
-        order: {
-          ...state.order,
+        orderInfor: {
+          ...state.orderInfor,
           ...action.payload
         }
       };
@@ -217,10 +217,10 @@ const bookingReducer = (state, action) => {
       if (keys.length === 2) {
         state = {
           ...state,
-          order: {
-            ...state.order,
+          orderInfor: {
+            ...state.orderInfor,
             [keys[0]]: {
-              ...state.order[keys[0]],
+              ...state.orderInfor[keys[0]],
               [keys[1]]: value
             }
           }
@@ -228,8 +228,8 @@ const bookingReducer = (state, action) => {
       } else {
         state = {
           ...state,
-          order: {
-            ...state.order,
+          orderInfor: {
+            ...state.orderInfor,
             [key]: value
           }
         };
@@ -254,16 +254,16 @@ const bookingReducer = (state, action) => {
       const data = action.payload;
       return {
         ...state,
-        order: {
-          ...state.order,
-          shippingLine: [
+        orderInfor: {
+          ...state.orderInfor,
+          shippingLines: [
             {
-              method_id: data.method_id,
-              method_title: data.method_title,
+              methodId: data.method_id,
+              methodTitle: data.method_title,
               total: data.total
             }
           ],
-          method: {
+          shippingMethod: {
             ...data
           }
         }

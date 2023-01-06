@@ -59,7 +59,7 @@ const PaymentBillingForm = ({
           placeholder="Họ"
           value={data.firstName || ''}
           onChange={(e) => onChange(`${formKey}.firstName`, e.target.value)}
-          error={errors.firstName}
+          error={errors?.firstName}
           tabIndex={1}
         />
         <Input
@@ -68,7 +68,7 @@ const PaymentBillingForm = ({
           placeholder="Tên đệm và tên"
           value={data.lastName || ''}
           onChange={(e) => onChange(`${formKey}.lastName`, e.target.value)}
-          error={errors.lastName}
+          error={errors?.lastName}
           tabIndex={2}
         />
       </div>
@@ -79,7 +79,7 @@ const PaymentBillingForm = ({
           placeholder="Email"
           value={data.email || ''}
           onChange={(e) => onChange(`${formKey}.email`, e.target.value)}
-          error={errors.email}
+          error={errors?.email}
           tabIndex={3}
         />
         <Input
@@ -88,7 +88,7 @@ const PaymentBillingForm = ({
           placeholder="Số điện thoại"
           value={data.phone || ''}
           onChange={(e) => onChange(`${formKey}.phone`, e.target.value)}
-          error={errors.phone}
+          error={errors?.phone}
           tabIndex={4}
         />
       </div>
@@ -100,7 +100,7 @@ const PaymentBillingForm = ({
           defaultSelect={countryEmptyOpt}
           selected={data.country || {}}
           onSetSelected={(value) => onChange(`${formKey}.country`, value)}
-          error={errors.country}
+          error={errors?.country}
           tabIndex={5}
         />
         <Select
@@ -110,7 +110,7 @@ const PaymentBillingForm = ({
           defaultSelect={cityEmtyOpt}
           selected={data.city || ''}
           onSetSelected={(value) => onChange(`${formKey}.city`, value)}
-          error={errors.city}
+          error={errors?.city}
           tabIndex={6}
         />
       </div>
@@ -121,7 +121,7 @@ const PaymentBillingForm = ({
           options={districtOpts}
           selected={data.district || {}}
           onSetSelected={(value) => onChange(`${formKey}.district`, value)}
-          error={errors.district}
+          error={errors?.district}
           tabIndex={7}
         />
         <Input
@@ -130,7 +130,7 @@ const PaymentBillingForm = ({
           placeholder="Mã bưu điện"
           value={data.postCode || ''}
           onChange={(e) => onChange(`${formKey}.postCode`, e.target.value)}
-          error={errors.postCode}
+          error={errors?.postCode}
           tabIndex={8}
         />
       </div>

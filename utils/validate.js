@@ -35,23 +35,47 @@ export const loginSchema = yup.object().shape({
 });
 
 export const bookingSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email('Email không hợp lệ')
-    .required('Email không được bỏ trống'),
-  firstName: yup
-    .string()
-    .required('Không bỏ trống Họ')
-    .min(2, 'Họ ít nhất 2 ký tự'),
-  lastName: yup
-    .string()
-    .required('Không bỏ trống tên đệm và tên')
-    .min(2, 'Họ ít nhất 2 ký tự'),
-  phone: yup.string().required('Không bỏ trống số điện thoại'),
-  city: yup.string().required('Chọn thành phố'),
-  country: yup.string().required('Chọn quốc gia'),
   paymentMethod: yup.string().required('Vui lòng chọn phương thức thanh toán'),
-  shippingLine: yup.array().min(1, 'Chọn hình thức giao hàng'),
+  paymentMethodTitle: yup
+    .string()
+    .required('Vui lòng chọn phương thức thanh toán'),
+  setPaid: yup.boolean().required().default(false),
+  isDifferenceShipping: yup.boolean().required().default(false),
+  billing: yup.object().shape({
+    email: yup
+      .string()
+      .email('Email không hợp lệ')
+      .required('Email không được bỏ trống'),
+    firstName: yup
+      .string()
+      .required('Không bỏ trống Họ')
+      .min(2, 'Họ ít nhất 2 ký tự'),
+    lastName: yup
+      .string()
+      .required('Không bỏ trống tên đệm và tên')
+      .min(2, 'Họ ít nhất 2 ký tự'),
+    phone: yup.string().required('Không bỏ trống số điện thoại'),
+    city: yup.string().required('Chọn thành phố'),
+    country: yup.string().required('Chọn quốc gia')
+  }),
+  shipping: yup.object().when('isDifferenceShipping', {
+    is: true,
+    then: yup.object().shape({
+      postCode: yup.string().required('Mã bưu điện không bỏ trống'),
+      firstName: yup
+        .string()
+        .required('Không bỏ trống Họ')
+        .min(2, 'Họ ít nhất 2 ký tự'),
+      lastName: yup
+        .string()
+        .required('Không bỏ trống tên đệm và tên')
+        .min(2, 'Họ ít nhất 2 ký tự'),
+      city: yup.string().required('Chọn thành phố'),
+      country: yup.string().required('Chọn quốc gia')
+    })
+  }),
+  shippingLines: yup.array().min(1, 'Chọn hình thức giao hàng'),
+  lineItems: yup.array().min(1, 'Giỏ hàng đang trống'),
   isAcceptTerm: yup
     .boolean()
     .required('Vui lòng chấp nhận điều khoản và điều kiện')

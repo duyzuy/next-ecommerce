@@ -7,7 +7,8 @@ const PaymentShippingForm = ({
   isLoading,
   data,
   countries,
-  cities
+  cities,
+  errors
 }) => {
   const countryDefault = { value: '', key: '', text: 'Chọn quốc gia' };
   const cityDefault = { value: '', key: '', text: 'Chọn thành phố' };
@@ -58,6 +59,7 @@ const PaymentShippingForm = ({
           placeholder="Họ"
           value={data.firstName || ''}
           onChange={(e) => onChange(`${formKey}.firstName`, e.target.value)}
+          error={errors?.firstName}
         />
         <Input
           name="lastName"
@@ -65,15 +67,7 @@ const PaymentShippingForm = ({
           placeholder="Tên đệm và tên"
           value={data.lastName || ''}
           onChange={(e) => onChange(`${formKey}.lastName`, e.target.value)}
-        />
-      </div>
-      <div className="form-row">
-        <Input
-          name="phone"
-          label="Số điện thoại "
-          placeholder="Số điện thoại"
-          value={data.phone || ''}
-          onChange={(e) => onChange(`${formKey}.phone`, e.target.value)}
+          error={errors?.lastName}
         />
       </div>
       <div className="form-row">
@@ -83,6 +77,7 @@ const PaymentShippingForm = ({
           defaultSelect={countryDefault}
           selected={data.country || {}}
           onSetSelected={(data) => onChange(`${formKey}.country`, data)}
+          error={errors?.country}
         />
         <Select
           label="Tỉnh/thành phố"
@@ -90,6 +85,7 @@ const PaymentShippingForm = ({
           defaultSelect={cityDefault}
           selected={data.city || {}}
           onSetSelected={(data) => onChange(`${formKey}.city`, data)}
+          error={errors?.city}
         />
       </div>
       <div className="form-row">
@@ -98,6 +94,7 @@ const PaymentShippingForm = ({
           options={districtOpts}
           selected={data.district || {}}
           onSetSelected={(data) => onChange(`${formKey}.district`, data)}
+          error={errors?.district}
         />
         <Input
           name="postcode"
@@ -105,6 +102,7 @@ const PaymentShippingForm = ({
           placeholder="Mã bưu điện"
           value={data.postCode || ''}
           onChange={(e) => onChange(`${formKey}.postCode`, e.target.value)}
+          error={errors?.postCode}
         />
       </div>
       <Input
