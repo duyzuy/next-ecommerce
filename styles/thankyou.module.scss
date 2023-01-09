@@ -1,0 +1,59 @@
+.wrapper {
+    margin-top: 60px;
+    :global .page-header{
+        margin-bottom: 30px;
+    }
+    
+    :global .page-body{
+        padding: 20px;
+        border-radius: 20px;
+        background-color: #ffff;
+        .inner_body{
+            display: flex;
+        }
+        .col-left {
+            width: 65%;
+            padding-right: 60px;
+        }
+        .col-right {
+            width: 35%;
+        }
+        .order_infor{
+            padding: 20px;
+            background-color: #f1f1f1;
+            .row{
+                display: flex;
+                padding: 5px 0;
+                p{
+                    margin-bottom: 5px;
+                }
+                .label{
+                    min-width: 180px;
+                }
+                .value{
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                    word-break: break-word;
+                }
+            }
+        }
+        .billing-infor{
+            padding: 20px;
+            .content{
+                .row{
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+        }
+        .shipping-infor{
+            padding: 20px;
+            .content{
+                .row{
+                    display: flex;
+                    justify-content: space-between;
+                }
+            }
+        }
+    }
+}

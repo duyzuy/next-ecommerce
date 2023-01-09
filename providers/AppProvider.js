@@ -24,7 +24,16 @@ const AppProvider = (props) => {
 
   const fetchUserData = async (session) => {
     const response = await client.get('/user', { email: session.user.email });
+    console.log({ navigator, history });
 
+    // const navigator = window.navigator || null;
+    // if (navigator) {
+    //   navigator.geolocation.getCurrentPosition((position) => {
+    //     console.log(position);
+    //   });
+    // } else {
+    //   console.log('Geolocation is not supported by this browser.');
+    // }
     disPatch({
       type: FETCH_USER_DATA,
       payload: { ...response.data }

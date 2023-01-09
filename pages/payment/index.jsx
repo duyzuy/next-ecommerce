@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useRouter } from 'next/router';
 
-import styles from '../../styles/payment.module.scss';
-
 import { useSelector, useDispatch } from '../../providers/hooks';
 import { withBookingLayout } from '../../HOCs/withBookingLayout';
 import BookingSummary from '../../components/BookingSummary';
@@ -24,7 +22,8 @@ import {
   FETCH_SHIPPING_ZONE_SETTING,
   ADD_SHIPPING_LINES,
   ADD_SHIPPING_METHOD,
-  UPDATE_SHIPPING_ADDRESS
+  UPDATE_SHIPPING_ADDRESS,
+  FETCH_ORDER_DETAIL
 } from '../../constants/actions';
 import { shippingMethodType } from '../../constants/constants';
 import { getFeeFromShortCode } from '../../utils/helper';
@@ -32,9 +31,11 @@ import CustomLoader from '../../components/CustomLoader';
 import { client } from '../../api/client';
 import { toast } from '../../lib/toast';
 import { bookingSchema } from '../../utils/validate';
+
+import styles from '../../styles/payment.module.scss';
 const PaymentPage = (props) => {
   const { cities } = props;
-  console.log({ cities });
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -143,9 +144,8 @@ const PaymentPage = (props) => {
 
   const shippingMethodsFilter = useMemo(() => {
     const userShippingInfor =
-      (bookingInfor.orderInfor.isDifferenceShipping &&
-        bookingInfor.orderInfor.shipping) ||
-      bookingInfor.orderInfor.billing;
+      (bookingInfor.isDifferenceShipping && bookingInfor.shipping) ||
+      bookingInfor.billing;
 
     let zonesShipping = {};
     const isExistsPostCode = (arr) => {
@@ -268,40 +268,49 @@ const PaymentPage = (props) => {
 
   const onSubmitOrder = useCallback(async () => {
     console.log({ bookingInfor });
-    const { orderInfor } = bookingInfor;
+    const {
+      billing,
+      shipping,
+      paymentMethod,
+      shippingMethod,
+      isDifferenceShipping,
+      products,
+      coupons,
+      isAcceptTerm
+    } = bookingInfor;
 
     //collect format data to validate before create order
     let dataSubmit = {
-      paymentMethod: orderInfor.paymentMethod,
-      paymentMethodTitle: orderInfor.paymentMethodTitle,
+      paymentMethodId: paymentMethod.id,
+      paymentMethodTitle: paymentMethod.title,
       setPaid: false,
-      isDifferenceShipping: orderInfor.isDifferenceShipping,
+      isDifferenceShipping: isDifferenceShipping,
       billing: {
-        ...orderInfor.billing,
-        country: orderInfor.billing.country.value,
-        city: orderInfor.billing.city.value,
-        state: orderInfor.billing.district?.value || ''
+        ...billing,
+        country: billing.country.value,
+        city: billing.city.value === '' ? null : billing.city.text,
+        state: billing.district?.text || ''
       },
       shipping: {
-        ...orderInfor.billing,
-        country: orderInfor.billing.country.value,
-        city: orderInfor.billing.city.value,
-        state: orderInfor.billing.district?.value || ''
+        ...billing,
+        country: billing.country.value,
+        city: billing.city.value === '' ? null : billing.city.text,
+        state: billing.district?.text || ''
       },
-      lineItems: [...orderInfor.lineItems],
-      shippingLines: [...orderInfor.shippingLines],
-      couponLines: [...orderInfor.couponLines],
-      isAcceptTerm: bookingInfor.isAcceptTerm
+      lineItems: [...products.items],
+      shippingLines: [{ ...shippingMethod }],
+      couponLines: [...coupons],
+      isAcceptTerm: isAcceptTerm
     };
 
-    if (orderInfor.isDifferenceShipping) {
+    if (isDifferenceShipping) {
       dataSubmit = {
         ...dataSubmit,
         shipping: {
-          ...orderInfor.shipping,
-          country: orderInfor.shipping.country.value,
-          city: orderInfor.shipping.city.value,
-          state: orderInfor.shipping.district?.value || ''
+          ...shipping,
+          country: shipping.country.value,
+          city: shipping.city.value === '' ? null : shipping.city.text,
+          state: shipping.district?.text || ''
         }
       };
     }
@@ -314,8 +323,20 @@ const PaymentPage = (props) => {
         { abortEarly: false }
       )
       .then(async (data) => {
+        const lineItems = data.lineItems.map((item) => ({
+          product_id: item.id,
+          quantity: item.quantity
+        }));
+        const shippingLines = data.shippingLines.map((item) => ({
+          method_id: item.method_id,
+          method_title: item.method_title,
+          total: item.total
+        }));
+        const couponLines = data.couponLines.map((coupon) => ({
+          code: coupon.code
+        }));
         const orderResponse = await client.post(`order/create`, {
-          payment_method: data.paymentMethod,
+          payment_method: data.paymentMethodId,
           payment_method_title: data.paymentMethodTitle,
           set_paid: false,
           billing: {
@@ -324,7 +345,7 @@ const PaymentPage = (props) => {
             address_1: data.billing.address,
             address_2: data.billing.address,
             city: data.billing.city,
-            state: data.billing.district,
+            state: data.billing.state,
             postcode: data.billing.postCode,
             country: data.billing.country,
             email: data.billing.email,
@@ -336,15 +357,24 @@ const PaymentPage = (props) => {
             address_1: data.shipping.address,
             address_2: data.shipping.address,
             city: data.shipping.city,
-            state: data.shipping.district,
+            state: data.shipping.state,
             postcode: data.shipping.postCode,
             country: data.shipping.country
           },
-          line_items: [...data.lineItems],
-          shipping_lines: [...data.shippingLines],
-          coupon_lines: []
+          line_items: [...lineItems],
+          shipping_lines: [...shippingLines],
+          coupon_lines: [...couponLines],
+          customer_note: bookingInfor.orderNote,
+          customer_id: 0, //default guest
+          customer_user_agent: '',
+          customer_ip_address: ''
         });
-        console.log({ orderResponse, data });
+        if (orderResponse.status === 'oke') {
+          dispatch({
+            type: FETCH_ORDER_DETAIL,
+            payload: { ...orderResponse.data }
+          });
+        }
       })
       .catch((err) => {
         let errorMessage = {};
@@ -398,7 +428,7 @@ const PaymentPage = (props) => {
             <form>
               <PaymentBillingForm
                 formKey="billing"
-                data={bookingInfor?.orderInfor?.billing}
+                data={bookingInfor?.billing}
                 onChange={handleChange}
                 countries={countries}
                 cities={cities}
@@ -408,14 +438,14 @@ const PaymentPage = (props) => {
                 <div className="shipping__form--header">
                   <div
                     className={
-                      (bookingInfor.orderInfor.isDifferenceShipping &&
+                      (bookingInfor.isDifferenceShipping &&
                         'form__check checked') ||
                       'form__check'
                     }
                     onClick={() =>
                       handleChange(
                         'isDifferenceShipping',
-                        !bookingInfor.orderInfor.isDifferenceShipping
+                        !bookingInfor.isDifferenceShipping
                       )
                     }
                   >
@@ -423,10 +453,10 @@ const PaymentPage = (props) => {
                     <p>Giao hàng tới địa chỉ khác ?</p>
                   </div>
                 </div>
-                {(bookingInfor.orderInfor.isDifferenceShipping && (
+                {(bookingInfor.isDifferenceShipping && (
                   <PaymentShippingForm
                     formKey="shipping"
-                    data={bookingInfor?.orderInfor?.shipping}
+                    data={bookingInfor?.shipping}
                     onChange={handleChange}
                     countries={countries}
                     cities={cities}
@@ -447,8 +477,7 @@ const PaymentPage = (props) => {
                       shippingMethodsFilter?.map((method) => (
                         <div
                           className={`shipping__method ${
-                            bookingInfor?.orderInfor?.shippingMethod?.id ===
-                            method.id
+                            bookingInfor?.shippingMethod?.id === method.id
                               ? 'active'
                               : ''
                           }`}
@@ -477,7 +506,7 @@ const PaymentPage = (props) => {
                   noResize
                   label="Ghi chú"
                   placeholder="Lưu ý khi giao hàng..."
-                  value={bookingInfor?.orderInfor?.orderNote}
+                  value={bookingInfor?.orderNote}
                   rows={4}
                   onChange={(value) => handleChange('orderNote', value)}
                 />

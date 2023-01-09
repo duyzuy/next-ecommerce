@@ -9,8 +9,8 @@ import { toast } from '../lib/toast';
 import { useDispatch, useSelector } from '../providers/hooks';
 import {
   UPDATE_PRICE_ON_CART,
-  CHANGE_PAYMENT_METHOD,
-  UPDATE_PAYMENT_TERM
+  UPDATE_PAYMENT_TERM,
+  SELECT_PAYMENT_METHOD
 } from '../constants/actions';
 import PaymentTypeItem from './PaymentTypeItem';
 import ProductSummaryItems from './ProductSummaryItems';
@@ -28,7 +28,7 @@ const BookingSummary = ({
   currency,
   router,
   page = 'cart',
-  isLoading = fasle,
+  isLoading = false,
   onSubmitOrder,
   errors
 }) => {
@@ -62,7 +62,7 @@ const BookingSummary = ({
       const usageCount = coupon.usage_count;
       const usedBy = coupon.used_by;
       const prdCategoryApply = coupon.product_categories;
-      console.log({ maximumAmount });
+
       //check minimum amount
       let nummberOfDiscount = minimumAmount;
       if (minimumAmount > subTotal) {
@@ -146,7 +146,7 @@ const BookingSummary = ({
       }
 
       //check limit usage and limit by user
-      if (usageCount > usageLimit) {
+      if (usageCount > usageLimit && usageLimit !== null) {
         toast({
           type: 'warning',
           message: `Số lượng sử dụng đã hết`
@@ -164,7 +164,7 @@ const BookingSummary = ({
             amount: coupon.amount,
             discountType: coupon.discount_type
           },
-          type: ACTIONS.ADD_CODE
+          action: ACTIONS.ADD_CODE
         }
       });
       toast({
@@ -183,7 +183,7 @@ const BookingSummary = ({
       type: UPDATE_PRICE_ON_CART,
       payload: {
         couponCode: code,
-        type: ACTIONS.REMOVE_CODE
+        action: ACTIONS.REMOVE_CODE
       }
     });
 
@@ -194,11 +194,11 @@ const BookingSummary = ({
   }, []);
 
   const onSelectPaymentMethod = (payment) => {
+    console.log(payment);
     dispatch({
-      type: CHANGE_PAYMENT_METHOD,
+      type: SELECT_PAYMENT_METHOD,
       payload: {
-        paymentMethod: payment.id,
-        paymentMethodTitle: payment.title
+        ...payment
       }
     });
   };
@@ -222,43 +222,47 @@ const BookingSummary = ({
       onSubmitOrder();
     }
   }, [page, bookingInfor]);
-  return (
-    <div className={`booking__summary ${page}`}>
-      <PromotionCode
-        code={bookingInfor.promotionCode}
-        onApplyCode={handleApplyCode}
-        hasPromotion={bookingInfor.hasPromotion}
-        onRemoveCode={handleRemoveCode}
-      />
 
-      {(page === 'payment' && (
-        <ProductSummaryItems data={bookingItems} currency={currency} />
-      )) || <></>}
-      <SubtotalSummary bookingInfor={bookingInfor} currency={currency} />
+  if (page === 'thankyou')
+    return (
+      <div className={`booking__summary ${page}`}>
+        <PromotionCode
+          code={bookingInfor.promotionCode}
+          onApplyCode={handleApplyCode}
+          hasPromotion={bookingInfor.hasPromotion}
+          onRemoveCode={handleRemoveCode}
+        />
 
-      <div className="booking__summary--payment-gate">
-        {(isLoading && <CustomLoader inline="centered" size="small" />) ||
-          paymentGateWayActive.map((item, index) => (
-            <PaymentTypeItem
-              data={item}
-              key={item.id}
-              active={bookingInfor.orderInfor.paymentMethod}
-              onSelectPaymentMethod={onSelectPaymentMethod}
-            />
-          ))}
+        {(page === 'payment' && (
+          <ProductSummaryItems data={bookingItems} currency={currency} />
+        )) || <></>}
+        <SubtotalSummary data={bookingInfor} currency={currency} />
+        {(page === 'payment' && (
+          <div className="booking__summary--payment-gate">
+            {(isLoading && <CustomLoader inline="centered" size="small" />) ||
+              paymentGateWayActive.map((item, index) => (
+                <PaymentTypeItem
+                  data={item}
+                  key={item.id}
+                  curentMethod={bookingInfor?.paymentMethod}
+                  onSelectPaymentMethod={onSelectPaymentMethod}
+                />
+              ))}
+          </div>
+        )) || <></>}
+        {(page === 'payment' && (
+          <PaymentTerm
+            onAcceptTerm={handleAcceptTerm}
+            isAccept={bookingInfor.isAcceptTerm}
+            error={errors?.isAcceptTerm}
+          />
+        )) || <></>}
+        <div className="booking__summary--actions">
+          <Button color="primary" onClick={onSubmitButton}>
+            {(page === 'cart' && 'Tiến hành thanh toán ?') || 'Thanh toán ngay'}
+          </Button>
+        </div>
       </div>
-      <PaymentTerm
-        onAcceptTerm={handleAcceptTerm}
-        isAccept={bookingInfor.isAcceptTerm}
-        error={errors.isAcceptTerm}
-      />
-      <div className="booking__summary--actions">
-        <Button color="primary" onClick={onSubmitButton}>
-          {(page === 'cart' && 'Tiến hành thanh toán ?') || 'Thanh toán ngay'}
-        </Button>
-      </div>
-    </div>
-  );
+    );
 };
-
 export default memo(BookingSummary);
