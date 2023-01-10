@@ -10,9 +10,11 @@ export function middleware(req) {
   //     { status: 401, headers: { 'content-type': 'application/json' } }
   //   );
   // }
+  const response = NextResponse.next();
+  console.log({ req, response });
 }
 
 // See "Matching Paths" below to learn more
 export const config = {
-  matcher: '/api/:order*'
+  matcher: ['/payment']
 };

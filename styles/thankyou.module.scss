@@ -18,9 +18,18 @@
         .col-right {
             width: 35%;
         }
-        .order_infor{
+        .thankyou__text{
+            margin-bottom: 30px;
+            text-align: center;
+            svg{
+                width: 40px;
+                height: 40px;
+            }
+        }
+        .order_summary{
             padding: 20px;
-            background-color: #f1f1f1;
+            background-color: #f4f8ff;
+            border-radius: 20px;
             .row{
                 display: flex;
                 padding: 5px 0;
@@ -28,7 +37,8 @@
                     margin-bottom: 5px;
                 }
                 .label{
-                    min-width: 180px;
+                    width: 140px;
+                    font-weight: bold;
                 }
                 .value{
                     white-space: pre-wrap;
@@ -37,23 +47,32 @@
                 }
             }
         }
-        .billing-infor{
-            padding: 20px;
-            .content{
-                .row{
-                    display: flex;
-                    justify-content: space-between;
-                }
-            }
+        .booking__summary--subtoal{
+            max-width: 250px;
+            margin-left: auto;
         }
+        .booking__summary--items{
+
+        }
+     
+        .billing-infor, 
         .shipping-infor{
-            padding: 20px;
+           margin-bottom: 20px;
             .content{
                 .row{
                     display: flex;
-                    justify-content: space-between;
+                    padding: 5px 0;
+                    .label{
+                        min-width: 180px;
+                    }
+                    .value{
+                        white-space: pre-wrap;
+                        word-wrap: break-word;
+                        word-break: break-word;
+                    }
                 }
             }
         }
+       
     }
 }
