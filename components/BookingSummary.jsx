@@ -1,5 +1,4 @@
 import { memo, useCallback, useMemo, useEffect } from 'react';
-import PromotionCode from '../container/Promotion';
 import { formatPrice } from '../helpers/product';
 import Button from './Button';
 import { client } from '../api/client';
@@ -12,6 +11,7 @@ import {
   CHANGE_PAYMENT_METHOD,
   UPDATE_PAYMENT_TERM
 } from '../constants/actions';
+import PromotionCode from '../container/Promotion';
 import PaymentTypeItem from './PaymentTypeItem';
 import ProductSummaryItems from './ProductSummaryItems';
 import SubtotalSummary from './SubtotalSummary';
@@ -41,7 +41,7 @@ const BookingSummary = ({
     const response = await client.get(`coupon`, {
       code: code
     });
-    console.log(response);
+    console.log({ response });
     if (response.status === 200 && response.data.length > 0) {
       const coupon = response.data[0];
       const subTotal = bookingInfor.products.subTotal;
@@ -62,6 +62,19 @@ const BookingSummary = ({
       const usageCount = coupon.usage_count;
       const usedBy = coupon.used_by;
       const prdCategoryApply = coupon.product_categories;
+      const excludeSaleItem = coupon.exclude_sale_items;
+
+      if (excludeSaleItem) {
+        const hasItemOnSale = bookingItems.find((item) => item.onSale === true);
+        if (hasItemOnSale) {
+          toast({
+            type: 'error',
+            message: `Mã giảm giá không áp dụng cho sản phẩm đang sale`
+          });
+          return;
+        }
+      }
+
       console.log({ maximumAmount });
       //check minimum amount
       let nummberOfDiscount = minimumAmount;

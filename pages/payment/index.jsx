@@ -34,7 +34,7 @@ import { toast } from '../../lib/toast';
 import { bookingSchema } from '../../utils/validate';
 const PaymentPage = (props) => {
   const { cities } = props;
-  console.log({ cities });
+
   const router = useRouter();
   const dispatch = useDispatch();
 
@@ -324,7 +324,7 @@ const PaymentPage = (props) => {
             address_1: data.billing.address,
             address_2: data.billing.address,
             city: data.billing.city,
-            state: data.billing.district,
+            state: data.billing.district.text,
             postcode: data.billing.postCode,
             country: data.billing.country,
             email: data.billing.email,
@@ -336,19 +336,29 @@ const PaymentPage = (props) => {
             address_1: data.shipping.address,
             address_2: data.shipping.address,
             city: data.shipping.city,
-            state: data.shipping.district,
+            state: data.shipping.district.text,
             postcode: data.shipping.postCode,
             country: data.shipping.country
           },
           line_items: [...data.lineItems],
-          shipping_lines: [...data.shippingLines],
-          coupon_lines: []
+          shipping_lines: [
+            {
+              method_id: data.shippingLines[0].methodId,
+              method_title: data.shippingLines[0].methodTitle,
+              total: data.shippingLines[0].total
+            }
+          ],
+          coupon_lines: [
+            {
+              code: data.couponLines[0].code
+            }
+          ]
         });
         console.log({ orderResponse, data });
       })
       .catch((err) => {
         let errorMessage = {};
-
+        console.log(err);
         err?.inner.forEach((err) => {
           const errKeys = err.path.split('.');
           if (errKeys.length > 1) {
@@ -505,6 +515,7 @@ const PaymentPage = (props) => {
     </>
   );
 };
+
 PaymentPage.booking = {
   loading: 'loading...',
   redirect: '/cart'
