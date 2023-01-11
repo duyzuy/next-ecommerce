@@ -1,9 +1,10 @@
 import { memo } from 'react';
-const PaymentTypeItem = ({ active, data, onSelectPaymentMethod }) => {
+const PaymentTypeItem = ({ curentMethod, data, onSelectPaymentMethod }) => {
   return (
     <div
       className={
-        (active === data.id && `payment__type active`) || 'payment__type'
+        (curentMethod.id === data.id && `payment__type active`) ||
+        'payment__type'
       }
     >
       <div

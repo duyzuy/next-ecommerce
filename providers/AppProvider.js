@@ -24,7 +24,6 @@ const AppProvider = (props) => {
 
   const fetchUserData = async (session) => {
     const response = await client.get('/user', { email: session.user.email });
-
     disPatch({
       type: FETCH_USER_DATA,
       payload: { ...response.data }

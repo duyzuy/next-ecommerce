@@ -29,7 +29,7 @@ const withBookingLayout = (Component, { title, step, styles }) => {
     }
   ];
 
-  return (props) => (
+  return (props) => {
     <Container>
       <div className={styles.wrapper}>
         <div className="page-header">
@@ -46,8 +46,8 @@ const withBookingLayout = (Component, { title, step, styles }) => {
           <Component {...props} />
         </div>
       </div>
-    </Container>
-  );
+    </Container>;
+  };
 };
 
 export { withBookingLayout };

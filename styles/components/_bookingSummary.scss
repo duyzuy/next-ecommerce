@@ -44,6 +44,9 @@
                 padding-right: 30px;
             }
         }
+        .item + .item {
+            border-top: 1px solid #f1f1f1;
+        }
     }
     &--payment-gate{
         .payment__type{
@@ -222,6 +225,7 @@
             border-radius: 30px;
             .code{
                 font-weight: bold;
+                text-transform: uppercase;
             }
             .btn-remove{
                 color: #0000008f;

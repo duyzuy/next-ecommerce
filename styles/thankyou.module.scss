@@ -1,0 +1,78 @@
+.wrapper {
+    margin-top: 60px;
+    :global .page-header{
+        margin-bottom: 30px;
+    }
+    
+    :global .page-body{
+        padding: 20px;
+        border-radius: 20px;
+        background-color: #ffff;
+        .inner_body{
+            display: flex;
+        }
+        .col-left {
+            width: 65%;
+            padding-right: 60px;
+        }
+        .col-right {
+            width: 35%;
+        }
+        .thankyou__text{
+            margin-bottom: 30px;
+            text-align: center;
+            svg{
+                width: 40px;
+                height: 40px;
+            }
+        }
+        .order_summary{
+            padding: 20px;
+            background-color: #f4f8ff;
+            border-radius: 20px;
+            .row{
+                display: flex;
+                padding: 5px 0;
+                p{
+                    margin-bottom: 5px;
+                }
+                .label{
+                    width: 140px;
+                    font-weight: bold;
+                }
+                .value{
+                    white-space: pre-wrap;
+                    word-wrap: break-word;
+                    word-break: break-word;
+                }
+            }
+        }
+        .booking__summary--subtoal{
+            max-width: 250px;
+            margin-left: auto;
+        }
+        .booking__summary--items{
+
+        }
+     
+        .billing-infor, 
+        .shipping-infor{
+           margin-bottom: 20px;
+            .content{
+                .row{
+                    display: flex;
+                    padding: 5px 0;
+                    .label{
+                        min-width: 180px;
+                    }
+                    .value{
+                        white-space: pre-wrap;
+                        word-wrap: break-word;
+                        word-break: break-word;
+                    }
+                }
+            }
+        }
+       
+    }
+}

@@ -8,6 +8,7 @@ const BookingRoute = ({ children }) => {
       router.push('/cart');
     }
   });
+
   if (!isPayment) {
     return <div>loading</div>;
   }

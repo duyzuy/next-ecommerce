@@ -35,7 +35,9 @@ export const loginSchema = yup.object().shape({
 });
 
 export const bookingSchema = yup.object().shape({
-  paymentMethod: yup.string().required('Vui lòng chọn phương thức thanh toán'),
+  paymentMethodId: yup
+    .string()
+    .required('Vui lòng chọn phương thức thanh toán'),
   paymentMethodTitle: yup
     .string()
     .required('Vui lòng chọn phương thức thanh toán'),

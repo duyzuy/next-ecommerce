@@ -13,7 +13,7 @@ import BookingRoute from '../components/BookingRoute';
 function MyApp(props) {
   const { Component, pageProps, appData } = props;
   const { device, ...rest } = appData;
-
+  console.log({ Component });
   const getLayout =
     Component.getLayout ||
     ((page) => (
