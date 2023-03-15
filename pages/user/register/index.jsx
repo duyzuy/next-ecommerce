@@ -3,11 +3,11 @@ import { Container, Header } from 'semantic-ui-react';
 import { wpClient } from '../../../api/client';
 import { customerSchema } from '../../../utils/validate';
 import * as Icon from 'react-feather';
-import styles from '../../../styles/register.module.scss';
 import Input from '../../../components/Input';
 import Button from '../../../components/Button';
 import Link from 'next/link';
 import Image from 'next/image';
+import styles from '../../../styles/register.module.scss';
 const Register = (props) => {
   const [userData, setUserData] = useState({});
   const [errors, setErrors] = useState([]);

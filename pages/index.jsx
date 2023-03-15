@@ -10,16 +10,25 @@ import {
 import ProductCatList from '../container/ProductCatList';
 import SingleBanner from '../container/SingleBanner';
 import styles from '../styles/home.module.scss';
-
+import CategoryItemList from '../components/common/Partials/CategoryItemList';
+import { Container } from 'semantic-ui-react';
 const Home = (props) => {
-  const { catListData, brand } = props;
+  const { catListData, brand, device, categories } = props;
 
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
       <div className="home__wrap">
-        <div className={styles.home__leadr}>
-          <TopPromote banner={TOP_PROMOTIONS} />
+        <div className={styles.promotion}>
+          <TopPromote banner={TOP_PROMOTIONS} isDesktop={device.isDesktop} />
+          {(!device.isDesktop && (
+            <div className="section__cat">
+              <Container>
+                <CategoryItemList items={categories} type="grid" length={8} />
+              </Container>
+            </div>
+          )) || <></>}
+
           <SingleBanner />
           <Brands data={brand} />
         </div>

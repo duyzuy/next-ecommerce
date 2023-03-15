@@ -38,12 +38,24 @@ const Brands = (props) => {
         <div className="ec__brand--list">
           <Swiper
             spaceBetween={20}
-            slidesPerView={6}
+            slidesPerView={3}
             scrollbar={{
               hide: true
             }}
             modules={[Scrollbar]}
             className="cat_list"
+            breakpoints={{
+              450: {
+                slidesPerView: 4
+              },
+
+              768: {
+                slidesPerView: 5
+              },
+              992: {
+                slidesPerView: 6
+              }
+            }}
           >
             {data.map((brand, index) => (
               <SwiperSlide key={index}>
