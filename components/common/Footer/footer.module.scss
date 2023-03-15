@@ -126,8 +126,27 @@
     background-color: #fff;
     border-radius: 20px;
     overflow: hidden;
+    .column {
+      @media screen and (max-width: 991px) {
+        flex-direction: column-reverse;
+      }
+    }
     .col-left {
       padding: 20px;
+      @media screen and (max-width: 991px) {
+        padding: 0 15px 40px;
+      }
+    }
+    .col-image {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      img {
+        object-fit: cover;
+      }
+      @media screen and (max-width: 991px) {
+        padding: 100px;
+      }
     }
     .ft__content ul {
       list-style-type: none;

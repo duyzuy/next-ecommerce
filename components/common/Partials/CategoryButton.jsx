@@ -1,9 +1,8 @@
 import React, { memo, useMemo } from 'react';
-import Link from 'next/link';
 
-const Promotion = ({ className, label, icon }) => {
+const CategoryButton = ({ className, label, icon }) => {
   const clss = useMemo(() => {
-    let cls = 'notify';
+    let cls = 'category';
     if (className) {
       cls = cls.concat(' ', className);
     }
@@ -16,15 +15,14 @@ const Promotion = ({ className, label, icon }) => {
     }
     return <></>;
   };
+
   return (
     <div className={clss}>
-      <Link href="/khuyen-mai">
-        <a className="item">
-          <IconComp />
-          {label && <p className="label">{label}</p>}
-        </a>
-      </Link>
+      <div className="item">
+        <IconComp />
+        {label && <p className="label">{label}</p>}
+      </div>
     </div>
   );
 };
-export default memo(Promotion);
+export default memo(CategoryButton);

@@ -17,12 +17,13 @@ const TopPromote = (props) => {
           <Grid.Column
             mobile={16}
             tablet={16}
-            computer={10}
+            computer={11}
             className="ec__promote--slide"
           >
             <Swiper
               spaceBetween={0}
               slidesPerView={1}
+              centeredSlides={true}
               pagination={{
                 dynamicBullets: true
               }}
@@ -65,7 +66,7 @@ const TopPromote = (props) => {
             <Grid.Column
               mobile={16}
               tablet={16}
-              computer={6}
+              computer={5}
               className="ec__promote--box"
             >
               <div className={styles.ec__box}>

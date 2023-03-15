@@ -10,7 +10,7 @@ export default function SEO({
     <Head>
       <title>{`${title} | ${siteTitle}`}</title>
       {/* <meta name="viewport" content="viewport-fit=cover" /> */}
-      <link rel="icon" href="/favicon.ico" />
+      <link rel="icon" href="/assets/images/favicon-sgh-red.svg" />
       <meta name="desciption" content={description} />
       <meta property="og:type" content="website" />
       <meta property="og:title" content={title} />

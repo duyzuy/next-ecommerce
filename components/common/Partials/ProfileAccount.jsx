@@ -2,7 +2,7 @@ import React, { memo, useMemo } from 'react';
 import Link from 'next/link';
 import * as Icon from 'react-feather';
 
-const ProfileAccount = ({ className, isAuthenticated }) => {
+const ProfileAccount = ({ className, isAuthenticated, label, icon }) => {
   const clss = useMemo(() => {
     let cls = 'profile';
     if (className) {
@@ -10,11 +10,19 @@ const ProfileAccount = ({ className, isAuthenticated }) => {
     }
     return cls;
   }, [className]);
+  const IconComp = () => {
+    if (icon && typeof icon === 'function') {
+      return <span className="ec_icon">{icon()}</span>;
+    }
+    return <></>;
+  };
+
   return (
     <div className={clss}>
       <Link href={`/user/${(isAuthenticated && 'profile') || 'login'}`}>
         <a className="item">
-          <Icon.User size={20} />
+          <IconComp />
+          {label && <p className="label">{label}</p>}
         </a>
       </Link>
       {(isAuthenticated && (

@@ -1,8 +1,10 @@
+import React, { memo, useMemo } from 'react';
 import Image from 'next/image';
 import { Container, Grid, Header, Icon } from 'semantic-ui-react';
-import styles from '../../styles/footer.module.scss';
+// import styles from '../../styles/footer.module.scss';
 import * as Icons from 'react-feather';
 import Link from 'next/link';
+import styles from './footer.module.scss';
 const Footer = () => {
   return (
     <div className={styles.ec_footer}>
@@ -188,7 +190,7 @@ const Footer = () => {
         </div>
         <div className="ec__absolute__footer">
           <Grid columns={2}>
-            <Grid.Column>
+            <Grid.Column computer={8} mobile={16}>
               <div className="col-left">
                 <div
                   className="ft__logo"
@@ -255,8 +257,8 @@ const Footer = () => {
                 </div>
               </div>
             </Grid.Column>
-            <Grid.Column>
-              <div className="image">
+            <Grid.Column computer={8} mobile={16}>
+              <div className="col-image">
                 <Image
                   src={'/assets/images/showroom.jpeg'}
                   layout="fill"
@@ -273,4 +275,4 @@ const Footer = () => {
   );
 };
 
-export default Footer;
+export default memo(Footer);

@@ -1,106 +1,123 @@
-.ec__card{
-    
-    background-color: #fff;
-    padding: 10px;
-    box-shadow: 0px 0px 12px rgb(0 0 0 / 6%);
-    border-radius: 10px;
-    height: 100%;
+.ec__card {
+  background-color: #fff;
+  padding: 10px;
+  box-shadow: 0px 0px 12px rgb(0 0 0 / 6%);
+  border-radius: 10px;
+  height: 100%;
+  cursor: pointer;
+  @media screen and (max-width: 991px) {
+    .arerage-number {
+      font-size: 11px;
+    }
+  }
+  .image {
+    padding: 10px 15px;
+    position: relative;
+    padding-top: 100%;
+  }
+  .ec__product--average {
+    display: flex;
+    align-items: center;
+    svg {
+      color: #ffc402;
+      fill: #ffc402;
+    }
+  }
+
+  &--image {
+    margin-bottom: 10px;
+    line-height: 0;
+    > span {
+      padding-top: 100%;
+    }
+    img {
+      object-fit: contain;
+    }
+  }
+  &--title {
+    font-weight: 400;
+    font-size: 16px;
+    color: #000;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    position: relative;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    height: 44px;
+    line-height: 22px;
+    -webkit-line-clamp: 2;
+    margin-bottom: 10px;
     cursor: pointer;
-    .image{
-        padding: 10px 15px;
-        position: relative;
-        padding-top: 100%;
+    @media screen and (max-width: 991px) {
+      font-size: 14px;
+      line-height: 20px;
+      height: 40px;
+    }
+  }
+  &--price {
+    .price {
+      margin-bottom: 0;
+      font-size: 18px;
+      color: #e91e63;
+      font-weight: bold;
 
+      ins {
+        text-decoration: none;
+      }
     }
-    .ec__product--average{
-        display: flex;
-        align-items: center;
-        svg{
-            color: #ffc402;
-            fill: #ffc402;
+    &.has-sale {
+      .price {
+        del {
+          margin-right: 15px;
         }
+        &.regular {
+          color: #3c3c3c;
+          opacity: 0.8;
+          font-size: 13px;
+          font-weight: normal;
+        }
+        .percent {
+          border: 1px solid #e91f63;
+          border-radius: 3px;
+          padding: 2px 5px;
+          color: #e91f63;
+          font-size: 11px;
+          display: inline-block;
+        }
+      }
     }
-    &--image{
-        padding: 10px;
-        margin-bottom: 10px;
-        >span{
-            padding-top: 100%
+    &.single {
+      margin-bottom: 20px;
+      .price {
+        font-size: 22px;
+      }
+      &.has-sale {
+        .price {
+          &.regular {
+            color: #3c3c3c;
+            opacity: 0.8;
+            font-size: 14px;
+            font-weight: normal;
+          }
         }
-        img{
-            object-fit: contain;
-        }
+      }
+    }
+    @media screen and (max-width: 991px) {
+      .price {
+        font-size: 15px;
+      }
+      &.has-sale {
+        .price {
+          &.regular {
+            font-size: 12px;
+          }
+          .percent {
+            padding: 0 3px;
 
-    }
-    &--title{
-        font-weight: 400;
-        font-size: 16px;
-        color: #000;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        position: relative;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        height: 44px;
-        line-height: 22px;
-        -webkit-line-clamp: 2;
-        margin-bottom: 10px;
-        cursor: pointer;
-       
-    }
-    &--price{
-     
-        .price{
-            margin-bottom: 0;
-            font-size: 18px;
-            color: #e91e63;
-            font-weight: bold;
-            margin-bottom: 5px;
-            ins{
-                text-decoration: none;
-            }
+            font-size: 11px;
+          }
         }
-        &.has-sale{
-            .price{
-               del{
-                margin-right: 15px;
-               }
-                &.regular{
-                    color: #3c3c3c;
-                    opacity: 0.8;
-                    font-size: 13px;
-                    font-weight: normal;
-                }
-                .percent{
-               
-                    border: 1px solid #e91f63;
-                    border-radius: 3px;
-                    padding: 2px 5px;
-                    color: #e91f63;
-                    font-size: 12px;
-                    display: inline-block;
-                  
-                
-                }
-            }
-        }
-        &.single{
-            margin-bottom: 20px;
-            .price{
-                font-size: 22px;
-            }
-            &.has-sale{
-                .price{
-                    &.regular{
-                        color: #3c3c3c;
-                        opacity: 0.8;
-                        font-size: 14px;
-                        font-weight: normal;
-                    }
-
-                }
-            }
-        }
- 
+      }
     }
- 
+  }
 }
