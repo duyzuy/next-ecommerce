@@ -97,19 +97,19 @@ const ProductCatList = (props) => {
           </span>
         </div>
         <div className="section-products">
-          <Grid columns={5}>
+          <div className="flx-row mobile-2 tablet-3 computer-5">
             {categoryData.lists.map((prd) => {
               return (
-                <Grid.Column key={prd.id}>
+                <div className="flx-col" key={prd.id}>
                   <Card
                     type={contentType.PRODUCT}
                     data={prd}
                     isLoading={isLoading}
                   />
-                </Grid.Column>
+                </div>
               );
             })}
-          </Grid>
+          </div>
         </div>
         <div className="section-footer">
           <Pagination

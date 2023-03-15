@@ -18,11 +18,23 @@ const HeaderBottom = (props) => {
       <Container>
         <Swiper
           spaceBetween={20}
-          slidesPerView={6}
+          slidesPerView={3}
           loop={false}
           freeMode={true}
           modules={[FreeMode, Pagination]}
           className="cat_list"
+          breakpoints={{
+            450: {
+              slidesPerView: 4
+            },
+
+            768: {
+              slidesPerView: 5
+            },
+            992: {
+              slidesPerView: 6
+            }
+          }}
         >
           {items?.map((item, index) => (
             <SwiperSlide key={item.id}>
@@ -44,7 +56,9 @@ const HeaderBottom = (props) => {
                       />
                     </div>
 
-                    <p className="sub--text">{item.name}</p>
+                    <p className="sub--text">
+                      <span>{item.name}</span>
+                    </p>
                   </a>
                 </Link>
               </div>

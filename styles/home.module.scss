@@ -1,13 +1,19 @@
-.home__leadr{
-    padding-top: 30px;
-    padding-bottom: 30px;
-    background-color: #fff;
+.promotion {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  background-color: #fff;
+  margin-bottom: 30px;
+  @media screen and (max-width: 991px) {
+    background-color: transparent;
+    z-index: 99;
+    margin-top: -100px;
+    position: relative;
+    padding-top: 0;
+  }
+  :global .ec__section {
     margin-bottom: 30px;
-    :global .ec__section{
-        margin-bottom: 30px;
-        &:last-child{
-            margin-bottom: 0;
-        }
-      }
-      
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
 }

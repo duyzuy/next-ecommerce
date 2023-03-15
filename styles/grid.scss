@@ -1,0 +1,155 @@
+.flx-row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-left: -10px;
+  margin-right: -10px;
+  .flx-col {
+    padding-left: 10px;
+    padding-right: 10px;
+    width: 100%;
+    flex-basis: 100%;
+  }
+  &.mobile-1 {
+    @media screen and (min-width: 768px) {
+      .flx-col {
+        width: 100%;
+        flex-basis: 100%;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      .flx-col {
+        width: 100%;
+        flex-basis: 100%;
+      }
+    }
+  }
+  &.mobile-2 {
+    @media screen and (min-width: 768px) {
+      .flx-col {
+        width: 50%;
+        flex-basis: 50%;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      .flx-col {
+        width: 50%;
+        flex-basis: 50%;
+      }
+    }
+  }
+  &.mobile-3 {
+    @media screen and (min-width: 768px) {
+      .flx-col {
+        width: 33.33%;
+        flex-basis: 33.33%;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      .flx-col {
+        width: 33.33%;
+        flex-basis: 33.33%;
+      }
+    }
+  }
+  &.mobile-4 {
+    @media screen and (min-width: 768px) {
+      .flx-col {
+        width: 25%;
+        flex-basis: 25%;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      .flx-col {
+        width: 25%;
+        flex-basis: 25%;
+      }
+    }
+  }
+  &.mobile-5 {
+    @media screen and (min-width: 768px) {
+      .flx-col {
+        width: 20%;
+        flex-basis: 20%;
+      }
+    }
+    @media screen and (max-width: 767px) {
+      .flx-col {
+        width: 20%;
+        flex-basis: 20%;
+      }
+    }
+  }
+
+  &.tablet-1 {
+    @media screen and (min-width: 992px) {
+      .flx-col {
+        width: 100%;
+        flex-basis: 100%;
+      }
+    }
+  }
+  &.tablet-2 {
+    @media screen and (min-width: 992px) {
+      .flx-col {
+        width: 50%;
+        flex-basis: 50%;
+      }
+    }
+  }
+  &.tablet-3 {
+    @media screen and (min-width: 992px) {
+      .flx-col {
+        width: 33.33%;
+        flex-basis: 33.33%;
+      }
+    }
+  }
+  &.tablet-4 {
+    @media screen and (min-width: 992px) {
+      .flx-col {
+        width: 25%;
+        flex-basis: 25%;
+      }
+    }
+  }
+  &.computer-1 {
+    @media screen and (min-width: 1200px) {
+      .flx-col {
+        width: 100%;
+        flex-basis: 100%;
+      }
+    }
+  }
+  &.computer-2 {
+    @media screen and (min-width: 1200px) {
+      .flx-col {
+        width: 50%;
+        flex-basis: 50%;
+      }
+    }
+  }
+  &.computer-3 {
+    @media screen and (min-width: 1200px) {
+      .flx-col {
+        width: 33.33%;
+        flex-basis: 33.33%;
+      }
+    }
+  }
+  &.computer-4 {
+    @media screen and (min-width: 1200px) {
+      .flx-col {
+        width: 25%;
+        flex-basis: 25%;
+      }
+    }
+  }
+  &.computer-5 {
+    @media screen and (min-width: 1200px) {
+      .flx-col {
+        width: 20%;
+        flex-basis: 20%;
+      }
+    }
+  }
+}

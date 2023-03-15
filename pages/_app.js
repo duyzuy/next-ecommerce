@@ -7,13 +7,15 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import 'semantic-ui-css/semantic.min.css';
 import 'swiper/css/bundle';
 import '../styles/global.scss';
+import '../styles/grid.scss';
 import '../lib/toast/style.scss';
 import { SessionProvider } from 'next-auth/react';
 import BookingRoute from '../components/BookingRoute';
+
 function MyApp(props) {
   const { Component, pageProps, appData } = props;
   const { device, ...rest } = appData;
-  console.log({ Component });
+
   const getLayout =
     Component.getLayout ||
     ((page) => (
@@ -56,11 +58,26 @@ MyApp.getInitialProps = async (ctx) => {
     per_page: 20,
     hide_empty: true
   });
-  // const UA = ctx.req.headers['user-agent'];
 
+  const userAgent = ctx.ctx.req.headers['user-agent'];
+  const isAndroid = Boolean(userAgent.match(/Android/i));
+  const isIos = Boolean(userAgent.match(/iPhone|iPad|iPod/i));
+  const isOpera = Boolean(userAgent.match(/Opera Mini/i));
+
+  const isMobile = isAndroid || isIos || isOpera;
+
+  const isDesktop = !isMobile;
+
+  console.log({ userAgent });
   return {
     appData: {
-      categories: categories
+      categories: categories,
+      device: {
+        isMobile,
+        isDesktop,
+        isAndroid,
+        isIos
+      }
     }
   };
 };

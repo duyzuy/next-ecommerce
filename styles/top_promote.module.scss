@@ -1,62 +1,67 @@
-
-.ec_promote{
-    :global .ec__promote--slide {
-        >.swiper{
-            border-radius: 10px;
-            overflow: hidden;
-        }
-       
-        .top-slide{
-            line-height: 0;
-            .slide-box{
-                position: absolute;
-                bottom: 20px;
-                left: 20px;
-                background-color: rgb(255 255 255 / 50%);
-                padding: 20px;
-                width: 240px;
-                backdrop-filter: blur(3px);
-                border-radius: 10px;
-                .title{
-                    color: #000;
-                    font-size: 16px;
-                }
-            }
-            .slide-btn{
-                color: #000;
-                display: inline-block;
-                line-height: 1.5;
-                .icon{
-                    margin-left: 5px;
-                    svg{
-                        position: relative;
-                        top: 2px;
-                    }
-                  
-                }
-            }
-        }
+.ec_promote {
+  :global .ec__promote--slide {
+    > .swiper {
+      border-radius: 10px;
+      overflow: hidden;
     }
-}
-.ec__box{
 
-    :global .ec__box--item{
-        background-color: #f1f1f1;
-        margin-bottom: 15px;
-        padding: 10px 20px;
+    .top-slide {
+      line-height: 0;
+      .slide-box {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background-color: rgb(255 255 255 / 50%);
+        padding: 20px;
+        width: 240px;
+        backdrop-filter: blur(3px);
         border-radius: 10px;
-        .ec__box--content h4{
-            margin-bottom: 5px;
-            text-transform: uppercase;
+
+        .title {
+          color: #000;
+          font-size: 16px;
         }
+        @media screen and (max-width: 991px) {
+          padding: 10px;
+          .title {
+            color: #000;
+            font-size: 14px;
+          }
+        }
+      }
+      .slide-btn {
+        color: #000;
+        display: inline-block;
+        line-height: 1.5;
+        .icon {
+          margin-left: 5px;
+          svg {
+            position: relative;
+            top: 2px;
+          }
+        }
+      }
     }
+  }
+}
+.ec__box {
+  :global .ec__box--item {
+    background-color: #f1f1f1;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    border-radius: 10px;
+    .ec__box--content h4 {
+      margin-bottom: 5px;
+      text-transform: uppercase;
+    }
+  }
 }
 
-.ec__box--item{
-    margin-bottom: 10px;
+.ec__box--item {
+  margin-bottom: 10px;
 }
 .ec__brand-item {
-    :global .ec__brand--thumbnail{
-        position: relative;
-    }
+  :global .ec__brand--thumbnail {
+    position: relative;
+  }
 }
