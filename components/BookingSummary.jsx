@@ -41,7 +41,7 @@ const BookingSummary = ({
     const response = await client.get(`coupon`, {
       code: code
     });
-    console.log({ response });
+
     if (response.status === 200 && response.data.length > 0) {
       const coupon = response.data[0];
       const subTotal = bookingInfor.products.subTotal;
@@ -62,7 +62,6 @@ const BookingSummary = ({
       const usageCount = coupon.usage_count;
       const usedBy = coupon.used_by;
       const prdCategoryApply = coupon.product_categories;
-<<<<<<< HEAD
       const excludeSaleItem = coupon.exclude_sale_items;
 
       if (excludeSaleItem) {
@@ -76,10 +75,6 @@ const BookingSummary = ({
         }
       }
 
-      console.log({ maximumAmount });
-=======
-
->>>>>>> refs/remotes/origin/main
       //check minimum amount
       let nummberOfDiscount = minimumAmount;
       if (minimumAmount > subTotal) {
