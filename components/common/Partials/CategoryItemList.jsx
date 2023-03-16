@@ -40,18 +40,18 @@ const CategoryItemList = (props) => {
         }}
       >
         {itemFilter?.map((item, index) => (
-          <SwiperSlide key={item.id}>
+          <SwiperSlide key={item?.id}>
             <div className="ec__cat--item">
-              <Link href={`/product-cat/${item.slug}`}>
+              <Link href={`/product-cat/${item?.slug}`}>
                 <a className="ec__cat--link">
                   <div className="ec__cat--thumbnail">
                     <Image
                       src={
-                        item.image !== null
-                          ? item.image.src
+                        item?.image !== null
+                          ? item?.image?.src
                           : '/assets/images/image.svg'
                       }
-                      alt={item.name}
+                      alt={item?.name}
                       width={100}
                       height={100}
                       layout="responsive"
@@ -60,7 +60,7 @@ const CategoryItemList = (props) => {
                   </div>
 
                   <p className="sub--text">
-                    <span>{item.name}</span>
+                    <span>{item?.name}</span>
                   </p>
                 </a>
               </Link>
@@ -73,17 +73,17 @@ const CategoryItemList = (props) => {
     return (
       <div className="ec__cat--lists grid">
         {itemFilter?.map((item, index) => (
-          <div className="ec__cat--item" key={item.id}>
-            <Link href={`/product-cat/${item.slug}`}>
+          <div className="ec__cat--item" key={item?.id}>
+            <Link href={`/product-cat/${item?.slug}`}>
               <a className="ec__cat--link">
                 <div className="ec__cat--thumbnail">
                   <Image
                     src={
                       item.image !== null
-                        ? item.image.src
+                        ? item?.image.src
                         : '/assets/images/image.svg'
                     }
-                    alt={item.name}
+                    alt={item?.name}
                     width={100}
                     height={100}
                     layout="responsive"
@@ -92,7 +92,7 @@ const CategoryItemList = (props) => {
                 </div>
 
                 <p className="sub--text">
-                  <span>{item.name}</span>
+                  <span>{item?.name}</span>
                 </p>
               </a>
             </Link>

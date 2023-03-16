@@ -45,7 +45,6 @@ const Home = (props) => {
 };
 
 export async function getServerSideProps(ctx) {
-  console.log('regeneration home page');
   const CATEGORIES = [
     {
       id: 19,

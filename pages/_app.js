@@ -11,6 +11,7 @@ import '../styles/grid.scss';
 import '../lib/toast/style.scss';
 import { SessionProvider } from 'next-auth/react';
 import BookingRoute from '../components/BookingRoute';
+import { getVerticalMenuItem } from '../api/menu';
 
 function MyApp(props) {
   const { Component, pageProps, appData } = props;
@@ -54,11 +55,23 @@ function MyApp(props) {
 }
 
 MyApp.getInitialProps = async (ctx) => {
-  const categories = await getCategories({
+  let categories = [];
+
+  const response = await getCategories({
     per_page: 20,
     hide_empty: true
   });
-
+  const menuItem = await getVerticalMenuItem();
+  console.log({ menuItem });
+  if (response.status === 500) {
+    ctx.ctx.res.writeHead(500, {
+      Location: 'http://localhost:3000/500',
+      'Content-Type': 'text/html; charset=utf-8'
+    });
+    ctx.ctx.res.end();
+  } else {
+    categories = response.data;
+  }
   const userAgent = ctx.ctx.req.headers['user-agent'];
   const isAndroid = Boolean(userAgent.match(/Android/i));
   const isIos = Boolean(userAgent.match(/iPhone|iPad|iPod/i));
@@ -66,15 +79,18 @@ MyApp.getInitialProps = async (ctx) => {
 
   const isMobile = isAndroid || isIos || isOpera;
 
-  const isDesktop = !isMobile;
+  // 'primary' => __( 'Main Menu', 'saigonhomekitchen' ),
+  //   'vertical' => __( 'vertical Menu', 'saigonhomekitchen' ),
+  //   'primary_mobile' => __( 'Main Menu - Mobile', 'saigonhomekitchen' ),
+  //   'footer' => __( 'Footer Menu', 'saigonhomekitchen' ),
+  //   'top_bar_nav' => __( 'Top Bar Menu', 'saigonhomekitchen' ),
 
-  console.log({ userAgent });
   return {
     appData: {
       categories: categories,
       device: {
         isMobile,
-        isDesktop,
+        isDesktop: !isMobile,
         isAndroid,
         isIos
       }

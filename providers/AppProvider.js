@@ -7,13 +7,13 @@ import { useSession } from 'next-auth/react';
 import { client } from '../api/client';
 import { settingType } from '../constants/constants';
 const AppProvider = (props) => {
-  const disPatch = useDispatch();
+  const dispatch = useDispatch();
   const { data: session, status } = useSession();
 
   const onDispatchSetting = useCallback(async () => {
     const generalSetting = await getSetting(settingType.GENERAL);
 
-    disPatch({
+    dispatch({
       type: FETCH_GENERAL_SETTING,
       payload: {
         settingValue: generalSetting,
@@ -24,7 +24,7 @@ const AppProvider = (props) => {
 
   const fetchUserData = async (session) => {
     const response = await client.get('/user', { email: session.user.email });
-    disPatch({
+    dispatch({
       type: FETCH_USER_DATA,
       payload: { ...response.data }
     });

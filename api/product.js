@@ -5,15 +5,25 @@ export const getCategories = async (params) => {
       ...params
     })
     .then((response) => {
-      return response.data.map((cat) => ({
+      const data = response.data.map((cat) => ({
         id: cat.id,
         slug: cat.slug,
         image: cat.image,
         name: cat.name
       }));
+
+      return {
+        status: response.status,
+        statusText: response.statusText,
+        data: data
+      };
     })
     .catch((error) => {
-      return error.response;
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
     });
 };
 
@@ -56,7 +66,11 @@ export const getProductListByCatId = async (catId, params) => {
       };
     })
     .catch((error) => {
-      return error.response.data;
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
     });
 };
 
@@ -76,7 +90,13 @@ export const getProductIdsByCatId = async (catId, queryObject) => {
         totalPage: res.headers['x-wp-totalpages']
       };
     })
-    .catch((error) => error.response.data);
+    .catch((error) => {
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
+    });
 };
 
 export const getCategoryBySlug = async (slug) => {
@@ -94,8 +114,12 @@ export const getCategoryBySlug = async (slug) => {
         data: res.data
       };
     })
-    .catch((err) => {
-      return err.response.data;
+    .catch((error) => {
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
     });
 };
 
@@ -126,7 +150,13 @@ export const getSlugFromProducts = async (url, params) => {
         totalPage: res.headers['x-wp-totalpages']
       };
     })
-    .catch((error) => error.response);
+    .catch((error) => {
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
+    });
 };
 
 export const getProductByIds = async (ids) => {
@@ -158,8 +188,11 @@ export const getProductBySlug = async (slug) => {
       };
     })
     .catch((error) => {
-      console.log(error);
-      return error.response.data;
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
     });
 };
 
@@ -208,7 +241,13 @@ export const getProductsByIds = async (ids) => {
       }));
       return prds;
     })
-    .catch((error) => error.response.data);
+    .catch((error) => {
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
+    });
 };
 
 export const getHomePageContent = async (url, params) => {};
@@ -223,7 +262,11 @@ export const createProductReview = async (prdId, data) => {
       return res.data;
     })
     .catch((error) => {
-      return error.response.data;
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
     });
 };
 
@@ -244,5 +287,11 @@ export const getProductCategoryDetail = async (catId) => {
         count: res.data.count
       }
     }))
-    .catch((error) => error.response.data);
+    .catch((error) => {
+      return {
+        status: error.response.status,
+        statusText: error.response.statusText,
+        data: error.response.data
+      };
+    });
 };
