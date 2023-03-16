@@ -61,14 +61,15 @@ MyApp.getInitialProps = async (ctx) => {
     per_page: 20,
     hide_empty: true
   });
-  const menuItem = await getVerticalMenuItem();
-  console.log({ menuItem });
+  // const menuItem = await getVerticalMenuItem();
+  // console.log({ menuItem });
   if (response.status === 500) {
-    ctx.ctx.res.writeHead(500, {
-      Location: 'http://localhost:3000/500',
-      'Content-Type': 'text/html; charset=utf-8'
-    });
-    ctx.ctx.res.end();
+    console.log(response);
+    // ctx.ctx.res.writeHead(500, {
+    //   Location: 'http://localhost:3000/500',
+    //   'Content-Type': 'text/html; charset=utf-8'
+    // });
+    // ctx.ctx.res.end();
   } else {
     categories = response.data;
   }

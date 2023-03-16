@@ -1,0 +1,73 @@
+.ec_promote {
+  :global .ec__promote--slide {
+    > .swiper {
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .top-slide {
+      line-height: 0;
+      .slide-box {
+        position: absolute;
+        bottom: 20px;
+        left: 20px;
+        background-color: rgb(255 255 255 / 50%);
+        padding: 20px;
+        width: 240px;
+        backdrop-filter: blur(3px);
+        border-radius: 10px;
+
+        .title {
+          color: #000;
+          font-size: 16px;
+        }
+        @media screen and (max-width: 991px) {
+          padding: 10px;
+          .title {
+            color: #000;
+            font-size: 14px;
+          }
+        }
+      }
+      .slide-btn {
+        color: #000;
+        display: inline-block;
+        line-height: 1.5;
+        .icon {
+          margin-left: 5px;
+          svg {
+            position: relative;
+            top: 2px;
+          }
+        }
+      }
+    }
+  }
+}
+.ec__box {
+  :global {
+    height: 100%;
+    background: linear-gradient(45deg, #3f51b5, #03a9f4);
+    border-radius: 10px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    .ec__box--item {
+      padding: 10px 20px;
+      border-radius: 10px;
+      color: #fff;
+      .ec__box--content h4 {
+        margin-bottom: 5px;
+        text-transform: uppercase;
+      }
+    }
+  }
+}
+
+.ec__box--item {
+  margin-bottom: 10px;
+}
+.ec__brand-item {
+  :global .ec__brand--thumbnail {
+    position: relative;
+  }
+}

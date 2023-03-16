@@ -21,7 +21,7 @@ const CartPage = () => {
   const cartStorage = useCart();
 
   const bookingItems = bookingInfor.products.items;
-
+  console.log({ bookingInfor });
   const onSetQuantity = useCallback((type, id) => {
     const item = bookingItems.find((item) => item.id === id);
     if (!item) return;

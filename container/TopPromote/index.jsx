@@ -1,12 +1,12 @@
-import { Container, Grid, Header, Icon } from 'semantic-ui-react';
+import { Container, Grid } from 'semantic-ui-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper';
-import styles from '../../styles/top_promote.module.scss';
-import * as Icons from 'react-feather';
+import styles from './promo.module.scss';
+import * as Icon from 'react-feather';
 
 const TopPromote = (props) => {
   const { banner, isDesktop } = props;
@@ -52,7 +52,7 @@ const TopPromote = (props) => {
                         <a className="slide-btn">
                           Xem ngay
                           <span className="icon">
-                            <Icons.ArrowRight size={12} />
+                            <Icon.ArrowRight size={12} />
                           </span>
                         </a>
                       </Link>
