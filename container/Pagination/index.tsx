@@ -1,9 +1,20 @@
-import { useEffect, useState, useMemo, memo } from 'react';
+import React, { useMemo, memo } from 'react';
 import { usePagination } from '../../hooks/usePagination';
 import * as Icon from 'react-feather';
 import { DOT, paginateAction } from '../../constants/constants';
 
-const Pagination = (props) => {
+type PropsType = {
+  children?: JSX.Element;
+  type: string;
+  totalPage: number;
+  totalItem?: number;
+  currentPage: number;
+  onSetcurrentPage: (data: any) => void;
+  isLoading: boolean;
+  position: string;
+  showStatus: boolean;
+};
+const Pagination: React.FC<PropsType> = (props) => {
   const {
     type,
     totalPage,
@@ -21,7 +32,7 @@ const Pagination = (props) => {
     pageRange: 3
   });
 
-  const handleSelectPage = (action, page) => {
+  const onSelectPage = (action: string, page?: number) => {
     switch (action) {
       case paginateAction.NEXT:
         {
@@ -59,9 +70,9 @@ const Pagination = (props) => {
     return cls;
   }, [position, isLoading]);
 
-  if (paginations.length <= 1) {
-    return <></>;
-  }
+  // if (paginations.length <= 1) {
+  //   return <></>;
+  // }
   return (
     <div className={classes}>
       {(showStatus && (
@@ -76,7 +87,7 @@ const Pagination = (props) => {
       <div className="ec__pagination--inner">
         <div
           className="ec__pagination--item prev"
-          onClick={() => handleSelectPage(paginateAction.PREV)}
+          onClick={() => onSelectPage(paginateAction.PREV)}
         >
           <Icon.ArrowLeft size={14} />
         </div>
@@ -97,7 +108,12 @@ const Pagination = (props) => {
                       ? 'ec__pagination--item active'
                       : 'ec__pagination--item'
                   }
-                  onClick={() => handleSelectPage(paginateAction.SELECT, page)}
+                  onClick={() =>
+                    onSelectPage(
+                      paginateAction.SELECT,
+                      isNaN(Number(page)) ? 0 : Number(page)
+                    )
+                  }
                 >
                   <span key={page}>{page}</span>
                 </li>
@@ -107,7 +123,7 @@ const Pagination = (props) => {
         </ul>
         <div
           className="ec__pagination--item next"
-          onClick={() => handleSelectPage(paginateAction.NEXT)}
+          onClick={() => onSelectPage(paginateAction.NEXT)}
         >
           <Icon.ArrowRight size={14} />
         </div>

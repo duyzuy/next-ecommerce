@@ -36,16 +36,18 @@ const ProductCategory = (props) => {
 export default ProductCategory;
 
 export async function getStaticPaths() {
-  const categories = await getCategories({
+  const response = await getCategories({
     per_page: 24,
     hide_empty: true
   });
-
-  let paths = categories?.map((cat) => ({
-    params: {
-      slug: cat.slug
-    }
-  }));
+  let paths = [];
+  if (response.status === 200) {
+    paths = response.data?.map((cat) => ({
+      params: {
+        slug: cat.slug
+      }
+    }));
+  }
 
   return {
     paths: paths,

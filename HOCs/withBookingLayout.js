@@ -1,7 +1,7 @@
 import { Container, Header } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
 import BookingSteps from '../components/BookingSteps';
-const withBookingLayout = (Component, { title, step, styles }) => {
+const withBookingLayout = (Component, { title, page, styles }) => {
   const STEPS = [
     {
       step: 1,
@@ -29,25 +29,27 @@ const withBookingLayout = (Component, { title, step, styles }) => {
     }
   ];
 
-  return (props) => {
-    <Container>
-      <div className={styles.wrapper}>
-        <div className="page-header">
-          <Header
-            size="large"
-            textAlign="center"
-            style={{ marginBottom: '30px' }}
-          >
-            {title}
-          </Header>
-          <BookingSteps active={['selecting']} current={step} steps={STEPS} />
+  return (props) => (
+    <>
+      <Container>
+        <div className={styles.wrapper}>
+          <div className="page-header">
+            <Header
+              size="large"
+              textAlign="center"
+              style={{ marginBottom: '30px' }}
+            >
+              {title}
+            </Header>
+            <BookingSteps active={['selecting']} current={page} steps={STEPS} />
+          </div>
+          <div className="page-body">
+            <Component {...props} />
+          </div>
         </div>
-        <div className="page-body">
-          <Component {...props} />
-        </div>
-      </div>
-    </Container>;
-  };
+      </Container>
+    </>
+  );
 };
 
 export { withBookingLayout };

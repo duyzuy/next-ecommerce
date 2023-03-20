@@ -1,11 +1,17 @@
 import Head from 'next/head';
 
-export default function SEO({
+type PropsType = {
+  title?: string;
+  description?: string;
+  siteTitle?: string;
+  thumbnail?: string;
+};
+const SEO: React.FC<PropsType> = ({
   title,
   description,
   siteTitle = 'Saigonhomekitchen',
-  image
-}) {
+  thumbnail
+}) => {
   return (
     <Head>
       <title>{`${title} | ${siteTitle}`}</title>
@@ -20,7 +26,8 @@ export default function SEO({
       <meta property="twitter:creator" content={`twiiter`} />
       <meta property="twitter:title" content={title} />
       <meta property="twitter:description" content={description} />
-      <meta property="og:image" content={image} />
+      <meta property="og:image" content={thumbnail} />
     </Head>
   );
-}
+};
+export default SEO;

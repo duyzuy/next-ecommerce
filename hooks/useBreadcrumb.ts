@@ -1,9 +1,15 @@
+import { NextRouter } from 'next/router';
+import React from 'react';
 import react, { useMemo } from 'react';
 import { ROUTES } from '../constants/route';
 import { isPathRoute } from '../utils/pathRoute';
-const useBreadcrumb = (router) => {
+import { BreadcrumbItemType } from '../model';
+
+const useBreadcrumb = (router: NextRouter): BreadcrumbItemType[] => {
   const items = useMemo(() => {
-    let breadItems = [{ id: 'home', path: '/', name: 'Trang chủ' }];
+    let breadItems: BreadcrumbItemType[] = [
+      { id: 'home', path: '/', name: 'Trang chủ' }
+    ];
     let pathName = router.pathname.split('/').slice(1);
 
     //hande product page
@@ -15,6 +21,17 @@ const useBreadcrumb = (router) => {
           id: ROUTES.product.id,
           path: ROUTES.product.path,
           name: ROUTES.product.name
+        }
+      ];
+    }
+    const postPath = ROUTES.post.path.split('/').slice(1);
+    if (isPathRoute(postPath, pathName)) {
+      breadItems = [
+        ...breadItems,
+        {
+          id: ROUTES.post.id,
+          path: ROUTES.post.path,
+          name: ROUTES.post.name
         }
       ];
     }
@@ -36,9 +53,8 @@ const useBreadcrumb = (router) => {
 
     return breadItems;
   }, [router.pathname]);
-  return {
-    breadItems: items
-  };
+
+  return items;
 };
 
 export { useBreadcrumb };

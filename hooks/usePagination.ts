@@ -1,8 +1,16 @@
 import { makeArrayFromNumber } from '../utils/helper';
 
 import { DOT } from '../constants/constants';
-const usePagination = ({ totalPage, currentPage, pageRange }) => {
-  let paginations = [];
+const usePagination = ({
+  totalPage = 1,
+  currentPage = 1,
+  pageRange = 3
+}: {
+  totalPage: number;
+  currentPage: number;
+  pageRange: number;
+}) => {
+  let paginations: (string | number)[] = [];
 
   const minimumPageNum = pageRange + 4; //next + prev + 2 dots;
   if (totalPage <= minimumPageNum) {

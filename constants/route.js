@@ -21,8 +21,13 @@ export const ROUTES = {
   },
   post: {
     id: 'post',
-    name: 'Post',
+    name: 'Blog',
     path: '/post'
+  },
+  postDetail: {
+    id: 'post',
+    name: 'post',
+    path: '/post/[slug]'
   },
   page: {
     id: 'page',

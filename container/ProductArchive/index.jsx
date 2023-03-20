@@ -18,7 +18,7 @@ const ProductArchive = (props) => {
 
   const [productData, setProductData] = useState(products.data);
   const [filter, setFilter] = useState({});
-  const { breadItems } = useBreadcrumb(router);
+  const breadItems = useBreadcrumb(router);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSelection = (select) => {

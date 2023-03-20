@@ -12,23 +12,33 @@ const BookingSteps = ({ active, current, steps }) => {
             clss = clss.concat(' ', 'current');
           }
 
-          const IconComp = () => {
-            if (typeof step.icon === 'function') {
-              return step.icon();
-            }
-            return step.icon;
-          };
-
           return (
-            <div key={step.key} className={clss}>
-              <div className="number">
-                <IconComp />
-              </div>
-              <div className="text">{step.name}</div>
-            </div>
+            <BookingStep
+              className={clss}
+              icon={step.icon}
+              key={step.key}
+              title={step.name}
+            />
           );
         })}
       </div>
+    </div>
+  );
+};
+const BookingStep = ({ isActive, className, title, icon }) => {
+  const IconComp = () => {
+    if (typeof icon === 'function') {
+      return <>{icon()}</>;
+    }
+    return <></>;
+  };
+
+  return (
+    <div className={className}>
+      <div className="number">
+        <IconComp />
+      </div>
+      <div className="text">{title}</div>
     </div>
   );
 };

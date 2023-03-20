@@ -5,6 +5,7 @@ import BookingSummary from '../../components/BookingSummary';
 import { useSelector } from '../../providers/hooks';
 import ProductSummaryItems from '../../components/ProductSummaryItems';
 import SubtotalSummary from '../../components/SubtotalSummary';
+import { PageBooking } from '../../constants/common';
 const ThankYouPage = () => {
   const bookingInfor = useSelector((state) => state.booking);
   const currency = useSelector((state) => {
@@ -135,7 +136,7 @@ const ThankYouPage = () => {
 
 export default withBookingLayout(ThankYouPage, {
   title: 'Thành công',
-  step: 'thankyou',
+  page: PageBooking.Thankyou,
   styles: styles
 });
 export async function getServerSideProps(ctx) {

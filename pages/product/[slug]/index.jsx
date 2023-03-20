@@ -30,7 +30,7 @@ const ProductDetail = (props) => {
   const router = useRouter();
   const { data, reviews, productRelated } = props;
 
-  const { breadItems } = useBreadcrumb(router);
+  const breadItems = useBreadcrumb(router);
   const [productReviews, setProductReviews] = useState(reviews);
   const [isShowPayment, setIsShowPayment] = useState(false);
   const dispatch = useDispatch();
@@ -159,7 +159,11 @@ const ProductDetail = (props) => {
   return (
     <div className={styles.ec__product__single}>
       <SEO title={data?.name} description="bep tu nhap khau chinh hang" />
-      <Breadcrumb items={breadCrumbItems} />
+      <div className="product-bred">
+        <Container>
+          <Breadcrumb items={breadCrumbItems} />
+        </Container>
+      </div>
       <Container>
         <div className={'ec__wrapper'}>
           <div className="ec__product--left">

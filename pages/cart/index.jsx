@@ -9,7 +9,7 @@ import CartItems from '../../components/CartItems';
 import BookingSummary from '../../components/BookingSummary';
 import CartEmpty from '../../components/CartEmpty';
 import { withBookingLayout } from '../../HOCs/withBookingLayout';
-
+import { PageBooking } from '../../constants/common';
 const CartPage = () => {
   const bookingInfor = useSelector((state) => state.booking);
   const currency = useSelector(
@@ -17,8 +17,8 @@ const CartPage = () => {
   );
   // const { items } = cart;
   const router = useRouter();
-  const disPatch = useDispatch();
-  const cartStorage = useCart();
+  const dispatch = useDispatch();
+  //const cartStorage = useCart();
 
   const bookingItems = bookingInfor.products.items;
   console.log({ bookingInfor });
@@ -26,7 +26,7 @@ const CartPage = () => {
     const item = bookingItems.find((item) => item.id === id);
     if (!item) return;
 
-    disPatch({
+    dispatch({
       type: UPDATE_CART,
       payload: {
         id: id,
@@ -69,7 +69,7 @@ const CartPage = () => {
 
 export default withBookingLayout(CartPage, {
   title: 'Giỏ hàng',
-  step: 'cart',
+  page: PageBooking.Cart,
   styles: styles
 });
 

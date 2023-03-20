@@ -43,14 +43,10 @@ client.put = (url, params) => {
 const wpClient = async (url, options = {}, method) => {
   const configs = {
     method: method ? method : 'POST',
-    // mode: 'cors',
     cache: 'no-cache',
-    // credentials: 'same-origin',
     headers: {
       'Content-Type': 'application/json'
     }
-    // redirect: 'follow',
-    // referrerPolicy: 'no-referrer'
   };
 
   const { body, headers } = options;
@@ -60,20 +56,27 @@ const wpClient = async (url, options = {}, method) => {
       ...headers
     };
   }
-  if (body && !isEmpty(body)) {
+  if (body && method === 'POST') {
     configs.body = JSON.stringify({ ...body });
   }
-
-  const baseUrl = `https://saigonhomekitchen.vn/wp-json/` + url;
+  let queryString = '';
+  if (!isEmpty(body) && method === 'GET') {
+    queryString = objectToQueryString(body);
+  }
+  const baseUrl = `https://saigonhomekitchen.vn/wp-json/` + url + queryString;
   const response = await fetch(baseUrl, { ...configs });
 
-  return response.json();
+  return {
+    status: response.status,
+    statusText: response.statusText,
+    data: await response.json()
+  };
 };
 
-wpClient.get = async (url, options = {}) => {
+wpClient.get = async (url, options = { body: {}, header: {} }) => {
   return await wpClient(url, options, 'GET');
 };
-wpClient.post = (url, options) => {
+wpClient.post = (url, options = { body: {}, header: {} }) => {
   return wpClient(url, options, 'POST');
 };
 

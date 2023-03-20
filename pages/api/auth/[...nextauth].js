@@ -33,7 +33,7 @@ export const authOptions = {
       },
       async authorize(credentials, req) {
         const user = await fetch(
-          `https://saigonhomekitchen.vn/wp-json/v1/user/login`,
+          `https://saigonhomekitchen.vn/wp-json/dv/v1/user/login`,
           {
             method: 'POST',
             headers: {

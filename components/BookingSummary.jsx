@@ -235,46 +235,45 @@ const BookingSummary = ({
     }
   }, [page, bookingInfor]);
 
-  if (page === 'thankyou')
-    return (
-      <div className={`booking__summary ${page}`}>
-        <PromotionCode
-          code={bookingInfor.promotionCode}
-          onApplyCode={handleApplyCode}
-          hasPromotion={bookingInfor.hasPromotion}
-          onRemoveCode={handleRemoveCode}
-        />
+  return (
+    <div className={`booking__summary ${page}`}>
+      <PromotionCode
+        code={bookingInfor.promotionCode}
+        onApplyCode={handleApplyCode}
+        hasPromotion={bookingInfor.hasPromotion}
+        onRemoveCode={handleRemoveCode}
+      />
 
-        {(page === 'payment' && (
-          <ProductSummaryItems data={bookingItems} currency={currency} />
-        )) || <></>}
-        <SubtotalSummary data={bookingInfor} currency={currency} />
-        {(page === 'payment' && (
-          <div className="booking__summary--payment-gate">
-            {(isLoading && <CustomLoader inline="centered" size="small" />) ||
-              paymentGateWayActive.map((item, index) => (
-                <PaymentTypeItem
-                  data={item}
-                  key={item.id}
-                  curentMethod={bookingInfor?.paymentMethod}
-                  onSelectPaymentMethod={onSelectPaymentMethod}
-                />
-              ))}
-          </div>
-        )) || <></>}
-        {(page === 'payment' && (
-          <PaymentTerm
-            onAcceptTerm={handleAcceptTerm}
-            isAccept={bookingInfor.isAcceptTerm}
-            error={errors?.isAcceptTerm}
-          />
-        )) || <></>}
-        <div className="booking__summary--actions">
-          <Button color="primary" onClick={onSubmitButton}>
-            {(page === 'cart' && 'Tiến hành thanh toán ?') || 'Thanh toán ngay'}
-          </Button>
+      {(page === 'payment' && (
+        <ProductSummaryItems data={bookingItems} currency={currency} />
+      )) || <></>}
+      <SubtotalSummary data={bookingInfor} currency={currency} />
+      {(page === 'payment' && (
+        <div className="booking__summary--payment-gate">
+          {(isLoading && <CustomLoader inline="centered" size="small" />) ||
+            paymentGateWayActive.map((item, index) => (
+              <PaymentTypeItem
+                data={item}
+                key={item.id}
+                curentMethod={bookingInfor?.paymentMethod}
+                onSelectPaymentMethod={onSelectPaymentMethod}
+              />
+            ))}
         </div>
+      )) || <></>}
+      {(page === 'payment' && (
+        <PaymentTerm
+          onAcceptTerm={handleAcceptTerm}
+          isAccept={bookingInfor.isAcceptTerm}
+          error={errors?.isAcceptTerm}
+        />
+      )) || <></>}
+      <div className="booking__summary--actions">
+        <Button color="primary" onClick={onSubmitButton}>
+          {(page === 'cart' && 'Tiến hành thanh toán?') || 'Thanh toán ngay'}
+        </Button>
       </div>
-    );
+    </div>
+  );
 };
 export default memo(BookingSummary);

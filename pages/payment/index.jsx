@@ -20,18 +20,15 @@ import {
   FETCH_SHIPPING_SETTING,
   FETCH_PAYMENT_GATEWAY_SETTING,
   FETCH_SHIPPING_ZONE_SETTING,
-  ADD_SHIPPING_LINES,
   ADD_SHIPPING_METHOD,
-  UPDATE_SHIPPING_ADDRESS,
   FETCH_ORDER_DETAIL
 } from '../../constants/actions';
 import { shippingMethodType } from '../../constants/constants';
 import { getFeeFromShortCode } from '../../utils/helper';
 import CustomLoader from '../../components/CustomLoader';
 import { client } from '../../api/client';
-import { toast } from '../../lib/toast';
 import { bookingSchema } from '../../utils/validate';
-
+import { PageBooking } from '../../constants/common';
 import styles from '../../styles/payment.module.scss';
 const PaymentPage = (props) => {
   const { cities } = props;
@@ -542,7 +539,7 @@ PaymentPage.booking = {
 
 export default withBookingLayout(PaymentPage, {
   title: 'Thanh toán',
-  step: 'payment',
+  page: PageBooking.Payment,
   styles: styles
 });
 export async function getServerSideProps(ctx) {
