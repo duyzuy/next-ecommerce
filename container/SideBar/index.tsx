@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
-import InputRange from '../../../../components/InputRange';
-import SliderRange from '../../../../components/SliderRange';
+import InputRange from '../../components/InputRange';
+import SliderRange from '../../components/SliderRange';
 const SideBar = (props: any) => {
   const { attribures } = props;
   const minPriceRef = useRef();

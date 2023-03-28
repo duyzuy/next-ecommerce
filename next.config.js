@@ -38,9 +38,9 @@ const nextConfig = {
     //   }
     // ]
   },
-  experimental: {
-    allowMiddlewareResponseBody: true
-  },
+  // experimental: {
+  //   allowMiddlewareResponseBody: true
+  // },
   env: {
     WC_CLIENT_URL: 'https://saigonhomekitchen.vn',
     WC_CLIENT_CUSTOMER_KEY: 'ck_da1d62166de972a98bfdb51ba1fc4e23230bd8df',

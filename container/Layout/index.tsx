@@ -1,21 +1,20 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Container, Header, Grid } from 'semantic-ui-react';
-import Card from '../../../../components/Card';
-import SideBar from '../Sidebar';
-import Pagination from '../../../../container/Pagination';
+import Card from '../../components/Card';
+import SideBar from '../SideBar';
+import Pagination from '../../container/Pagination';
 import ProductToolBar from '../ProductToolBar';
-import { contentType } from '../../../../constants/constants';
-import { productFilterValue } from '../../../../constants/product';
-import { updateQueryFromString } from '../../../../utils';
-
-import Breadcrumb from '../../../../components/BreadCrumb';
-import SEO from '../../../../components/common/Seo';
-import { useBreadcrumb } from '../../../../hooks/useBreadcrumb';
-import { client } from '../../../../api/client';
-import styles from './product.module.scss';
-import { ProductItemType } from '../../../../model/product';
-import { CategoryItemType } from '../../../../model/category';
-import { ProductAttributeType } from '../../../../model';
+import { contentType } from '../../constants/constants';
+import { productFilterValue } from '../../constants/product';
+import { updateQueryFromString } from '../../utils';
+import Breadcrumb from '../../components/BreadCrumb';
+import SEO from '../../components/common/Seo';
+import { useBreadcrumb } from '../../hooks/useBreadcrumb';
+import { client } from '../../api/client';
+import styles from '../../styles/product.module.scss';
+import { ProductItemType } from '../../model/product';
+import { CategoryItemType } from '../../model/category';
+import { ProductAttributeType } from '../../model';
 import { NextRouter } from 'next/router';
 type PropsType = {
   products?: {

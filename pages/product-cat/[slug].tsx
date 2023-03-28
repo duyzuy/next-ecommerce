@@ -12,20 +12,22 @@ import {
   getProductAttrTerms
 } from '../../api/ProductAttributes';
 import { useRouter } from 'next/router';
-import Layout from './components/Layout';
+import Layout from '../../container/Layout';
 
 import {
   ProductAttributeType,
   CategoryItemType,
   ProductsType
 } from '../../model';
-import { GetStaticProps } from 'next';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { ParsedUrlQuery } from 'querystring';
 
-const ProductCategory: React.FC<{
+type NextPagePropsType = {
   category: CategoryItemType;
   products: ProductsType;
   attribures: ProductAttributeType[];
-}> = (props) => {
+};
+const ProductCategory: NextPage<NextPagePropsType> = (props) => {
   const { category, products, attribures } = props;
   const router = useRouter();
   if (router.isFallback) {
@@ -46,7 +48,7 @@ const ProductCategory: React.FC<{
 
 export default ProductCategory;
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const response = await getCategories({
     per_page: 24,
     hide_empty: true
@@ -64,11 +66,15 @@ export async function getStaticPaths() {
     paths: paths,
     fallback: 'blocking' // can also be true or 'blocking'
   };
+};
+interface Params extends ParsedUrlQuery {
+  slug: string;
 }
-
-export const getStaticProps: GetStaticProps = async (ctx) => {
+export const getStaticProps: GetStaticProps<NextPagePropsType, Params> = async (
+  ctx
+) => {
   const { params, locales, locale } = ctx;
-  console.log({ ctx });
+  const { slug } = ctx.params as Params;
   let attribures = [];
   let products = {
     totalPage: 0,
@@ -77,7 +83,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
     data: []
   };
 
-  const category = await getCategoryBySlug(params.slug);
+  const category = await getCategoryBySlug(slug);
 
   if (category.statusCode === 404) {
     return {

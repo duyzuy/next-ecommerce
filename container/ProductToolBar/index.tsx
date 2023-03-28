@@ -1,5 +1,7 @@
-import Select from '../../components/Select';
 import { useMemo } from 'react';
+import Select from '../../components/Select';
+
+type PropsType = {};
 const ProductToolBar = ({
   filter,
   isLoading,

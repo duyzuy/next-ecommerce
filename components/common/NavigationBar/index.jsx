@@ -3,7 +3,7 @@ import CategoryButton from '../Partials/CategoryButton';
 import ProfileAccount from '../Partials/ProfileAccount';
 import Logo from '../Partials/Logo';
 import Promotion from '../Partials/Promotion';
-import styles from './navbar.module.scss';
+import styles from '../../../styles/navbar.module.scss';
 import * as Icon from 'react-feather';
 const NavigationBar = () => {
   return (

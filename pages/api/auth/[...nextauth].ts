@@ -1,14 +1,12 @@
-import NextAuth from 'next-auth';
+import NextAuth from 'next-auth/next';
+
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import {
-  getCustomerInfor,
-  getCustomerByEmail,
-  createCustomer
-} from '../../../api/customer';
+import { getCustomerByEmail, getCustomerInfor } from '../../../api/customer';
 import { USER_ROLES } from '../../../constants/roles';
-
-export const authOptions = {
+import { randomUUID, randomBytes } from 'crypto';
+import { NextAuthOptions } from 'next-auth';
+export const authOptions: NextAuthOptions = {
   session: {
     strategy: 'jwt',
 
@@ -113,12 +111,20 @@ export const authOptions = {
     },
     async session({ session, token, user }) {
       // Send properties to the client, like an access_token from a provider.
-      session.accessToken = token.accessToken;
+      // session.accessToken = token.accessToken;
 
-      session.user.role = token.role;
-      session.error = token.error;
-
-      return session;
+      // session.user.role = token.role;
+      // session.error = token.error;
+      let newSession = {
+        ...session,
+        user: {
+          ...session.user,
+          role: token.role
+        },
+        error: token.error,
+        accessToken: token.accessToken
+      };
+      return newSession;
     }
   },
   pages: {

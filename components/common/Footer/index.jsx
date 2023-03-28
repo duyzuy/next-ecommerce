@@ -1,10 +1,9 @@
 import React, { memo, useMemo } from 'react';
 import Image from 'next/image';
 import { Container, Grid, Header, Icon } from 'semantic-ui-react';
-// import styles from '../../styles/footer.module.scss';
 import * as Icons from 'react-feather';
 import Link from 'next/link';
-import styles from './footer.module.scss';
+import styles from '../../../styles/footer.module.scss';
 const Footer = () => {
   return (
     <div className={styles.ec_footer}>

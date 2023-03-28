@@ -5,7 +5,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper';
-import styles from './promo.module.scss';
+import styles from '../../styles/promo.module.scss';
 import * as Icon from 'react-feather';
 
 const TopPromote = (props) => {

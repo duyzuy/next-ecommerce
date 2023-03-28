@@ -13,7 +13,7 @@ import CategoryButton from '../Partials/CategoryButton';
 import ProfileAccount from '../Partials/ProfileAccount';
 import CategoryItemList from '../Partials/CategoryItemList';
 import Promotion from '../Partials/Promotion';
-import styles from './header.module.scss';
+import styles from '../../../styles/header.module.scss';
 const Header = (props) => {
   const { data: session, status } = useSession();
 

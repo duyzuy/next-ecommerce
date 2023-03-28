@@ -110,7 +110,7 @@ export const getProductIdsByCatId = async (catId, queryObject) => {
     });
 };
 
-export const getCategoryBySlug = async (slug) => {
+export const getCategoryBySlug = async (slug: string) => {
   return await wcApi
     .get(`products/categories`, { slug: slug })
     .then((res) => {

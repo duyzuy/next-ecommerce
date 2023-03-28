@@ -4,8 +4,7 @@ import { Container } from 'semantic-ui-react';
 import Breadcrumb from '../../../components/BreadCrumb';
 import { useRouter } from 'next/router';
 import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
-import { BreadcrumbItemType } from '../../../model';
-import styles from '../post.module.scss';
+import styles from '../../../styles/post.module.scss';
 import Image from 'next/image';
 import {
   GetStaticPaths,
@@ -16,10 +15,11 @@ import {
 } from 'next';
 import { PostItemType } from '../../../model';
 import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
-type PropsType = {
+import { ParsedUrlQuery } from 'querystring';
+type PropsDataType = {
   postData?: PostItemType;
 };
-const PostDetail: NextPage<PropsType> = (props) => {
+const PostDetail: NextPage<PropsDataType> = (props) => {
   const { postData } = props;
 
   const router = useRouter();
@@ -76,7 +76,7 @@ const PostDetail: NextPage<PropsType> = (props) => {
     </div>
   );
 };
-interface Params extends NextParsedUrlQuery {
+interface Params extends ParsedUrlQuery {
   slug: string;
 }
 export const getStaticPaths: GetStaticPaths<Params> = async () => {
@@ -90,7 +90,9 @@ export const getStaticPaths: GetStaticPaths<Params> = async () => {
   };
 };
 
-export const getStaticProps = async (ctx) => {
+export const getStaticProps: GetStaticProps<PropsDataType, Params> = async (
+  ctx
+) => {
   const { params, locales, locale } = ctx;
 
   const response = await getPostBySlug(params.slug);

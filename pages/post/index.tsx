@@ -4,7 +4,7 @@ import { PostItemType } from '../../model/post';
 import { Container } from 'semantic-ui-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import styles from './post.module.scss';
+import styles from '../../styles/post.module.scss';
 import SEO from '../../components/common/Seo';
 import Breadcrumb from '../../components/BreadCrumb';
 import * as Icon from 'react-feather';

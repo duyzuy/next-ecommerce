@@ -9,9 +9,8 @@ import { getVerticalMenuItem } from '../api/menu';
 import { DeviceType } from '../model';
 
 import { AppContext, AppProps } from 'next/app';
-import { ReactNode } from 'react';
 import type { NextPage } from 'next';
-import { Session } from 'next-auth';
+import type { Session } from 'next-auth';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'semantic-ui-css/semantic.min.css';
 import 'swiper/css/bundle';
@@ -19,13 +18,14 @@ import '../styles/global.scss';
 import '../styles/grid.scss';
 import '../lib/toast/style.scss';
 import { CategoryItemType } from '../model/category';
-type ComponentType = NextPage & {
-  getLayout?: (page: ReactNode) => ReactNode;
+type ComponentType<P = {}, IP = P> = NextPage<P, IP> & {
+  getLayout: (page: JSX.Element) => JSX.Element;
   auth?: boolean;
   booking?: boolean;
 };
-type AppPropsType = AppProps & {
-  Component: ComponentType;
+
+type AppPropsType<P = {}> = AppProps<P> & {
+  Component: ComponentType<P>;
   appData?: {
     categories: CategoryItemType[];
     device: DeviceType;
@@ -35,13 +35,12 @@ type AppPropsType = AppProps & {
   };
 };
 
-const MyApp = (props: AppPropsType) => {
-  const { Component, pageProps, appData } = props;
+const MyApp = ({ Component, pageProps, appData }: AppPropsType) => {
   const { device, ...rest } = appData;
 
   const getLayout =
     Component.getLayout ||
-    ((page: ReactNode) => (
+    ((page) => (
       <Layout {...rest} device={device}>
         {page}
       </Layout>
@@ -78,7 +77,7 @@ const MyApp = (props: AppPropsType) => {
 
 MyApp.getInitialProps = async (context: AppContext) => {
   let categories = [];
-  let device: DeviceType = {
+  let device = {
     isMobile: false,
     isDesktop: false,
     isAndroid: false,
@@ -110,10 +109,11 @@ MyApp.getInitialProps = async (context: AppContext) => {
 
   const isMobile = isAndroid || isIos || isOpera;
   device = {
-    isMobile,
+    ...device,
+    isMobile: isMobile,
     isDesktop: !isMobile,
-    isAndroid,
-    isIos
+    isAndroid: isAndroid,
+    isIos: isIos
   };
   // 'primary' => __( 'Main Menu', 'saigonhomekitchen' ),
   //   'vertical' => __( 'vertical Menu', 'saigonhomekitchen' ),

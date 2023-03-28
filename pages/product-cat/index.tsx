@@ -1,5 +1,5 @@
 const ProductCat = () => {
-  return <>asdf</>;
+  return <>product cat page</>;
 };
 
 export default ProductCat;
