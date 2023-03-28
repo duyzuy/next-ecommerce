@@ -15,7 +15,11 @@ const SEO: React.FC<PropsType> = ({
   return (
     <Head>
       <title>{`${title} | ${siteTitle}`}</title>
-      {/* <meta name="viewport" content="viewport-fit=cover" /> */}
+
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no"
+      />
       <link rel="icon" href="/assets/images/favicon-sgh-red.svg" />
       <meta name="desciption" content={description} />
       <meta property="og:type" content="website" />

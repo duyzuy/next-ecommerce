@@ -88,7 +88,7 @@ export const getPostBySlug = async (
       return {
         status: response.status,
         statusText: response.statusText,
-        data: response.data
+        data: response.data.data
       };
     })
     .catch((error) => {

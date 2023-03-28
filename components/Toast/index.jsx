@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from '../../providers/hooks';
 
-export const toast = (message = '', options = {}) => {
+const toast = (message = '', options = {}) => {
   return message;
 };
 
@@ -15,11 +15,11 @@ const Toast = (props) => {
   return (
     <div className="toast-container">
       {lists.message.map((mess) => (
-        <p>{mess.content}</p>
+        <p key={mess}>{mess.content}</p>
       ))}
     </div>
   );
 };
 
 export default Toast;
-export {toast}
+export { toast };

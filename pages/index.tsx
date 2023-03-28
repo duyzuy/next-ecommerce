@@ -12,6 +12,7 @@ import SingleBanner from '../container/SingleBanner';
 import styles from '../styles/home.module.scss';
 import CategoryItemList from '../components/common/Partials/CategoryItemList';
 import { Container } from 'semantic-ui-react';
+import { NextPageContext } from 'next';
 const Home = (props) => {
   const { catListData, brand, device, categories } = props;
 
@@ -44,7 +45,8 @@ const Home = (props) => {
   );
 };
 
-export async function getServerSideProps(ctx) {
+export async function getServerSideProps(ctx: NextPageContext) {
+  let productList = [];
   const CATEGORIES = [
     {
       id: 19,
@@ -75,10 +77,10 @@ export async function getServerSideProps(ctx) {
           ...response.data,
           key: catItem.key,
           id: catItem.id,
-          lists: [...productList.data],
-          totalItems: productList.totalItems,
-          totalPage: productList.totalPage,
-          page: productList.page
+          lists: [...productList.data.products],
+          totalItems: productList.data.totalItems,
+          totalPage: productList.data.totalPage,
+          page: productList.data.page
         };
       } else {
         return {

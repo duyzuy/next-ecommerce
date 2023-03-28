@@ -36,15 +36,22 @@ export const getCategory = async (url, params) => {
   return category;
 };
 
-export const getProductListByCatId = async (catId, params) => {
+export const getProductListByCatId = async (
+  catId: number,
+  params
+): Promise<{
+  status: number;
+  statusText: string;
+  data?: { products: []; totalItems: number; totalPage: number; page: number };
+}> => {
   return await wcApi
     .get(`products`, {
       ...params,
       page: (params.page && params.page) || 1,
       category: catId
     })
-    .then((res) => {
-      const prds = res.data.map((prd) => ({
+    .then((response) => {
+      const prds = response.data.map((prd) => ({
         id: prd.id,
         name: prd.name,
         slug: prd.slug,
@@ -59,10 +66,14 @@ export const getProductListByCatId = async (catId, params) => {
         stock_status: prd.stock_status
       }));
       return {
-        data: prds,
-        totalItems: res.headers['x-wp-total'],
-        totalPage: res.headers['x-wp-totalpages'],
-        page: (params.page && params.page) || 1
+        status: response.status,
+        statusText: response.statusText,
+        data: {
+          products: prds,
+          totalItems: Number(response.headers['x-wp-total']),
+          totalPage: Number(response.headers['x-wp-totalpages']),
+          page: (params.page && params.page) || 1
+        }
       };
     })
     .catch((error) => {

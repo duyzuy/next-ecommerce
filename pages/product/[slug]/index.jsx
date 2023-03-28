@@ -255,7 +255,7 @@ export async function getStaticPaths() {
 export async function getStaticProps(ctx) {
   const { params, locales, locale } = ctx;
 
-  console.log(`regenerate product detail ${params.slug}`);
+  // console.log(`regenerate product detail ${params.slug}`);
   const response = await getProductBySlug(params.slug);
   if (response.statusCode === 404) {
     return {

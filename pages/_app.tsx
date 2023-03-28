@@ -1,25 +1,47 @@
-import { AppProvider } from '../providers';
-import { StoreProvider } from '../providers';
+import { AppProvider, StoreProvider } from '../providers';
 import { getCategories } from '../api/product';
+
+import { SessionProvider } from 'next-auth/react';
+import BookingRoute from '../components/BookingRoute';
 import Auth from '../components/Auth';
 import Layout from '../components/Layout';
+import { getVerticalMenuItem } from '../api/menu';
+import { DeviceType } from '../model';
+
+import { AppContext, AppProps } from 'next/app';
+import { ReactNode } from 'react';
+import type { NextPage } from 'next';
+import { Session } from 'next-auth';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'semantic-ui-css/semantic.min.css';
 import 'swiper/css/bundle';
 import '../styles/global.scss';
 import '../styles/grid.scss';
 import '../lib/toast/style.scss';
-import { SessionProvider } from 'next-auth/react';
-import BookingRoute from '../components/BookingRoute';
-import { getVerticalMenuItem } from '../api/menu';
+import { CategoryItemType } from '../model/category';
+type ComponentType = NextPage & {
+  getLayout?: (page: ReactNode) => ReactNode;
+  auth?: boolean;
+  booking?: boolean;
+};
+type AppPropsType = AppProps & {
+  Component: ComponentType;
+  appData?: {
+    categories: CategoryItemType[];
+    device: DeviceType;
+  };
+  pageProps: {
+    session?: Session;
+  };
+};
 
-function MyApp(props) {
+const MyApp = (props: AppPropsType) => {
   const { Component, pageProps, appData } = props;
   const { device, ...rest } = appData;
 
   const getLayout =
     Component.getLayout ||
-    ((page) => (
+    ((page: ReactNode) => (
       <Layout {...rest} device={device}>
         {page}
       </Layout>
@@ -52,11 +74,18 @@ function MyApp(props) {
       </SessionProvider>
     </StoreProvider>
   );
-}
+};
 
-MyApp.getInitialProps = async (ctx) => {
+MyApp.getInitialProps = async (context: AppContext) => {
   let categories = [];
+  let device: DeviceType = {
+    isMobile: false,
+    isDesktop: false,
+    isAndroid: false,
+    isIos: false
+  };
 
+  const { ctx } = context;
   const response = await getCategories({
     per_page: 20,
     hide_empty: true
@@ -65,21 +94,27 @@ MyApp.getInitialProps = async (ctx) => {
   // console.log({ menuItem });
   if (response.status === 500) {
     console.log(response);
-    // ctx.ctx.res.writeHead(500, {
+    // context.context.res.writeHead(500, {
     //   Location: 'http://localhost:3000/500',
     //   'Content-Type': 'text/html; charset=utf-8'
     // });
-    // ctx.ctx.res.end();
+    // context.context.res.end();
   } else {
     categories = response.data;
   }
-  const userAgent = ctx.ctx.req.headers['user-agent'];
+
+  const userAgent = ctx.req.headers['user-agent'];
   const isAndroid = Boolean(userAgent.match(/Android/i));
   const isIos = Boolean(userAgent.match(/iPhone|iPad|iPod/i));
   const isOpera = Boolean(userAgent.match(/Opera Mini/i));
 
   const isMobile = isAndroid || isIos || isOpera;
-
+  device = {
+    isMobile,
+    isDesktop: !isMobile,
+    isAndroid,
+    isIos
+  };
   // 'primary' => __( 'Main Menu', 'saigonhomekitchen' ),
   //   'vertical' => __( 'vertical Menu', 'saigonhomekitchen' ),
   //   'primary_mobile' => __( 'Main Menu - Mobile', 'saigonhomekitchen' ),
@@ -88,13 +123,8 @@ MyApp.getInitialProps = async (ctx) => {
 
   return {
     appData: {
-      categories: categories,
-      device: {
-        isMobile,
-        isDesktop: !isMobile,
-        isAndroid,
-        isIos
-      }
+      categories,
+      device
     }
   };
 };

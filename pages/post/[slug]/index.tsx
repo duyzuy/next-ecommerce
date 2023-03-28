@@ -7,15 +7,24 @@ import { useBreadcrumb } from '../../../hooks/useBreadcrumb';
 import { BreadcrumbItemType } from '../../../model';
 import styles from '../post.module.scss';
 import Image from 'next/image';
+import {
+  GetStaticPaths,
+  GetStaticProps,
+  GetStaticPropsContext,
+  NextPage,
+  PreviewData
+} from 'next';
+import { PostItemType } from '../../../model';
+import { NextParsedUrlQuery } from 'next/dist/server/request-meta';
 type PropsType = {
-  postData?: { [key: string]: any };
+  postData?: PostItemType;
 };
-const PostDetail: React.FC<PropsType> = (props) => {
+const PostDetail: NextPage<PropsType> = (props) => {
   const { postData } = props;
 
   const router = useRouter();
   const items = useBreadcrumb(router);
-  const bredcrumds = useMemo(() => {
+  const breadCrumbItems = useMemo(() => {
     let itemList = items;
 
     itemList = [
@@ -32,7 +41,7 @@ const PostDetail: React.FC<PropsType> = (props) => {
     <div className={styles.wrapper}>
       <Container>
         <div className="post-bredcrumb">
-          <Breadcrumb items={bredcrumds} />
+          <Breadcrumb items={breadCrumbItems} />
         </div>
       </Container>
       <Container className="post-container">
@@ -67,8 +76,10 @@ const PostDetail: React.FC<PropsType> = (props) => {
     </div>
   );
 };
-
-export async function getStaticPaths() {
+interface Params extends NextParsedUrlQuery {
+  slug: string;
+}
+export const getStaticPaths: GetStaticPaths<Params> = async () => {
   const response = await getAllPostSlugs();
   let paths = response.data.posts.map((post) => ({
     params: { slug: post.slug }
@@ -77,32 +88,25 @@ export async function getStaticPaths() {
     paths,
     fallback: 'blocking'
   };
-}
+};
 
-export async function getStaticProps(ctx) {
+export const getStaticProps = async (ctx) => {
   const { params, locales, locale } = ctx;
-  console.log({ ctx });
-  // console.log(`regenerate product detail ${params.slug}`);
+
   const response = await getPostBySlug(params.slug);
   if (response.status === 404) {
     return {
       notFound: true
     };
   }
-  console.log({ response });
-  // const reviews = await getReviewsByProductId(response.data.id);
-
-  // const { related_ids, upsell_ids } = response.data;
-  // const productRelated = await getProductsByIds(related_ids);
+  const postData = response.data as PostItemType;
 
   return {
     props: {
-      postData: { ...response.data.data }
-      // reviews: reviews,
-      // productRelated: productRelated
+      postData
     },
     revalidate: 10
   };
-}
+};
 
 export default PostDetail;

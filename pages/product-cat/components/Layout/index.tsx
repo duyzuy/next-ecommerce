@@ -1,29 +1,50 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Container, Header, Grid } from 'semantic-ui-react';
-import Card from '../../components/Card';
-import SideBar from '../../container/SideBar';
-import Pagination from '../../container/Pagination';
+import Card from '../../../../components/Card';
+import SideBar from '../Sidebar';
+import Pagination from '../../../../container/Pagination';
 import ProductToolBar from '../ProductToolBar';
-import { contentType } from '../../constants/constants';
-import { productFilterValue, productFilterKeys } from '../../constants/product';
-import { updateQueryFromString } from '../../utils';
-import styles from '../../styles/product.module.scss';
-import Breadcrumb from '../../components/BreadCrumb';
-import SEO from '../../components/common/Seo';
-import { useBreadcrumb } from '../../hooks/useBreadcrumb';
-import { client } from '../../api/client';
+import { contentType } from '../../../../constants/constants';
+import { productFilterValue } from '../../../../constants/product';
+import { updateQueryFromString } from '../../../../utils';
 
-const ProductArchive = (props) => {
+import Breadcrumb from '../../../../components/BreadCrumb';
+import SEO from '../../../../components/common/Seo';
+import { useBreadcrumb } from '../../../../hooks/useBreadcrumb';
+import { client } from '../../../../api/client';
+import styles from './product.module.scss';
+import { ProductItemType } from '../../../../model/product';
+import { CategoryItemType } from '../../../../model/category';
+import { ProductAttributeType } from '../../../../model';
+import { NextRouter } from 'next/router';
+type PropsType = {
+  products?: {
+    data: ProductItemType[];
+    page: number;
+    totalItems: number;
+    totalPage: number;
+  };
+  type?: string;
+  isCategory?: boolean;
+  category?: CategoryItemType;
+  attribures?: ProductAttributeType[];
+  router?: NextRouter;
+};
+const Layout: React.FC<PropsType> = (props) => {
   const { products, isCategory, category, attribures, router } = props;
 
   const [productData, setProductData] = useState(products.data);
-  const [filter, setFilter] = useState({});
+  const [filter, setFilter] = useState({ ...productFilterValue });
   const breadItems = useBreadcrumb(router);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSelection = (select) => {
-    let queries = select.value.split('&');
-    queries = queries.reduce((acm, item) => {
+  const handleSelection = (select: {
+    key: string;
+    text: string;
+    value: string;
+  }) => {
+    const queries = select.value.split('&');
+    const queryParams = queries.reduce((acm, item) => {
       setFilter((prevState) => ({
         ...prevState,
         [item.split('=')[0]]: item.split('=')[1]
@@ -34,15 +55,21 @@ const ProductArchive = (props) => {
       return acm;
     }, {});
 
-    handleFetchData({ params: { ...queries }, action: 'filter' });
+    onFetchProductData({ params: { ...queryParams }, action: 'filter' });
   };
 
-  const handleFetchData = async (data) => {
+  const onFetchProductData = async (data: {
+    params: { [key: string]: any };
+    action: string;
+  }) => {
     const { params, action } = data;
     setIsLoading(true);
 
     //update filter
-    let newFilter = Object.assign(filter, { ...params });
+    let newFilter = {
+      ...filter,
+      ...params
+    };
 
     if (isCategory) {
       newFilter = {
@@ -63,7 +90,7 @@ const ProductArchive = (props) => {
     setIsLoading(false);
   };
 
-  const onUpdateRoutePath = (key, value) => {
+  const onUpdateRoutePath = (key: string, value: string) => {
     let path = router.asPath;
     let queryParams = {};
     const newPath = updateQueryFromString(path, {
@@ -71,7 +98,10 @@ const ProductArchive = (props) => {
       value
     });
     if (isCategory) {
-      queryParams = Object.assign(queryParams, { slug: category.slug });
+      queryParams = {
+        ...queryParams,
+        slug: category.slug
+      };
     }
     router.push(
       {
@@ -85,7 +115,7 @@ const ProductArchive = (props) => {
     );
   };
 
-  const breadcrumbs = useMemo(() => {
+  const breadcrumbItems = useMemo(() => {
     if (isCategory) {
       return [
         ...breadItems,
@@ -110,7 +140,9 @@ const ProductArchive = (props) => {
         title={`${(isCategory && category?.name) || 'Bếp từ nhập khẩu'}`}
         description="bep tu nhap khau chinh hang"
       />
-      <Breadcrumb items={breadcrumbs} />
+      <Container>
+        <Breadcrumb items={breadcrumbItems} />
+      </Container>
       <div className="layout-container">
         <div className={styles.ec__product}>
           <Container>
@@ -123,6 +155,7 @@ const ProductArchive = (props) => {
               <SideBar type="category" attribures={attribures} />
               <div className="ec__product--list">
                 <ProductToolBar
+                  isLoading={false}
                   filter={filter}
                   totalPage={products?.totalPage}
                   totalItem={products?.totalItems}
@@ -149,9 +182,9 @@ const ProductArchive = (props) => {
                   totalPage={products?.totalPage}
                   totalItem={products?.totalItems}
                   showStatus={true}
-                  currentPage={filter.page}
+                  currentPage={Number(filter.page)}
                   onSetcurrentPage={(page) =>
-                    handleFetchData({
+                    onFetchProductData({
                       params: { page: page },
                       action: 'paginate'
                     })
@@ -168,6 +201,4 @@ const ProductArchive = (props) => {
   );
 };
 
-export default ProductArchive;
-// giabaogroup
-// 6Ba$615bn
+export default Layout;

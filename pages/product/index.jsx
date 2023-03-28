@@ -1,8 +1,6 @@
 import { contentType } from '../../constants/constants';
-import { productFilterKeys, productFilterValue } from '../../constants/product';
-import { isEmpty, isExists } from '../../utils/helper';
+import { productFilterValue } from '../../constants/product';
 import { getProductList } from '../../api/product';
-import ProductArchive from '../../container/ProductArchive';
 import { useRouter } from 'next/router';
 import {
   getProductAttributes,
@@ -12,14 +10,7 @@ const Product = (props) => {
   const { products, attribures } = props;
 
   const router = useRouter();
-  return (
-    <ProductArchive
-      products={products}
-      type={contentType.PRODUCT}
-      router={router}
-      attribures={attribures}
-    />
-  );
+  return <>prd page</>;
 };
 
 export default Product;

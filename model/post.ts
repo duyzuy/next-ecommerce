@@ -7,5 +7,6 @@ export interface PostItemType {
   createAt?: string;
   author?: string;
   categories?: { [key: string]: any };
+  content?: string;
 }
 export type PostListType = PostItemType[];

@@ -47,8 +47,7 @@ const nextConfig = {
     WC_CLIENT_CUSTOMER_SECRET_KEY:
       'cs_0852fcce10fac6166d107e63a4561aee11b2020b',
     BASE_API_URL: 'http://localhost:3000/api',
-    SKIP_BUILD_STATIC_GENERATION: false,
-    NEXTAUTH_URL: 'https://example.com'
+    SKIP_BUILD_STATIC_GENERATION: false
   }
 };
 

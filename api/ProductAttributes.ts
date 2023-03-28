@@ -1,6 +1,10 @@
 import { wcApi } from './woo';
-
-export async function getProductAttributes() {
+import { AttributeType } from '../model';
+export async function getProductAttributes(): Promise<{
+  status: number;
+  statusText: string;
+  data?: AttributeType[];
+}> {
   return await wcApi
     .get(`products/attributes`)
     .then((response) => {
@@ -8,10 +12,15 @@ export async function getProductAttributes() {
         id: attr.id,
         name: attr.name,
         type: attr.type,
-        orderBy: attr.order_by
+        orderBy: attr.order_by,
+        hasArchives: attr.has_archives
       }));
 
-      return data;
+      return {
+        status: response.status,
+        statusText: response.statusText,
+        data: data
+      };
     })
     .catch((error) => {
       console.log(error);
