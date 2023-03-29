@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Container, Grid, Header, Icon } from 'semantic-ui-react';
 import * as Icons from 'react-feather';
 import Link from 'next/link';
-import styles from '../../../styles/footer.module.scss';
+import styles from './footer.module.scss';
 const Footer = () => {
   return (
     <div className={styles.ec_footer}>

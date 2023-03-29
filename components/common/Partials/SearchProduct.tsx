@@ -1,6 +1,9 @@
 import { Input } from 'semantic-ui-react';
 import { useMemo } from 'react';
-const SearchProduct = ({ className }) => {
+type PropsType = {
+  className?: string;
+};
+const SearchProduct: React.FC<PropsType> = ({ className }) => {
   const clss = useMemo(() => {
     const cls = className;
     return cls;

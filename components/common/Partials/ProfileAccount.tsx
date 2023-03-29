@@ -1,8 +1,19 @@
 import React, { memo, useMemo } from 'react';
 import Link from 'next/link';
 import * as Icon from 'react-feather';
-
-const ProfileAccount = ({ className, isAuthenticated, label, icon }) => {
+import { signOut } from 'next-auth/react';
+type PropsType = {
+  className?: string;
+  isAuthenticated?: boolean;
+  label?: string;
+  icon?: () => React.ReactNode;
+};
+const ProfileAccount: React.FC<PropsType> = ({
+  className,
+  isAuthenticated,
+  label,
+  icon
+}) => {
   const clss = useMemo(() => {
     let cls = 'profile';
     if (className) {
@@ -50,7 +61,7 @@ const ProfileAccount = ({ className, isAuthenticated, label, icon }) => {
               </Link>
             </li>
             <li>
-              <button className="item" onClick={() => signOut('credentials')}>
+              <button className="item" onClick={() => signOut()}>
                 <Icon.LogOut size={20} /> Đăng xuất
               </button>
             </li>

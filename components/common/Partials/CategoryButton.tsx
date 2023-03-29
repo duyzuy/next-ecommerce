@@ -1,8 +1,13 @@
 import React, { memo, useMemo } from 'react';
-import Link from 'next/link';
-const Cart = ({ className, count, label, icon, showCount = false }) => {
+
+type PropsType = {
+  className?: string;
+  label?: string;
+  icon?: () => React.ReactNode;
+};
+const CategoryButton: React.FC<PropsType> = ({ className, label, icon }) => {
   const clss = useMemo(() => {
-    let cls = 'cart';
+    let cls = 'category';
     if (className) {
       cls = cls.concat(' ', className);
     }
@@ -15,17 +20,14 @@ const Cart = ({ className, count, label, icon, showCount = false }) => {
     }
     return <></>;
   };
+
   return (
     <div className={clss}>
-      <Link href="/cart">
-        <a className="item">
-          <IconComp />
-
-          {(showCount && <span className="cart_count">{count}</span>) || <></>}
-          {label && <p className="label">{label}</p>}
-        </a>
-      </Link>
+      <div className="item">
+        <IconComp />
+        {label && <p className="label">{label}</p>}
+      </div>
     </div>
   );
 };
-export default memo(Cart);
+export default memo(CategoryButton);

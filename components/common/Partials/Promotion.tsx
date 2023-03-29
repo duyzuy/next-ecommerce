@@ -1,7 +1,11 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo, ReactNode, useMemo } from 'react';
 import Link from 'next/link';
-
-const Promotion = ({ className, label, icon }) => {
+type PropsType = {
+  className?: string;
+  label?: string;
+  icon?: () => ReactNode;
+};
+const Promotion: React.FC<PropsType> = ({ className, label, icon }) => {
   const clss = useMemo(() => {
     let cls = 'notify';
     if (className) {

@@ -1,3 +1,4 @@
+import { CategoryItemType } from '../model';
 import { wcApi } from './woo';
 export const getCategories = async (params) => {
   return await wcApi
@@ -281,11 +282,18 @@ export const createProductReview = async (prdId, data) => {
     });
 };
 
-export const getProductCategoryDetail = async (catId) => {
+export const getProductCategoryDetail = async (
+  catId: number
+): Promise<{
+  status: number;
+  statusText: string;
+  data: CategoryItemType | {};
+}> => {
   return await wcApi
     .get(`products/categories/${catId}`)
     .then((res) => ({
       status: res.status,
+      statusText: res.statusText,
       data: {
         id: res.data.id,
         image: {

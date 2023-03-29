@@ -74,7 +74,6 @@ export const getStaticProps: GetStaticProps<NextPagePropsType, Params> = async (
   ctx
 ) => {
   const { params, locales, locale } = ctx;
-  const { slug } = ctx.params as Params;
   let attribures = [];
   let products = {
     totalPage: 0,
@@ -83,7 +82,7 @@ export const getStaticProps: GetStaticProps<NextPagePropsType, Params> = async (
     data: []
   };
 
-  const category = await getCategoryBySlug(slug);
+  const category = await getCategoryBySlug(params.slug);
 
   if (category.statusCode === 404) {
     return {

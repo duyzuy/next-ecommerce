@@ -1,7 +1,13 @@
 import React, { memo, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-const Logo = ({ className, asIcon, label }) => {
+
+type PropsType = {
+  className?: string;
+  asIcon?: any;
+  label?: string;
+};
+const Logo: React.FC<PropsType> = ({ className, asIcon, label }) => {
   const clss = useMemo(() => {
     let cls = 'logo';
     if (className) {

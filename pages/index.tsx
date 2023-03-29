@@ -13,6 +13,8 @@ import styles from '../styles/home.module.scss';
 import CategoryItemList from '../components/common/Partials/CategoryItemList';
 import { Container } from 'semantic-ui-react';
 import { NextPageContext } from 'next';
+import { useDetectDevice } from '../hooks/useDetectDevice';
+
 const Home = (props) => {
   const { catListData, brand, device, categories } = props;
 

@@ -43,7 +43,10 @@ const Layout = (props) => {
 
   return (
     <>
-      <Header categories={categories} device={device} />
+      {/* <Header categories={categories} device={device} /> */}
+      <Suspense fallback={`loading...`}>
+        <DynamicHeader categories={categories} device={device} />
+      </Suspense>
       <main id="main" className={`ec_main ${clss}`}>
         {childrenWithProps}
       </main>

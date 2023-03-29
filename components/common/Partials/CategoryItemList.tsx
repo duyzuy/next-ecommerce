@@ -6,10 +6,18 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import { FreeMode, Pagination } from 'swiper';
-
-const CategoryItemList = (props) => {
-  const { items, spacing, type = 'grid', length = 16 } = props;
-
+type PropsType = {
+  spacing?: number;
+  items?: [];
+  type?: 'grid' | 'slider';
+  length?: number;
+};
+const CategoryItemList: React.FC<PropsType> = ({
+  items,
+  spacing,
+  type = 'grid',
+  length = 16
+}) => {
   const itemFilter = useMemo(() => {
     let itemList = [];
     for (let count = 0; count < length; count++) {

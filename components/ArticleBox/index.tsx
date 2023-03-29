@@ -1,7 +1,16 @@
 import { Placeholder, Header } from 'semantic-ui-react';
-
-const ArticleBox = (props) => {
-  const { thumbnail, title, path, shortDes } = props;
+type propsType = {
+  thumbnail?: string;
+  title?: string;
+  path?: string;
+  shortDes?: string;
+};
+const ArticleBox: React.FC<propsType> = ({
+  thumbnail,
+  title,
+  path,
+  shortDes
+}) => {
   return (
     <>
       <div className="ec__article">

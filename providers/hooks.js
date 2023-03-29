@@ -1,5 +1,6 @@
 import { useContext } from 'react';
 import { StoreContext } from '../contexts';
+
 export const combineReducers = (slices) => (state, action) => {
   Object.keys(slices).forEach((key) => {
     state = {

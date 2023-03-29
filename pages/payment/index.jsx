@@ -543,6 +543,7 @@ export default withBookingLayout(PaymentPage, {
   styles: styles
 });
 export async function getServerSideProps(ctx) {
+  console.log({ ctx });
   const response = await fetch('https://provinces.open-api.vn/api/?depth=2', {
     method: 'GET',
     headers: {

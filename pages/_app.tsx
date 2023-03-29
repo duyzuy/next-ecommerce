@@ -7,7 +7,6 @@ import Auth from '../components/Auth';
 import Layout from '../components/Layout';
 import { getVerticalMenuItem } from '../api/menu';
 import { DeviceType } from '../model';
-
 import { AppContext, AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import type { Session } from 'next-auth';
@@ -18,6 +17,7 @@ import '../styles/global.scss';
 import '../styles/grid.scss';
 import '../lib/toast/style.scss';
 import { CategoryItemType } from '../model/category';
+
 type ComponentType<P = {}, IP = P> = NextPage<P, IP> & {
   getLayout: (page: JSX.Element) => JSX.Element;
   auth?: boolean;
@@ -27,16 +27,21 @@ type ComponentType<P = {}, IP = P> = NextPage<P, IP> & {
 type AppPropsType<P = {}> = AppProps<P> & {
   Component: ComponentType<P>;
   appData?: {
-    categories: CategoryItemType[];
-    device: DeviceType;
+    categories?: CategoryItemType[];
+    device?: DeviceType;
+    ua?: string;
   };
   pageProps: {
     session?: Session;
   };
 };
 
-const MyApp = ({ Component, pageProps, appData }: AppPropsType) => {
-  const { device, ...rest } = appData;
+const MyApp = ({
+  Component,
+  pageProps,
+  appData
+}: AppPropsType<{ session: Session }>) => {
+  const { device, ua, ...rest } = appData;
 
   const getLayout =
     Component.getLayout ||
@@ -79,7 +84,7 @@ MyApp.getInitialProps = async (context: AppContext) => {
   let categories = [];
   let device = {
     isMobile: false,
-    isDesktop: false,
+    isDesktop: true,
     isAndroid: false,
     isIos: false
   };
@@ -102,7 +107,8 @@ MyApp.getInitialProps = async (context: AppContext) => {
     categories = response.data;
   }
 
-  const userAgent = ctx.req.headers['user-agent'];
+  const userAgent = ctx.req.headers['user-agent'] || '';
+  // console.log({ context, ctx, userAgent });
   const isAndroid = Boolean(userAgent.match(/Android/i));
   const isIos = Boolean(userAgent.match(/iPhone|iPad|iPod/i));
   const isOpera = Boolean(userAgent.match(/Opera Mini/i));

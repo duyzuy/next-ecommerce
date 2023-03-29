@@ -5,7 +5,7 @@ export interface CategoryItemType {
   display?: string;
   id: number;
   image?: ImageType;
-  parent: number;
+  parent?: number;
   slug?: string;
   name?: string;
 }
