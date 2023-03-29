@@ -186,6 +186,7 @@ export const getProductBySlug = async (slug) => {
   return await wcApi
     .get(`products`, { slug: slug })
     .then((res) => {
+      console.log({ res });
       if (res.data.length === 0) {
         return {
           statusCode: 404,
@@ -193,13 +194,13 @@ export const getProductBySlug = async (slug) => {
           message: 'no product found'
         };
       }
-
       return {
         statusCode: res.status,
         data: res.data[0]
       };
     })
     .catch((error) => {
+      console.log({ error });
       return {
         status: error.response.status,
         statusText: error.response.statusText,
@@ -210,7 +211,7 @@ export const getProductBySlug = async (slug) => {
 
 export const getReviewsByProductId = async (
   productId,
-  params = { perPage: 6, page: 1, status: 'approved' }
+  params = { perPage: 10, page: 1, status: 'approved' }
 ) => {
   let queryParams = {
     product: productId,

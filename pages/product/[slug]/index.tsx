@@ -25,10 +25,20 @@ import { addBooking } from '../../../actions/booking';
 import useCart from '../../../hooks/useCart';
 import { toast } from '../../../lib/toast';
 import { setPayment, isPayment } from '../../../constants/booking';
+import { ProductItemType, ProductDetailType } from '../../../model';
+import { NextPage } from 'next';
 
-const ProductDetail = (props) => {
+type NextPagePropsType = {
+  data: ProductDetailType;
+  reviews: any;
+  productRelated: ProductItemType[];
+};
+const ProductDetail: NextPage<NextPagePropsType> = ({
+  data,
+  reviews,
+  productRelated
+}) => {
   const router = useRouter();
-  const { data, reviews, productRelated } = props;
 
   const breadItems = useBreadcrumb(router);
   const [productReviews, setProductReviews] = useState(reviews);
@@ -36,6 +46,7 @@ const ProductDetail = (props) => {
   const dispatch = useDispatch();
   const cart = useCart();
   const bookingInfor = useSelector((state) => state.booking);
+
   const onAddToCart = (prd, quantity, callback) => {
     const { id, sale_price, regular_price, name, images, categories, on_sale } =
       prd;
@@ -210,7 +221,6 @@ const ProductDetail = (props) => {
                 style={{
                   marginRight: 10,
                   position: 'relative',
-                  marginRight: 10,
                   top: 4
                 }}
               />
@@ -257,16 +267,17 @@ export async function getStaticProps(ctx) {
 
   // console.log(`regenerate product detail ${params.slug}`);
   const response = await getProductBySlug(params.slug);
+
   if (response.statusCode === 404) {
     return {
       notFound: true
     };
   }
   const reviews = await getReviewsByProductId(response.data.id);
-
+  console.log({ reviews });
   const { related_ids, upsell_ids } = response.data;
   const productRelated = await getProductsByIds(related_ids);
-
+  console.log({ productRelated });
   return {
     props: {
       data: response.data,

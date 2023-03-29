@@ -108,7 +108,7 @@ MyApp.getInitialProps = async (context: AppContext) => {
   }
 
   const userAgent = ctx.req.headers['user-agent'] || '';
-  // console.log({ context, ctx, userAgent });
+  console.log({ context, userAgent });
   const isAndroid = Boolean(userAgent.match(/Android/i));
   const isIos = Boolean(userAgent.match(/iPhone|iPad|iPod/i));
   const isOpera = Boolean(userAgent.match(/Opera Mini/i));

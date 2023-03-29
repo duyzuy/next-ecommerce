@@ -19,7 +19,7 @@ export const getAllPosts = async (params?: {
       body: { per_page: perPage, page: page }
     })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       return {
         status: response.status,
         statusText: response.statusText,
@@ -54,7 +54,7 @@ export const getAllPostSlugs = async (params?: {
       body: { per_page: perPage, page: page }
     })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       return {
         status: response.status,
         statusText: response.statusText,
@@ -84,7 +84,7 @@ export const getPostBySlug = async (
       body: { slug: slug }
     })
     .then((response) => {
-      console.log(response);
+      // console.log(response);
       return {
         status: response.status,
         statusText: response.statusText,
