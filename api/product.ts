@@ -1,4 +1,4 @@
-import { CategoryItemType } from '../model';
+import { CategoryItemType, ProductDetailType } from '../model';
 import { wcApi } from './woo';
 export const getCategories = async (params) => {
   return await wcApi
@@ -182,20 +182,27 @@ export const getProductByIds = async (ids) => {
   return products;
 };
 
-export const getProductBySlug = async (slug) => {
+export const getProductBySlug = async (
+  slug: string
+): Promise<{
+  status: number;
+  statusText: string;
+  data: ProductDetailType | null;
+}> => {
   return await wcApi
     .get(`products`, { slug: slug })
     .then((res) => {
       console.log({ res });
       if (res.data.length === 0) {
         return {
-          statusCode: 404,
-          data: res.data,
-          message: 'no product found'
+          status: 404,
+          statusText: 'no product found',
+          data: null
         };
       }
       return {
-        statusCode: res.status,
+        status: res.status,
+        statusText: res.statusText,
         data: res.data[0]
       };
     })
@@ -210,7 +217,7 @@ export const getProductBySlug = async (slug) => {
 };
 
 export const getReviewsByProductId = async (
-  productId,
+  productId: number,
   params = { perPage: 10, page: 1, status: 'approved' }
 ) => {
   let queryParams = {

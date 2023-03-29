@@ -25,12 +25,16 @@ import { addBooking } from '../../../actions/booking';
 import useCart from '../../../hooks/useCart';
 import { toast } from '../../../lib/toast';
 import { setPayment, isPayment } from '../../../constants/booking';
-import { ProductItemType, ProductDetailType } from '../../../model';
-import { NextPage } from 'next';
+import { ProductItemType, ProductDetailType, ReviewType } from '../../../model';
+import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import { ParsedUrlQuery } from 'querystring';
 
 type NextPagePropsType = {
   data: ProductDetailType;
-  reviews: any;
+  reviews: {
+    perPage: number;
+    reviews: ReviewType[];
+  };
   productRelated: ProductItemType[];
 };
 const ProductDetail: NextPage<NextPagePropsType> = ({
@@ -47,17 +51,19 @@ const ProductDetail: NextPage<NextPagePropsType> = ({
   const cart = useCart();
   const bookingInfor = useSelector((state) => state.booking);
 
-  const onAddToCart = (prd, quantity, callback) => {
+  const onAddToCart = (
+    prd: ProductItemType,
+    quantity: number,
+    callback: () => void
+  ) => {
     const { id, sale_price, regular_price, name, images, categories, on_sale } =
       prd;
 
-    // toast({ type: 'error', message: 'Lỗi không thể thêm vào giỏ hàng' });
     toast({
       type: 'success',
       message: `Đã thêm vào giỏ hàng - <strong>${name}</strong>`
     });
-    // toast({ type: 'infor', message: 'Hiện tại đã hết sản phẩm' });
-    // toast({ type: 'warning', message: 'giỏ hàng bạn đã đầy' });
+
     const prdItem = {
       id,
       price:
@@ -89,7 +95,7 @@ const ProductDetail: NextPage<NextPagePropsType> = ({
 
     if (perPage === data.rating_count) return;
 
-    const nextPage = perPage + 3;
+    let nextPage = perPage + 3;
 
     if (nextPage > data.rating_count) {
       nextPage = data.rating_count;
@@ -242,7 +248,7 @@ const ProductDetail: NextPage<NextPagePropsType> = ({
 
 export default ProductDetail;
 
-export async function getStaticPaths() {
+export const getStaticPaths: GetStaticPaths = async () => {
   const products = await getSlugFromProducts('products', {
     page: 1,
     per_page: 5,
@@ -260,24 +266,29 @@ export async function getStaticPaths() {
     paths: paths,
     fallback: 'blocking'
   };
+};
+interface Params extends ParsedUrlQuery {
+  slug: string;
 }
-
-export async function getStaticProps(ctx) {
+export const getStaticProps: GetStaticProps<NextPagePropsType, Params> = async (
+  ctx
+) => {
   const { params, locales, locale } = ctx;
 
   // console.log(`regenerate product detail ${params.slug}`);
   const response = await getProductBySlug(params.slug);
-
-  if (response.statusCode === 404) {
+  console.log(response);
+  if (response.status === 404) {
     return {
       notFound: true
     };
   }
+
   const reviews = await getReviewsByProductId(response.data.id);
-  console.log({ reviews });
+
   const { related_ids, upsell_ids } = response.data;
   const productRelated = await getProductsByIds(related_ids);
-  console.log({ productRelated });
+
   return {
     props: {
       data: response.data,
@@ -286,4 +297,4 @@ export async function getStaticProps(ctx) {
     },
     revalidate: 10
   };
-}
+};
