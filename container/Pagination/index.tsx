@@ -3,33 +3,32 @@ import { usePagination } from '../../hooks/usePagination';
 import * as Icon from 'react-feather';
 import { DOT, paginateAction } from '../../constants/constants';
 
-type PropsType = {
+const Pagination: React.FC<{
   children?: JSX.Element;
-  type: string;
-  totalPage: number;
+  type?: string;
+  totalPage?: number;
   totalItem?: number;
-  currentPage: number;
-  onSetcurrentPage: (data: any) => void;
-  isLoading: boolean;
-  position: string;
-  showStatus: boolean;
-};
-const Pagination: React.FC<PropsType> = (props) => {
-  const {
-    type,
-    totalPage,
-    totalItem,
-    currentPage,
-    onSetcurrentPage,
-    isLoading,
-    position,
-    showStatus = false
-  } = props;
-
+  currentPage?: number;
+  onSetcurrentPage?: (data: any) => void;
+  isLoading?: boolean;
+  position?: string;
+  showStatus?: boolean;
+  pageRange?: number;
+}> = ({
+  type,
+  totalPage,
+  totalItem,
+  currentPage,
+  onSetcurrentPage,
+  isLoading,
+  position,
+  showStatus = false,
+  pageRange = 3
+}) => {
   const paginations = usePagination({
     totalPage: Number(totalPage),
     currentPage: currentPage,
-    pageRange: 3
+    pageRange
   });
 
   const onSelectPage = (action: string, page?: number) => {

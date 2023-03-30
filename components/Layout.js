@@ -6,6 +6,7 @@ import Header from './common/Header';
 import Footer from './common/Footer';
 import { Toast } from '../lib/toast';
 import NavigationBar from './common/NavigationBar';
+import { useSelector } from '../providers/hooks';
 const DynamicHeader = dynamic(() => import('./common/Header'), {
   suspense: true,
   loading: undefined
@@ -16,11 +17,11 @@ const DynamicFooter = dynamic(() => import('./common/Footer'), {
   loading: undefined
 });
 
-const Layout = (props) => {
-  const { categories, device, children } = props;
-
+const Layout = ({ children }) => {
+  // const { categories, device,  } = props;
+  const device = useSelector((state) => state.device);
   const clss = useClasses();
-
+  console.log({ device });
   // return (
   //   <>
   //     <Suspense fallback={`loading...`}>
@@ -34,21 +35,21 @@ const Layout = (props) => {
   //     </Suspense>
   //   </>
   // );
-  const childrenWithProps = React.Children.map(children, (child) => {
-    if (React.isValidElement(child)) {
-      return React.cloneElement(child, { device, categories });
-    }
-    return child;
-  });
+  // const childrenWithProps = React.Children.map(children, (child) => {
+  //   if (React.isValidElement(child)) {
+  //     return React.cloneElement(child, { device, categories });
+  //   }
+  //   return child;
+  // });
 
   return (
     <>
       {/* <Header categories={categories} device={device} /> */}
       <Suspense fallback={`loading...`}>
-        <DynamicHeader categories={categories} device={device} />
+        <DynamicHeader />
       </Suspense>
       <main id="main" className={`ec_main ${clss}`}>
-        {childrenWithProps}
+        {children}
       </main>
       <Footer device={device} />
       {!device.isDesktop && <NavigationBar />}

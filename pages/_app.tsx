@@ -41,15 +41,9 @@ const MyApp = ({
   pageProps,
   appData
 }: AppPropsType<{ session: Session }>) => {
-  const { device, ua, ...rest } = appData;
+  const { device, ua, categories, ...rest } = appData;
 
-  const getLayout =
-    Component.getLayout ||
-    ((page) => (
-      <Layout {...rest} device={device}>
-        {page}
-      </Layout>
-    ));
+  const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
   const CustomComponent = (props) => {
     if (Component.auth) {
@@ -72,7 +66,7 @@ const MyApp = ({
   return (
     <StoreProvider>
       <SessionProvider session={pageProps?.session}>
-        <AppProvider>
+        <AppProvider categories={categories} device={device}>
           {getLayout(<CustomComponent {...pageProps} />)}
         </AppProvider>
       </SessionProvider>
@@ -90,6 +84,7 @@ MyApp.getInitialProps = async (context: AppContext) => {
   };
 
   const { ctx } = context;
+  console.log({ ctx });
   const response = await getCategories({
     per_page: 20,
     hide_empty: true
@@ -108,7 +103,7 @@ MyApp.getInitialProps = async (context: AppContext) => {
   }
 
   const userAgent = ctx.req.headers['user-agent'] || '';
-  console.log({ context, userAgent });
+  // console.log({ context, userAgent });
   const isAndroid = Boolean(userAgent.match(/Android/i));
   const isIos = Boolean(userAgent.match(/iPhone|iPad|iPod/i));
   const isOpera = Boolean(userAgent.match(/Opera Mini/i));

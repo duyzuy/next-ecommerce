@@ -18,9 +18,9 @@ const Header = (props) => {
   const { data: session, status } = useSession();
 
   const bookingInfor = useSelector((state) => state.booking);
-
-  const { categories, device } = props;
-
+  const categories = useSelector((state) => state.menu.categories);
+  const device = useSelector((state) => state.device);
+  console.log({ device });
   if (device.isDesktop) {
     return (
       <header id="ec__header" className={styles.ec_header}>

@@ -1,4 +1,4 @@
-import { CategoryItemType, ProductDetailType } from '../model';
+import { CategoryItemType, ProductDetailType, ProductItemType } from '../model';
 import { wcApi } from './woo';
 export const getCategories = async (params) => {
   return await wcApi
@@ -43,11 +43,17 @@ export const getProductListByCatId = async (
 ): Promise<{
   status: number;
   statusText: string;
-  data?: { products: []; totalItems: number; totalPage: number; page: number };
+  data: {
+    products: ProductItemType[];
+    totalItems: number;
+    totalPage: number;
+    page: number;
+  };
 }> => {
   return await wcApi
     .get(`products`, {
       ...params,
+      status: 'publish',
       page: (params.page && params.page) || 1,
       category: catId
     })
@@ -241,7 +247,7 @@ export const getReviewsByProductId = async (
   };
 };
 
-export const getProductsByIds = async (ids) => {
+export const getProductsByIds = async (ids: number[]) => {
   return await wcApi
     .get('products', { include: [...ids] })
     .then((res) => {
@@ -295,26 +301,29 @@ export const getProductCategoryDetail = async (
 ): Promise<{
   status: number;
   statusText: string;
-  data: CategoryItemType | {};
+  data: CategoryItemType;
 }> => {
   return await wcApi
     .get(`products/categories/${catId}`)
-    .then((res) => ({
-      status: res.status,
-      statusText: res.statusText,
-      data: {
-        id: res.data.id,
-        image: {
-          src: res.data.image.src,
-          name: res.data.image.name,
-          alt: res.data.image.alt
-        },
-        name: res.data.name,
-        slug: res.data.slug,
-        count: res.data.count
-      }
-    }))
+    .then((res) => {
+      return {
+        status: res.status,
+        statusText: res.statusText,
+        data: {
+          id: res.data.id,
+          image: {
+            src: res.data.image.src,
+            name: res.data.image.name,
+            alt: res.data.image.alt
+          },
+          name: res.data.name,
+          slug: res.data.slug,
+          count: res.data.count
+        }
+      };
+    })
     .catch((error) => {
+      console.log({ error });
       return {
         status: error.response.status,
         statusText: error.response.statusText,

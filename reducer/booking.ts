@@ -12,8 +12,39 @@ import {
   UPDATE_SHIPPING_ADDRESS,
   FETCH_ORDER_DETAIL
 } from '../constants/actions';
+import { ProductItemType } from '../model';
 
-const bookingState = {
+type ProductBookingItemType = Pick<ProductItemType, 'id' | 'price'> & {
+  quantity: number;
+};
+export interface CouponItem {
+  id: number;
+  code: string;
+  discount: number;
+  discountTax: string;
+}
+export interface BookingDataType {
+  products: {
+    items: ProductBookingItemType[];
+    count: number;
+    subTotal: number;
+  };
+  total: number;
+  hasPromotion: boolean;
+  promotionCode: string;
+  discountValue: number;
+  shippingCost: number;
+  shippingMethod: { [key: string]: any };
+  discountType: string;
+  paymentMethod: { [key: string]: any };
+  isDifferenceShipping: false;
+  billing: { [key: string]: any };
+  shipping: { [key: string]: any };
+  orderInfor: { [key: string]: any };
+  isAcceptTerm: boolean;
+  coupons: CouponItem[];
+}
+export const bookingState: BookingDataType = {
   products: {
     items: [],
     count: 0,
@@ -35,7 +66,10 @@ const bookingState = {
   coupons: []
 };
 
-const bookingReducer = (state, action) => {
+const bookingReducer = (
+  state = bookingState,
+  action: { type: string; payload: { [key: string]: any } }
+) => {
   switch (action.type) {
     case ADD_TO_CART: {
       const { payload } = action;
@@ -105,8 +139,8 @@ const bookingReducer = (state, action) => {
       }
       newSubtotal =
         payload.type === 'up'
-          ? state.products.subTotal + payload.quantity * item.price
-          : state.products.subTotal - payload.quantity * item.price;
+          ? state.products.subTotal + payload.quantity * Number(item.price)
+          : state.products.subTotal - payload.quantity * Number(item.price);
       newCount =
         payload.type === 'up'
           ? state.products.count + payload.quantity
@@ -114,8 +148,8 @@ const bookingReducer = (state, action) => {
 
       newTotal =
         payload.type === 'up'
-          ? state.total + payload.quantity * item.price
-          : state.total - payload.quantity * item.price;
+          ? state.total + payload.quantity * Number(item.price)
+          : state.total - payload.quantity * Number(item.price);
       return {
         ...state,
         products: {
@@ -238,5 +272,4 @@ const bookingReducer = (state, action) => {
   }
 };
 
-export { bookingState };
 export default bookingReducer;

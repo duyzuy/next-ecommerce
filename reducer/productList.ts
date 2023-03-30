@@ -3,19 +3,33 @@ import {
   LOAD_LIST_PRODUCT,
   UPDATE_PAGE_LIST_PRODUCT
 } from '../constants/actions';
-const productListState = {
+import { ProductItemType } from '../model';
+
+export interface CacheItemType {
+  id?: number;
+  currentPage?: number;
+  pageCache?: number[];
+  items?: { [key: string]: ProductItemType[] };
+}
+export interface DataCacheType {
+  lists: CacheItemType[];
+  isLoading: boolean;
+}
+export const productListState: DataCacheType = {
   lists: [],
   isLoading: false
 };
 
-const productListReducer = (state, action) => {
+const productListReducer = (
+  state = productListState,
+  action: { type: string; payload: any | null }
+) => {
   switch (action.type) {
     case CHANGE_PAGE: {
       const newState = {
         ...state,
         ...action.payload
       };
-
       return newState;
     }
     case LOAD_LIST_PRODUCT: {
@@ -80,5 +94,4 @@ const productListReducer = (state, action) => {
   }
 };
 
-export { productListState };
 export default productListReducer;

@@ -1,5 +1,6 @@
+import React from 'react';
+import { NextPage, NextPageContext } from 'next';
 import SEO from '../components/common/Seo';
-import { TOP_PROMOTIONS } from '../constants/menu';
 import Brands from '../container/Brands';
 import { data } from '../constants/brandsData.js';
 import TopPromote from '../container/TopPromote';
@@ -12,12 +13,28 @@ import SingleBanner from '../container/SingleBanner';
 import styles from '../styles/home.module.scss';
 import CategoryItemList from '../components/common/Partials/CategoryItemList';
 import { Container } from 'semantic-ui-react';
-import { NextPageContext } from 'next';
-import { useDetectDevice } from '../hooks/useDetectDevice';
 
-const Home = (props) => {
-  const { catListData, brand, device, categories } = props;
-
+import { BrandItemType, CategoryItemType, ProductItemType } from '../model';
+import {
+  HOME_PAGE_PRODUCT_SECTION,
+  TOP_PROMOTIONS
+} from '../constants/settings';
+import { useSelector } from '../providers/hooks';
+type CatListDataItemType = CategoryItemType & {
+  key: string;
+  lists: ProductItemType[];
+  totalItems: number;
+  totalPage: number;
+  page: number;
+};
+const Home: NextPage<{
+  catListData: CatListDataItemType[];
+  brand: BrandItemType[];
+  device;
+  categories;
+}> = (props) => {
+  const { catListData, brand, categories } = props;
+  const device = useSelector((state) => state.device);
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
@@ -36,59 +53,37 @@ const Home = (props) => {
           <Brands data={brand} />
         </div>
 
-        {catListData.map(
-          (catData) =>
-            catData.status !== 404 && (
-              <ProductCatList slider key={catData.key} catData={catData} />
-            )
-        )}
+        {catListData.map((catData) => (
+          <ProductCatList slider key={catData.key} catData={catData} />
+        ))}
       </div>
     </>
   );
 };
 
 export async function getServerSideProps(ctx: NextPageContext) {
-  let productList = [];
-  const CATEGORIES = [
-    {
-      id: 19,
-      key: 'hongNgoai'
-    },
-    {
-      id: 18,
-      key: 'bepGas'
-    },
-    {
-      id: 16,
-      key: 'bepTu'
-    },
-    {
-      id: 20,
-      key: 'hutMui'
-    }
-  ];
-  const catListData = await Promise.all(
-    CATEGORIES.map(async (catItem) => {
-      const response = await getProductCategoryDetail(catItem.id);
+  let categoryListData: CatListDataItemType[] = [];
 
-      if (response.status === 200) {
+  await Promise.all(
+    HOME_PAGE_PRODUCT_SECTION.map(async (catItem) => {
+      const category = await getProductCategoryDetail(catItem.id);
+
+      if (category.status === 200) {
         const productList = await getProductListByCatId(catItem.id, {
           per_page: 10
         });
-        return {
-          ...response.data,
-          key: catItem.key,
-          id: catItem.id,
-          lists: [...productList.data.products],
-          totalItems: productList.data.totalItems,
-          totalPage: productList.data.totalPage,
-          page: productList.data.page
-        };
-      } else {
-        return {
-          ...response.data,
-          lists: []
-        };
+        categoryListData = [
+          ...categoryListData,
+          {
+            ...category.data,
+            key: catItem.key,
+            id: category.data.id,
+            lists: productList.data.products,
+            totalItems: productList.data.totalItems,
+            totalPage: productList.data.totalPage,
+            page: productList.data.page
+          }
+        ];
       }
     })
   );
@@ -96,7 +91,7 @@ export async function getServerSideProps(ctx: NextPageContext) {
   return {
     props: {
       brand: data,
-      catListData: [...catListData]
+      catListData: categoryListData
     }
   };
 }

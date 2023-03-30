@@ -1,4 +1,3 @@
-import { bool } from 'yup';
 import { ProductItemType } from './product';
 
 export type BreadcrumbItemType = {
@@ -44,4 +43,11 @@ export interface AttributeType {
   type: string;
   orderBy: string;
   hasArchives: boolean;
+}
+
+export interface BrandItemType {
+  id: number;
+  name: string;
+  src: string;
+  path: string;
 }

@@ -1,10 +1,18 @@
-import {
-  UPDATE_USER_DATA,
-  FETCH_USER_DATA,
-  UPDATE_ACCOUNT_INFO
-} from '../constants/actions';
+import { UPDATE_USER_DATA, FETCH_USER_DATA } from '../constants/actions';
 
-const userState = {
+export interface UserDataType {
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatarUrl: string;
+  isPaying: false;
+  userId: 0;
+  role: string;
+  userName: string;
+  billing: {};
+  shipping: {};
+}
+export const userState: UserDataType = {
   firstName: '',
   lastName: '',
   email: '',
@@ -17,7 +25,7 @@ const userState = {
   shipping: {}
 };
 
-const userReducer = (state, action) => {
+const userReducer = (state = userState, action) => {
   switch (action.type) {
     case FETCH_USER_DATA: {
       const data = action.payload;
@@ -94,5 +102,4 @@ const userReducer = (state, action) => {
   }
 };
 
-export { userState };
 export default userReducer;

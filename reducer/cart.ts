@@ -5,7 +5,23 @@ import {
   UPDATE_CART
 } from '../constants/actions';
 import { isEmpty } from '../utils/helper';
-const cartState = {
+
+interface ItemType {
+  id?: number;
+  quantity: number;
+  price?: number;
+}
+export interface CartDataType {
+  items: ItemType[];
+  count: number;
+  subTotal: number;
+  currency: 'VND' | 'USD';
+  hasPromotion: boolean;
+  promotionCode: string;
+  discount: number;
+}
+
+export const cartState: CartDataType = {
   items: [],
   count: 0,
   subTotal: 0,
@@ -15,7 +31,7 @@ const cartState = {
   discount: 0
 };
 
-const cartReducer = (state, action) => {
+const cartReducer = (state = cartState, action) => {
   switch (action.type) {
     case ADD_TO_CART: {
       const { payload } = action;
@@ -112,5 +128,4 @@ const cartReducer = (state, action) => {
   }
 };
 
-export { cartState };
 export default cartReducer;

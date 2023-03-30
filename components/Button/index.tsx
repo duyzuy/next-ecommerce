@@ -1,7 +1,21 @@
-import { useMemo } from 'react';
+import { ReactNode, useMemo } from 'react';
 import Link from 'next/link';
+import './button.module.scss';
 
-const Button = (props) => {
+const Button: React.FC<{
+  name?: string;
+  type?: 'button' | 'link';
+  onClick?: () => void;
+  children?: string;
+  color?: 'primary' | 'light' | 'dark' | 'secondary';
+  fluid?: boolean;
+  outline?: boolean;
+  iconPosition?: 'left' | 'right';
+  href?: string;
+  icon?: () => ReactNode;
+  className?: string;
+  size?: 'medium' | 'small';
+}> = (props) => {
   const {
     name,
     type = 'button',
@@ -56,51 +70,50 @@ const Button = (props) => {
     }
     return clss;
   }, [color, fluid, outline, type, iconPosition, size, className]);
-
-  const IconComp = () => {
-    if (icon !== undefined && typeof icon === 'function') {
-      return <span className="icon">{icon()}</span>;
-    }
-    return <></>;
-  };
+  const buttonTitle = name || children;
 
   if (type === 'link') {
     return (
-      <>
-        <Link href={href} {...rest}>
-          <a className={classes}>
-            {iconPosition === 'right' ? (
-              <>
-                {children}
-                <IconComp />
-              </>
-            ) : (
-              <>
-                <IconComp />
-                {children}
-              </>
-            )}
-          </a>
-        </Link>
-      </>
+      <Link href={href} {...rest}>
+        <a className={classes}>
+          <ComponentChild
+            position={iconPosition}
+            name={buttonTitle}
+            icon={icon}
+          />
+        </a>
+      </Link>
     );
   }
 
   return (
     <button type={type} className={classes} onClick={onClick} {...rest}>
-      {iconPosition === 'right' ? (
-        <>
-          {children}
-          <IconComp />
-        </>
-      ) : (
-        <>
-          <IconComp />
-          {children}
-        </>
-      )}
+      <ComponentChild position={iconPosition} name={buttonTitle} icon={icon} />
     </button>
   );
 };
 
 export default Button;
+
+const ComponentChild: React.FC<{
+  position?: string;
+  name?: string;
+  icon?: () => ReactNode;
+}> = ({ position, name, icon }) => {
+  if (icon !== undefined && typeof icon === 'function') {
+    return (
+      (position === 'right' && (
+        <>
+          {name}
+          <span className="icon">{icon()}</span>
+        </>
+      )) || (
+        <>
+          <span className="icon">{icon()}</span>
+          {name}
+        </>
+      )
+    );
+  }
+  return <>{name}</>;
+};

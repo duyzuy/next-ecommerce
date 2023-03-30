@@ -1,5 +1,5 @@
-import { memo, useEffect, useMemo, useState } from 'react';
-import { Container, Header, Grid } from 'semantic-ui-react';
+import React, { memo, useEffect, useState } from 'react';
+import { Container, Header } from 'semantic-ui-react';
 import Link from 'next/link';
 import Card from '../../components/Card';
 import { contentType } from '../../constants/constants';
@@ -10,15 +10,32 @@ import {
   LOAD_LIST_PRODUCT,
   UPDATE_PAGE_LIST_PRODUCT
 } from '../../constants/actions';
-const ProductCatList = (props) => {
-  const { catData } = props;
+import { CategoryItemType, ProductItemType } from '../../model';
 
+interface DataCacheItemType {
+  id: number;
+  currentPage: number;
+  items: { [key: string]: ProductItemType[] };
+  pageCache: number[];
+}
+const ProductCatList: React.FC<{
+  catData: CategoryItemType & {
+    totalPage: number;
+    totalItems: number;
+    page: number;
+    lists: ProductItemType[];
+  };
+  slider?: boolean;
+}> = ({ catData }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [categoryData, setCategoryData] = useState(catData);
   const dispatch = useDispatch();
-  const dataCached = useSelector((state) => state.productList);
+  const dataCached: {
+    isLoading: boolean;
+    lists: DataCacheItemType[];
+  } = useSelector((state) => state.productList);
 
-  const handleLoadProducts = async (page) => {
+  const handleLoadProducts = async (page: number) => {
     setIsLoading(true);
 
     const listPrd = dataCached.lists.find(

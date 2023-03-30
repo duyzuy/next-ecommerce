@@ -4,12 +4,17 @@ import {
   FETCH_SHIPPING_ZONE_SETTING,
   FETCH_GENERAL_SETTING
 } from '../constants/actions';
-export const settingState = {
+
+export interface SettingDataType {
+  wcShipping: { [key: string]: any }[];
+  wcPaymentGateWay: { [key: string]: any }[];
+}
+export const settingState: SettingDataType = {
   wcShipping: [],
   wcPaymentGateWay: []
 };
 
-const settingReducer = (state, action) => {
+const settingReducer = (state = settingState, action) => {
   switch (action.type) {
     case FETCH_GENERAL_SETTING: {
       const { settingType, settingValue } = action.payload;

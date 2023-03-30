@@ -20,7 +20,9 @@
     "**/*.ts",
     "**/*.tsx",
     "pages/_app.tsx",
-    "components/common/Header/index.jsx"
+    "components/common/Header/index.jsx",
+    "pages/_404.jsx",
+    "contexts/StoreContext.ts"
   ],
   "exclude": ["node_modules"]
 }

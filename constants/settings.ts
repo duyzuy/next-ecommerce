@@ -1,10 +1,34 @@
+export const wooSetting = {
+  WOO_CURRENCY: 'woocommerce_currency',
+  WOO_ENABLE_COUPONS: 'woocommerce_enable_coupons',
+  WOO_CALC_TAXES: 'woocommerce_calc_taxes',
+  WOO_SHIP_TO_COUNTRIES: 'woocommerce_specific_ship_to_countries'
+};
+export const HOME_PAGE_PRODUCT_SECTION = [
+  {
+    id: 19,
+    key: 'hongNgoai'
+  },
+  {
+    id: 18,
+    key: 'bepGas'
+  },
+  {
+    id: 16,
+    key: 'bepTu'
+  },
+  {
+    id: 20,
+    key: 'hutMui'
+  }
+];
+
 export const MENUS = [
   {
     name: 'home',
     path: '/',
     icon: '',
     hasChildren: false,
-    icon: '',
     childrens: []
   },
   {
@@ -19,7 +43,6 @@ export const MENUS = [
     path: 'news',
     icon: '',
     hasChildren: false,
-    icon: '',
     childrens: []
   },
   {
@@ -27,7 +50,6 @@ export const MENUS = [
     path: 'lien-he',
     icon: '',
     hasChildren: false,
-    icon: '',
     childrens: []
   }
 ];
