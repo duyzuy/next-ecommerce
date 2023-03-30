@@ -33,21 +33,23 @@ const Home: NextPage<{
   device;
   categories;
 }> = (props) => {
-  const { catListData, brand, categories } = props;
+  const { catListData, brand } = props;
   const device = useSelector((state) => state.device);
+  const categories = useSelector((state) => state.menu.categories);
+  console.log({ categories });
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
       <div className="home__wrap">
         <div className={styles.promotion}>
           <TopPromote banner={TOP_PROMOTIONS} isDesktop={device.isDesktop} />
-          {(!device.isDesktop && (
+          {/* {(!device.isDesktop && (
             <div className="section__cat">
               <Container>
                 <CategoryItemList items={categories} type="grid" length={8} />
               </Container>
             </div>
-          )) || <></>}
+          )) || <></>} */}
 
           <SingleBanner />
           <Brands data={brand} />

@@ -5,6 +5,7 @@ import rootReducer, {
   initialState,
   InitialRootStateType
 } from '../reducer/rootReducer';
+import { DispatchType } from '../contexts/StoreContext';
 import { logger } from '../utils/logger';
 
 const StoreProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {

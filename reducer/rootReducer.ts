@@ -30,5 +30,4 @@ const rootReducer = combineReducers({
 export default rootReducer;
 
 export type InitialRootStateType = typeof initialState;
-
 export type ReducerKeys = keyof typeof initialState;

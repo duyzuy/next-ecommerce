@@ -1,12 +1,12 @@
 import { useContext } from 'react';
-import StoreContext from '../contexts/StoreContext';
+import StoreContext, { ActionType } from '../contexts/StoreContext';
 
 import { InitialRootStateType, ReducerKeys } from '../reducer/rootReducer';
 
 export const combineReducers =
   (slices: Record<ReducerKeys, Function>) =>
-  (state: InitialRootStateType, action: any) => {
-    console.log([slices]);
+  (state: InitialRootStateType, action: ActionType) => {
+    const initialState: Partial<InitialRootStateType> = {};
     return Object.keys(slices).reduce((acc, current) => {
       return {
         ...acc,
@@ -15,14 +15,15 @@ export const combineReducers =
           action
         )
       };
-    }, {});
+    }, initialState);
   };
 
-export const useSelector = (cb: (data: InitialRootStateType) => void) => {
+export const useSelector = (cb: (state: InitialRootStateType) => void) => {
   const [state, _] = useContext(StoreContext);
 
   if (cb !== undefined && typeof cb === 'function') {
-    return cb(state);
+    const data = cb(state);
+    return data;
   }
 
   return state;

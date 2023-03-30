@@ -7,6 +7,7 @@ import Footer from './common/Footer';
 import { Toast } from '../lib/toast';
 import NavigationBar from './common/NavigationBar';
 import { useSelector } from '../providers/hooks';
+import { DeviceType } from '../model';
 const DynamicHeader = dynamic(() => import('./common/Header'), {
   suspense: true,
   loading: undefined
@@ -45,13 +46,13 @@ const Layout = ({ children }) => {
   return (
     <>
       {/* <Header categories={categories} device={device} /> */}
-      <Suspense fallback={`loading...`}>
+      {/* <Suspense fallback={`loading...`}>
         <DynamicHeader />
-      </Suspense>
+      </Suspense> */}
       <main id="main" className={`ec_main ${clss}`}>
         {children}
       </main>
-      <Footer device={device} />
+      <Footer />
       {!device.isDesktop && <NavigationBar />}
       <Toast />
     </>

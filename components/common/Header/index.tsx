@@ -1,8 +1,8 @@
 import { memo } from 'react';
 import { Container } from 'semantic-ui-react';
 import * as Icon from 'react-feather';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { useSelector, useDispatch } from '../../../providers/hooks';
+import { useSession } from 'next-auth/react';
+import { useSelector } from '../../../providers/hooks';
 
 import SearchProduct from '../Partials/SearchProduct';
 import Logo from '../Partials/Logo';
@@ -14,7 +14,8 @@ import ProfileAccount from '../Partials/ProfileAccount';
 import CategoryItemList from '../Partials/CategoryItemList';
 import Promotion from '../Partials/Promotion';
 import styles from './header.module.scss';
-const Header = (props) => {
+
+const Header: React.FC = () => {
   const { data: session, status } = useSession();
 
   const bookingInfor = useSelector((state) => state.booking);
