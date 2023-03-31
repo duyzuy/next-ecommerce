@@ -14,13 +14,16 @@ import ProfileAccount from '../Partials/ProfileAccount';
 import CategoryItemList from '../Partials/CategoryItemList';
 import Promotion from '../Partials/Promotion';
 import styles from './header.module.scss';
-
+import { CategoryItemType, DeviceType } from '../../../model';
+import { BookingDataType } from '../../../reducer/booking';
 const Header: React.FC = () => {
   const { data: session, status } = useSession();
 
-  const bookingInfor = useSelector((state) => state.booking);
-  const categories = useSelector((state) => state.menu.categories);
-  const device = useSelector((state) => state.device);
+  const bookingInfor = useSelector<BookingDataType>((state) => state.booking);
+  const device = useSelector<DeviceType>((state) => state.device);
+  const categories = useSelector<CategoryItemType[]>(
+    (state) => state.menu.categories
+  );
   console.log({ device });
   if (device.isDesktop) {
     return (

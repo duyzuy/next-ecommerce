@@ -20,7 +20,7 @@ const DynamicFooter = dynamic(() => import('./common/Footer'), {
 
 const Layout = ({ children }) => {
   // const { categories, device,  } = props;
-  const device = useSelector((state) => state.device);
+  const device = useSelector<DeviceType>((state) => state.device);
   const clss = useClasses();
   console.log({ device });
   // return (
@@ -46,9 +46,9 @@ const Layout = ({ children }) => {
   return (
     <>
       {/* <Header categories={categories} device={device} /> */}
-      {/* <Suspense fallback={`loading...`}>
+      <Suspense fallback={`loading...`}>
         <DynamicHeader />
-      </Suspense> */}
+      </Suspense>
       <main id="main" className={`ec_main ${clss}`}>
         {children}
       </main>

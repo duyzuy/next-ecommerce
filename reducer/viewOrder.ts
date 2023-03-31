@@ -1,4 +1,10 @@
 import { VIEW_ORDER_DETAIL } from '../constants/actions';
+
+export interface ViewOrderType {
+  orderId: number;
+  orderDetail: [];
+  isLoading: boolean;
+}
 const viewOrderState = {
   orderId: null,
   orderDetail: [],

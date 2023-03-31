@@ -12,10 +12,7 @@ export const deviceState: DeviceType = {
 const deviceReducer = (state = deviceState, action: ActionType) => {
   switch (action.type) {
     case FETCH_DEVICE_TYPE: {
-      return {
-        ...state,
-        device: { ...action.payload }
-      };
+      return action.payload.device;
     }
     default:
       return state;

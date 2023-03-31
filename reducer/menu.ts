@@ -1,8 +1,9 @@
 import { FETCH_CATEGORY } from '../constants/actions';
 import { ActionType } from '../contexts';
+import { CategoryItemType } from '../model';
 
 export interface MenuDataType {
-  categories: [];
+  categories: CategoryItemType[];
   menuItem: [];
 }
 export const menuState: MenuDataType = {

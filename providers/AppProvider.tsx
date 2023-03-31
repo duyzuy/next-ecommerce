@@ -28,13 +28,13 @@ const AppProvider = ({ categories, children, device }) => {
     dispatch({
       type: FETCH_CATEGORY,
       payload: {
-        ...categories
+        categories
       }
     });
     dispatch({
       type: FETCH_DEVICE_TYPE,
       payload: {
-        ...device
+        device
       }
     });
   }, []);

@@ -14,7 +14,12 @@ import styles from '../styles/home.module.scss';
 import CategoryItemList from '../components/common/Partials/CategoryItemList';
 import { Container } from 'semantic-ui-react';
 
-import { BrandItemType, CategoryItemType, ProductItemType } from '../model';
+import {
+  BrandItemType,
+  CategoryItemType,
+  DeviceType,
+  ProductItemType
+} from '../model';
 import {
   HOME_PAGE_PRODUCT_SECTION,
   TOP_PROMOTIONS
@@ -34,22 +39,24 @@ const Home: NextPage<{
   categories;
 }> = (props) => {
   const { catListData, brand } = props;
-  const device = useSelector((state) => state.device);
-  const categories = useSelector((state) => state.menu.categories);
-  console.log({ categories });
+  const device = useSelector<DeviceType>((state) => state.device);
+  const categories = useSelector<CategoryItemType[]>(
+    (state) => state.menu.categories
+  );
+
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
       <div className="home__wrap">
         <div className={styles.promotion}>
           <TopPromote banner={TOP_PROMOTIONS} isDesktop={device.isDesktop} />
-          {/* {(!device.isDesktop && (
+          {(!device.isDesktop && (
             <div className="section__cat">
               <Container>
                 <CategoryItemList items={categories} type="grid" length={8} />
               </Container>
             </div>
-          )) || <></>} */}
+          )) || <></>}
 
           <SingleBanner />
           <Brands data={brand} />

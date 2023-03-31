@@ -6,10 +6,11 @@ import 'swiper/css';
 import 'swiper/css/free-mode';
 import 'swiper/css/pagination';
 import { FreeMode, Pagination } from 'swiper';
+import { CategoryItemType } from '../../../model';
 
 const CategoryItemList: React.FC<{
   spacing?: number;
-  items?: [];
+  items?: CategoryItemType[];
   type?: 'grid' | 'slider';
   length?: number;
 }> = ({ items, spacing, type = 'grid', length = 16 }) => {
@@ -83,7 +84,7 @@ const CategoryItemList: React.FC<{
                 <div className="ec__cat--thumbnail">
                   <Image
                     src={
-                      item.image !== null
+                      item?.image !== null
                         ? item?.image.src
                         : '/assets/images/image.svg'
                     }

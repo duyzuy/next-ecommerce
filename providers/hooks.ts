@@ -1,7 +1,13 @@
 import { useContext } from 'react';
 import StoreContext, { ActionType } from '../contexts/StoreContext';
+import { DeviceType } from '../model';
+import { BookingDataType } from '../reducer/booking';
 
-import { InitialRootStateType, ReducerKeys } from '../reducer/rootReducer';
+import {
+  InitialRootStateType,
+  initialState,
+  ReducerKeys
+} from '../reducer/rootReducer';
 
 export const combineReducers =
   (slices: Record<ReducerKeys, Function>) =>
@@ -18,15 +24,13 @@ export const combineReducers =
     }, initialState);
   };
 
-export const useSelector = (cb: (state: InitialRootStateType) => void) => {
+interface CallbackType {}
+export const useSelector = <R>(
+  selector: (state: InitialRootStateType) => R
+) => {
   const [state, _] = useContext(StoreContext);
 
-  if (cb !== undefined && typeof cb === 'function') {
-    const data = cb(state);
-    return data;
-  }
-
-  return state;
+  return selector(state);
 };
 
 export const useDispatch = () => {
@@ -34,3 +38,14 @@ export const useDispatch = () => {
 
   return dispatch;
 };
+
+// const makeSelector =
+//   <I, R>(selectingFunction: (state: I) => R) =>
+//   (state: I) =>
+//     selectingFunction(state);
+
+// const bookingInfor = makeSelector((state: InitialRootStateType) => state.booking);
+
+// const out = bookingInfor(initialState);
+
+export const createReducer = (initialState, builder) => {};

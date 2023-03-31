@@ -1,6 +1,6 @@
 import { combineReducers } from '../providers/hooks';
 import productListReducer, { productListState } from './productList';
-import viewOrderReducer, { viewOrderState } from './viewOrder';
+// import viewOrderReducer, { viewOrderState } from './viewOrder';
 import cartReducer, { cartState } from './cart';
 import settingReducer, { settingState } from './settingReducer';
 import bookingReducer, { bookingState } from './booking';
@@ -10,7 +10,7 @@ import menuReducer, { menuState } from './menu';
 
 export const initialState = {
   productList: productListState,
-  viewOrder: viewOrderState,
+  // viewOrder: viewOrderState,
   user: userState,
   setting: settingState,
   booking: bookingState,
@@ -19,7 +19,7 @@ export const initialState = {
 };
 const rootReducer = combineReducers({
   productList: productListReducer,
-  viewOrder: viewOrderReducer,
+  // viewOrder: viewOrderReducer,
   user: userReducer,
   setting: settingReducer,
   booking: bookingReducer,
@@ -30,4 +30,4 @@ const rootReducer = combineReducers({
 export default rootReducer;
 
 export type InitialRootStateType = typeof initialState;
-export type ReducerKeys = keyof typeof initialState;
+export type ReducerKeys = keyof InitialRootStateType;

@@ -28,6 +28,7 @@ import { setPayment, isPayment } from '../../../constants/booking';
 import { ProductItemType, ProductDetailType, ReviewType } from '../../../model';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
+import { BookingDataType } from '../../../reducer/booking';
 
 type NextPagePropsType = {
   data: ProductDetailType;
