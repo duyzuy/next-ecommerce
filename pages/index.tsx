@@ -8,6 +8,7 @@ import {
   getProductCategoryDetail,
   getProductListByCatId
 } from '../api/product';
+import { getSlider } from '../api/post';
 import ProductCatList from '../container/ProductCatList';
 import SingleBanner from '../container/SingleBanner';
 import styles from '../styles/home.module.scss';
@@ -18,7 +19,8 @@ import {
   BrandItemType,
   CategoryItemType,
   DeviceType,
-  ProductItemType
+  ProductItemType,
+  SliderItem
 } from '../model';
 import {
   HOME_PAGE_PRODUCT_SECTION,
@@ -35,21 +37,18 @@ type CatListDataItemType = CategoryItemType & {
 const Home: NextPage<{
   catListData: CatListDataItemType[];
   brand: BrandItemType[];
-  device;
-  categories;
+  sliders: SliderItem[];
 }> = (props) => {
-  const { catListData, brand } = props;
-  const device = useSelector<DeviceType>((state) => state.device);
-  const categories = useSelector<CategoryItemType[]>(
-    (state) => state.menu.categories
-  );
+  const { catListData, brand, sliders } = props;
+  const device = useSelector((state) => state.device);
+  const categories = useSelector((state) => state.menu.categories);
 
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
       <div className="home__wrap">
         <div className={styles.promotion}>
-          <TopPromote banner={TOP_PROMOTIONS} isDesktop={device.isDesktop} />
+          <TopPromote items={sliders} isDesktop={device.isDesktop} />
           {(!device.isDesktop && (
             <div className="section__cat">
               <Container>
@@ -72,6 +71,11 @@ const Home: NextPage<{
 
 export async function getServerSideProps(ctx: NextPageContext) {
   let categoryListData: CatListDataItemType[] = [];
+  let sliders = [];
+  const slider = await getSlider(103);
+  if (slider.status === 200) {
+    sliders = slider.data.list;
+  }
 
   await Promise.all(
     HOME_PAGE_PRODUCT_SECTION.map(async (catItem) => {
@@ -100,7 +104,8 @@ export async function getServerSideProps(ctx: NextPageContext) {
   return {
     props: {
       brand: data,
-      catListData: categoryListData
+      catListData: categoryListData,
+      sliders
     }
   };
 }

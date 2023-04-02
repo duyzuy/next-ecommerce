@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { DispatchWithoutAction } from 'react';
 import { createContext } from 'react';
 import { InitialRootStateType, initialState } from '../reducer/rootReducer';
-export interface ActionType {
+export interface AppActionType {
   type: string;
   payload: any;
 }
-export type DispatchType = React.Dispatch<ActionType>;
-const StoreContext = createContext<[InitialRootStateType, DispatchType] | null>(
+export type AppDispatchType = React.Dispatch<AppActionType>;
+const StoreContext = createContext<[InitialRootStateType, AppDispatchType]>([
+  initialState,
   null
-);
+]);
 
 export default StoreContext;

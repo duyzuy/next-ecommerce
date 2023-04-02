@@ -42,7 +42,7 @@ const MyApp = ({
   appData
 }: AppPropsType<{ session: Session }>) => {
   const { device, ua, categories, ...rest } = appData;
-
+  console.log({ categories });
   const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
   const CustomComponent = (props) => {
@@ -76,6 +76,7 @@ const MyApp = ({
 
 MyApp.getInitialProps = async (context: AppContext) => {
   let categories = [];
+  let menus = [];
   let device = {
     isMobile: false,
     isDesktop: true,
@@ -84,26 +85,26 @@ MyApp.getInitialProps = async (context: AppContext) => {
   };
 
   const { ctx } = context;
-  console.log({ ctx });
+
   const response = await getCategories({
     per_page: 20,
     hide_empty: true
   });
   // const menuItem = await getVerticalMenuItem();
   // console.log({ menuItem });
-  if (response.status === 500) {
+  if (response.status === 200) {
+    categories = response.data;
+  } else {
     console.log(response);
     // context.context.res.writeHead(500, {
     //   Location: 'http://localhost:3000/500',
     //   'Content-Type': 'text/html; charset=utf-8'
     // });
     // context.context.res.end();
-  } else {
-    categories = response.data;
   }
 
   const userAgent = ctx.req.headers['user-agent'] || '';
-  // console.log({ context, userAgent });
+
   const isAndroid = Boolean(userAgent.match(/Android/i));
   const isIos = Boolean(userAgent.match(/iPhone|iPad|iPod/i));
   const isOpera = Boolean(userAgent.match(/Opera Mini/i));
@@ -116,11 +117,6 @@ MyApp.getInitialProps = async (context: AppContext) => {
     isAndroid: isAndroid,
     isIos: isIos
   };
-  // 'primary' => __( 'Main Menu', 'saigonhomekitchen' ),
-  //   'vertical' => __( 'vertical Menu', 'saigonhomekitchen' ),
-  //   'primary_mobile' => __( 'Main Menu - Mobile', 'saigonhomekitchen' ),
-  //   'footer' => __( 'Footer Menu', 'saigonhomekitchen' ),
-  //   'top_bar_nav' => __( 'Top Bar Menu', 'saigonhomekitchen' ),
 
   return {
     appData: {

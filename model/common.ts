@@ -51,3 +51,11 @@ export interface BrandItemType {
   src: string;
   path: string;
 }
+
+export interface SliderItem {
+  id: number;
+  title: string;
+  excerpt: string;
+  bannerLink: string;
+  thumbnail: string;
+}

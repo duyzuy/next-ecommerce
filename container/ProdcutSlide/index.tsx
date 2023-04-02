@@ -6,10 +6,13 @@ import { Pagination } from 'swiper';
 import { contentType } from '../../constants/constants';
 import Card from '../../components/Card';
 import * as Icon from 'react-feather';
-const ProductSlide = (props) => {
-  const { products, spacing, viewItems } = props;
-
-  const slideRef = useRef();
+import { ProductItemType } from '../../model';
+const ProductSlide: React.FC<{
+  products?: ProductItemType[];
+  spacing?: number;
+  viewItems?: number;
+}> = ({ products, spacing, viewItems }) => {
+  const slideRef = useRef(null);
 
   const onSwiperPrev = () => {
     slideRef.current.slidePrev();

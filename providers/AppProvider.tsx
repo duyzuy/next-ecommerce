@@ -14,7 +14,7 @@ import { settingType } from '../constants/constants';
 const AppProvider = ({ categories, children, device }) => {
   const dispatch = useDispatch();
   const { data: session, status } = useSession();
-  console.log({ categories, children, device });
+  // console.log({ categories, children, device });
   const onDispatchSetting = useCallback(async () => {
     const generalSetting = await getSetting(settingType.GENERAL);
 

@@ -16,7 +16,7 @@ const clientWp = async (
     }
   };
 
-  const { body = {}, headers = {} } = options || {};
+  const { body, headers } = options || {};
 
   if (headers && !isEmpty(headers)) {
     configs = {

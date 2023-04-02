@@ -1,5 +1,5 @@
 import { FETCH_DEVICE_TYPE } from '../constants/actions';
-import { ActionType } from '../contexts';
+import { AppActionType } from '../contexts';
 import { DeviceType } from '../model';
 
 export const deviceState: DeviceType = {
@@ -9,7 +9,7 @@ export const deviceState: DeviceType = {
   isMobile: false
 };
 
-const deviceReducer = (state = deviceState, action: ActionType) => {
+const deviceReducer = (state = deviceState, action: AppActionType) => {
   switch (action.type) {
     case FETCH_DEVICE_TYPE: {
       return action.payload.device;

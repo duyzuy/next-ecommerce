@@ -28,7 +28,6 @@ import { setPayment, isPayment } from '../../../constants/booking';
 import { ProductItemType, ProductDetailType, ReviewType } from '../../../model';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
-import { BookingDataType } from '../../../reducer/booking';
 
 type NextPagePropsType = {
   data: ProductDetailType;
@@ -275,10 +274,9 @@ export const getStaticProps: GetStaticProps<NextPagePropsType, Params> = async (
   ctx
 ) => {
   const { params, locales, locale } = ctx;
-
   // console.log(`regenerate product detail ${params.slug}`);
   const response = await getProductBySlug(params.slug);
-  console.log(response);
+  // console.log(response);
   if (response.status === 404) {
     return {
       notFound: true

@@ -11,7 +11,7 @@
     display: flex;
     flex-wrap: wrap;
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: 10px;
     overflow: hidden;
     margin-bottom: 30px;
     @media screen and (max-width: 991px) {
@@ -124,7 +124,7 @@
   }
   :global .ec__absolute__footer {
     background-color: #fff;
-    border-radius: 20px;
+    border-radius: 10px;
     overflow: hidden;
     .column {
       @media screen and (max-width: 991px) {
@@ -148,21 +148,23 @@
         padding: 100px;
       }
     }
-    .ft__content ul {
-      list-style-type: none;
-      padding: 0;
-      margin: 0;
-      display: flex;
-      flex-wrap: wrap;
-      li {
-        width: 33.33%;
-        padding: 10px;
-        @media screen and (max-width: 991px) {
-          width: 50%;
-        }
-        a {
-          font-weight: bold;
-          font-size: 16px;
+    .ft__content {
+      p {
+        margin-bottom: 0;
+      }
+      .footer-menu {
+        list-style-type: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        li {
+          a {
+            display: inline-block;
+            font-size: 14px;
+            padding: 5px 10px;
+          }
         }
       }
     }

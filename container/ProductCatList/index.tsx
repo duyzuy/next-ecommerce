@@ -12,12 +12,7 @@ import {
 } from '../../constants/actions';
 import { CategoryItemType, ProductItemType } from '../../model';
 
-interface DataCacheItemType {
-  id: number;
-  currentPage: number;
-  items: { [key: string]: ProductItemType[] };
-  pageCache: number[];
-}
+import { CacheItemType } from '../../reducer/productList';
 const ProductCatList: React.FC<{
   catData: CategoryItemType & {
     totalPage: number;
@@ -32,7 +27,7 @@ const ProductCatList: React.FC<{
   const dispatch = useDispatch();
   const dataCached: {
     isLoading: boolean;
-    lists: DataCacheItemType[];
+    lists: CacheItemType[];
   } = useSelector((state) => state.productList);
 
   const handleLoadProducts = async (page: number) => {

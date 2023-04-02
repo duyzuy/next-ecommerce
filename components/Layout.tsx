@@ -22,7 +22,7 @@ const Layout = ({ children }) => {
   // const { categories, device,  } = props;
   const device = useSelector<DeviceType>((state) => state.device);
   const clss = useClasses();
-  console.log({ device });
+  // console.log({ device });
   // return (
   //   <>
   //     <Suspense fallback={`loading...`}>
@@ -45,10 +45,7 @@ const Layout = ({ children }) => {
 
   return (
     <>
-      {/* <Header categories={categories} device={device} /> */}
-      <Suspense fallback={`loading...`}>
-        <DynamicHeader />
-      </Suspense>
+      <Header />
       <main id="main" className={`ec_main ${clss}`}>
         {children}
       </main>

@@ -12,7 +12,7 @@
       justify-content: space-between;
     }
     .header-logo {
-      width: 180px;
+      width: 220px;
       margin-right: 60px;
       line-height: 0;
       a {
@@ -26,7 +26,7 @@
     }
     .header-top {
       background: linear-gradient(to right, #fec400 40%, #ffd800);
-      padding: 10px 0;
+      padding: 20px 0;
       input {
         width: 100%;
       }
@@ -83,9 +83,9 @@
       :global .ui.input {
         width: 100%;
         border-width: 0px;
-        height: 40px;
+        height: 45px;
         input {
-          border-radius: 30px;
+          border-radius: 5px;
           border-color: transparent;
         }
       }
@@ -102,6 +102,12 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        padding: 5px 10px;
+        white-space: nowrap;
+        border-radius: 5px;
+        &:hover {
+          background-color: #f4f8ff;
+        }
       }
       .ec_icon {
         background-color: $bg-white;
@@ -132,35 +138,65 @@
 }
 
 .ec_header_bottom {
-  box-shadow: 0px 10px 15px -6px rgb(0 0 0 / 15%);
-  padding-top: 10px;
-  padding-bottom: 10px;
-  :global .ec__cat--link {
-    display: flex;
-    align-items: center;
-    color: $grey-color;
-    font-weight: bold;
-    .sub--text {
-      flex: 1;
-      height: 20px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      -webkit-line-clamp: 1;
-      -webkit-box-orient: vertical;
-      display: -webkit-box;
-      span {
-        display: block;
+  :global {
+    box-shadow: 0px 10px 15px -6px rgb(0 0 0 / 15%);
+    padding-top: 10px;
+    padding-bottom: 10px;
+    .row-navigation {
+      display: flex;
+      align-items: center;
+    }
+    .ec__cat--link {
+      display: flex;
+      align-items: center;
+      color: $grey-color;
+      font-weight: bold;
+      padding: 5px 10px;
+      border-radius: 5px;
+      &:hover {
+        background-color: #f4f8ff;
+      }
+      .sub--text {
+        flex: 1;
+        height: 20px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 1;
+        -webkit-box-orient: vertical;
+        display: -webkit-box;
+        span {
+          display: block;
+        }
+      }
+      .ec__cat--thumbnail {
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        margin-right: 10px;
+        padding: 5px;
+        box-sizing: border-box;
       }
     }
-  }
-  :global .ec__cat--thumbnail {
-    width: 40px;
-    height: 40px;
-    border: 1px solid #f1f1f1;
-    border-radius: 50%;
-    margin-right: 10px;
-    padding: 5px;
-    box-sizing: border-box;
+    .swipe-control {
+      .swipe-buttons {
+        display: flex;
+      }
+      .button {
+        cursor: pointer;
+        display: inline-block;
+        line-height: 0;
+        background: #f4f8ff;
+        border-radius: 30px;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .button + .button {
+        margin-left: 10px;
+      }
+    }
   }
 }
 

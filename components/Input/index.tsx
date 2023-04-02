@@ -1,6 +1,18 @@
-import { useMemo } from 'react';
-const Input = (props) => {
+import React, { useMemo } from 'react';
+const Input: React.FC<{
+  id?: string;
+  type?: 'password' | 'text';
+  asRadio?: boolean;
+  asCheckbox?: boolean;
+  icon?: () => JSX.Element;
+  name?: string;
+  label?: string;
+  onChange?: (e: InputEvent) => void;
+  iconPosition?: 'left' | 'right';
+  error?: string;
+}> = (props) => {
   const {
+    id,
     type,
     asRadio,
     asCheckbox,

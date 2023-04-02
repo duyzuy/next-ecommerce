@@ -29,7 +29,6 @@ const userReducer = (state = userState, action) => {
   switch (action.type) {
     case FETCH_USER_DATA: {
       const data = action.payload;
-      console.log({ data });
       return {
         ...data,
         firstName: data.first_name,

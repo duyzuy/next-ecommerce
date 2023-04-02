@@ -5,12 +5,14 @@ import rootReducer, {
   initialState,
   InitialRootStateType
 } from '../reducer/rootReducer';
-import { DispatchType } from '../contexts/StoreContext';
+import { AppDispatchType } from '../contexts/StoreContext';
 import { logger } from '../utils/logger';
 
 const StoreProvider: React.FC<{ children: JSX.Element }> = ({ children }) => {
-  const [state, dispatch]: [InitialRootStateType, DispatchWithoutAction] =
-    useReducer(logger(rootReducer), initialState);
+  const [state, dispatch]: [InitialRootStateType, AppDispatchType] = useReducer(
+    logger(rootReducer),
+    initialState
+  );
 
   return (
     <StoreContext.Provider value={[state, dispatch]}>

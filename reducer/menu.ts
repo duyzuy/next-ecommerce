@@ -1,5 +1,5 @@
 import { FETCH_CATEGORY } from '../constants/actions';
-import { ActionType } from '../contexts';
+import { AppActionType } from '../contexts';
 import { CategoryItemType } from '../model';
 
 export interface MenuDataType {
@@ -11,7 +11,7 @@ export const menuState: MenuDataType = {
   menuItem: []
 };
 
-const menuReducer = (state = menuState, action: ActionType) => {
+const menuReducer = (state = menuState, action: AppActionType) => {
   switch (action.type) {
     case FETCH_CATEGORY: {
       return {

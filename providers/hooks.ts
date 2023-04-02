@@ -1,7 +1,5 @@
 import { useContext } from 'react';
-import StoreContext, { ActionType } from '../contexts/StoreContext';
-import { DeviceType } from '../model';
-import { BookingDataType } from '../reducer/booking';
+import StoreContext, { AppActionType } from '../contexts/StoreContext';
 
 import {
   InitialRootStateType,
@@ -11,7 +9,7 @@ import {
 
 export const combineReducers =
   (slices: Record<ReducerKeys, Function>) =>
-  (state: InitialRootStateType, action: ActionType) => {
+  (state: InitialRootStateType, action: AppActionType) => {
     const initialState: Partial<InitialRootStateType> = {};
     return Object.keys(slices).reduce((acc, current) => {
       return {
@@ -24,9 +22,8 @@ export const combineReducers =
     }, initialState);
   };
 
-interface CallbackType {}
-export const useSelector = <R>(
-  selector: (state: InitialRootStateType) => R
+export const useSelector = <T>(
+  selector: (state: InitialRootStateType) => T
 ) => {
   const [state, _] = useContext(StoreContext);
 
@@ -48,4 +45,37 @@ export const useDispatch = () => {
 
 // const out = bookingInfor(initialState);
 
-export const createReducer = (initialState, builder) => {};
+// interface Slice<N, S, R> {
+//   name?: N;
+//   initialState?: S;
+//   reducer?: R;
+// }
+// type SliceCreatetorReturn<N, S, R> = {
+//   name: N;
+//   reducer: R;
+//   initialState: S;
+// };
+
+// export const createSlide = <N, S, R>(
+//   slice: Slice<N, S, R>
+// ): SliceCreatetorReturn<N, S, R> => {
+//   let initialState = slice.initialState;
+
+//   let methods: object = slice.reducer || {};
+
+//   return {
+//     name: slice.name,
+//     reducer: { ...methods } as R,
+//     initialState: slice.initialState
+//   };
+// };
+
+// const userSlice = createSlide({
+//   name: 'user',
+//   initialState: { user: '', age: 20, address: '' },
+//   reducer: {
+//     increment: (state, action) => {},
+//     decrement: (state, action) => {}
+//   }
+// });
+// userSlice.name;

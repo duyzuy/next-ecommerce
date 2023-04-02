@@ -99,3 +99,34 @@ export const getPostBySlug = async (
       };
     });
 };
+
+export const getSlider = async (
+  taxId?: number
+): Promise<{
+  status: number;
+  statusText: string;
+  data?: {
+    [key: string]: any;
+  };
+}> => {
+  return await clientWp
+    .get(`dv/v1/slider`, {
+      body: { tax_id: taxId }
+    })
+    .then((response) => {
+      // console.log(response);
+      return {
+        status: response.status,
+        statusText: response.statusText,
+        data: response.data.data
+      };
+    })
+    .catch((error) => {
+      console.log(error);
+      return {
+        status: 503,
+        statusText: '',
+        data: {}
+      };
+    });
+};

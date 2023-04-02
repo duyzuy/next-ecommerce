@@ -7,9 +7,12 @@ import 'swiper/css/pagination';
 import { Autoplay, Pagination } from 'swiper';
 import styles from '../../styles/promo.module.scss';
 import * as Icon from 'react-feather';
+import { SliderItem } from '../../model';
 
-const TopPromote = (props) => {
-  const { banner, isDesktop } = props;
+const TopPromote: React.FC<{ items: SliderItem[]; isDesktop: boolean }> = ({
+  items,
+  isDesktop
+}) => {
   return (
     <div className={`ec__section ${styles.ec_promote}`}>
       <Container>
@@ -34,21 +37,21 @@ const TopPromote = (props) => {
               modules={[Autoplay, Pagination]}
               className="cat_list"
             >
-              {banner.map((item, index) => (
+              {items?.map((item, index) => (
                 <SwiperSlide key={index}>
                   <div className="top-slide">
                     <Image
-                      src={item.src}
+                      src={item.thumbnail}
                       layout="intrinsic"
                       width={900}
                       height={450}
                       placeholder="blur"
-                      blurDataURL={item.src}
+                      blurDataURL={item.thumbnail}
                       objectFit="cover"
                     />
                     <div className="slide-box">
-                      <p className="title">{item.name}</p>
-                      <Link href={item.path}>
+                      <p className="title">{item.title}</p>
+                      <Link href={item.bannerLink}>
                         <a className="slide-btn">
                           Xem ngay
                           <span className="icon">

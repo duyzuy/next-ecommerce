@@ -24,7 +24,7 @@ const Header: React.FC = () => {
   const categories = useSelector<CategoryItemType[]>(
     (state) => state.menu.categories
   );
-  console.log({ device });
+
   if (device.isDesktop) {
     return (
       <header id="ec__header" className={styles.ec_header}>
@@ -32,12 +32,6 @@ const Header: React.FC = () => {
           <Container>
             <div className="header-row">
               <Logo className="header-logo" />
-              <CategoryButton
-                label="Danh mục"
-                icon={() => <Icon.Menu size={20} />}
-                className="header-category"
-              />
-              <Promotion className="header-promo" label="Khuyến mại" />
               <SearchProduct className="header-search" />
               <div className={styles.ec_header_actions}>
                 <Cart
@@ -62,7 +56,14 @@ const Header: React.FC = () => {
         </div>
         <div id="ec_header_bottom" className={styles.ec_header_bottom}>
           <Container>
-            <CategoryItemList items={categories} type="slider" />
+            <div className="row-navigation">
+              <CategoryButton
+                label="Danh mục"
+                icon={() => <Icon.Menu size={20} />}
+                className="header-category"
+              />
+              <CategoryItemList items={categories} type="slider" />
+            </div>
           </Container>
         </div>
       </header>

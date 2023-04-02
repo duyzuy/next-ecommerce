@@ -22,7 +22,7 @@ const Footer = () => {
                     </span>
                     Chế độ bảo hành tận tâm
                   </Header>
-                  <p>
+                  <p style={{ textAlign: 'justify' }}>
                     Tất cả các sản phẩm do SaigonhomeKitchen bán ra đều được
                     tuân thủ điều kiện bảo hành của nhà cung cấp, hãng sản xuất.
                     Nếu có vấn đề về chất lượng sản phẩm, SaigonhomeKitchen xin
@@ -43,7 +43,7 @@ const Footer = () => {
                     </span>
                     Hỗ trợ đổi trả 1-1
                   </Header>
-                  <p>
+                  <p style={{ textAlign: 'justify' }}>
                     Tất cả các sản phẩm do SaigonhomeKitchen bán ra đều được
                     tuân thủ điều kiện bảo hành của nhà cung cấp, hãng sản xuất.
                     Nếu có vấn đề về chất lượng sản phẩm, SaigonhomeKitchen xin
@@ -188,28 +188,20 @@ const Footer = () => {
           </div>
         </div>
         <div className="ec__absolute__footer">
-          <Grid columns={2}>
-            <Grid.Column computer={8} mobile={16}>
+          <Grid columns={1} textAlign="center">
+            <Grid.Column computer={10} mobile={16}>
               <div className="col-left">
-                <div
-                  className="ft__logo"
-                  style={{ maxWidth: 180, marginBottom: 20 }}
-                >
-                  <Image
-                    src={`/assets/images/logo-saigonhome-red.svg`}
-                    width={100}
-                    height={30}
-                    layout="responsive"
-                    alt="saigonhome"
-                    placeholder="blur"
-                    blurDataURL={`/assets/images/logo-saigonhome-red.svg`}
-                  />
-                </div>
                 <div className="ft__content">
-                  <ul>
+                  <p>
+                    237 (số mới 324) Lý Thường Kiệt, Phường 6, Quận Tân Bình,
+                    Tp. Hồ Chí Minh. Đối diện CMC Plaza (Nguyễn Kim Tân Bình)
+                  </p>
+                  <p>Hotline: 0949 305 666 / 0901 392 555</p>
+                  <p>Email: saigonhomekitchen@gmail.com</p>
+                  <ul className="footer-menu">
                     <li>
-                      <Link href="/">
-                        <a>Giới thiệu</a>
+                      <Link href="/about">
+                        <a>Về chúng tôi</a>
                       </Link>
                     </li>
                     <li>
@@ -232,39 +224,30 @@ const Footer = () => {
                         <a>Liên hệ</a>
                       </Link>
                     </li>
-                    <li>
-                      <Link href="/about">
-                        <a>about</a>
-                      </Link>
-                    </li>
-                    <li>
-                      <Link href="/">
-                        <a style={{ maxWidth: 100, display: 'block' }}>
-                          <Image
-                            src={'/assets/images/bct.png'}
-                            width={120}
-                            height={45}
-                            alt="bct"
-                            layout="responsive"
-                            placeholder="blur"
-                            blurDataURL={'/assets/images/bct.png'}
-                          />
-                        </a>
-                      </Link>
-                    </li>
                   </ul>
+                  <div className="footer-bct">
+                    <Link href="/">
+                      <a
+                        style={{
+                          maxWidth: 100,
+                          display: 'block',
+                          marginLeft: 'auto',
+                          marginRight: 'auto'
+                        }}
+                      >
+                        <Image
+                          src={'/assets/images/bct.png'}
+                          width={120}
+                          height={45}
+                          alt="bct"
+                          layout="responsive"
+                          placeholder="blur"
+                          blurDataURL={'/assets/images/bct.png'}
+                        />
+                      </a>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </Grid.Column>
-            <Grid.Column computer={8} mobile={16}>
-              <div className="col-image">
-                <Image
-                  src={'/assets/images/showroom.jpeg'}
-                  layout="fill"
-                  alt="showroom"
-                  placeholder="blur"
-                  blurDataURL={'/assets/images/showroom.jpeg'}
-                />
               </div>
             </Grid.Column>
           </Grid>
