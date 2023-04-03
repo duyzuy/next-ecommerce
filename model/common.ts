@@ -1,4 +1,29 @@
 import { ProductItemType } from './product';
+export interface MetaDataType {
+  id: number;
+  key: string;
+  value: string;
+}
+export enum POST_STATUS {
+  PUBLISH = 'publish',
+  DRAFT = 'draft',
+  PRIVATE = 'private'
+}
+export enum POST_TYPE {
+  SIMPLE = 'simple',
+  GROUPED = 'grouped',
+  EXTERNAL = 'external',
+  VARIABLE = 'variable'
+}
+export enum TAX_STATUS {
+  TAXABLE = 'taxable',
+  SHIPPING = 'shipping'
+}
+export enum STOCK_STATUS {
+  INSTOCK = 'instock',
+  OUT_OF_STOCK = 'outofstock',
+  ON_BACK_ORDER = 'onbackorder'
+}
 
 export type BreadcrumbItemType = {
   id?: string;
@@ -6,15 +31,6 @@ export type BreadcrumbItemType = {
   name?: string;
   current?: boolean;
 };
-
-export interface ImageType {
-  alt?: string;
-  date_created?: string;
-  date_created_gmt?: string;
-  id?: number;
-  name?: string;
-  src?: string;
-}
 
 export interface ProductAttributeType {
   id?: number;

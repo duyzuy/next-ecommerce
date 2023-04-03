@@ -1,11 +1,12 @@
-import { ImageType } from './common';
+import { ImageType } from './image';
 export interface CategoryItemType {
-  count: number;
-  description: string;
-  display: string;
   id: number;
-  image: ImageType | null;
-  parent: number;
-  slug: string;
   name: string;
+  slug: string;
+  image: ImageType | null;
+  description: string;
+  display: 'default' | 'products' | 'subcategories' | 'both';
+  parent: number;
+  menu_order: number;
+  count: number;
 }

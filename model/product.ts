@@ -1,4 +1,28 @@
-import { ImageType, ProductAttributeType } from './common';
+import { CategoryItemType } from './category';
+import { ProductAttributeType } from './common';
+import { ImageType } from './image';
+
+type ProductDownLoadType = {
+  id: string;
+  name: string;
+  file: string;
+};
+type DimensionsType = {
+  length: string;
+  width: string;
+  height: string;
+};
+type ProductCategoryType = {
+  id: number;
+  name: string;
+  slug: string;
+};
+type ProductTagType = {
+  id: number;
+  name: string;
+  slug: string;
+};
+
 export interface ProductItemType {
   id: number;
   name: string;
@@ -6,9 +30,9 @@ export interface ProductItemType {
   price: string;
   regular_price: string;
   sale_price: string;
-  status: string;
-  stock_status: string;
-  type: string;
+  status: 'draft' | 'pending' | 'private' | 'publish';
+  stock_status: 'instock' | 'outofstock' | 'onbackorder';
+  type: 'simple' | 'grouped' | 'external' | 'variable';
   attributes: ProductAttributeType[];
   images: ImageType[];
   featured: boolean;
@@ -20,14 +44,14 @@ export interface ProductItemType {
   on_sale: boolean;
   purchasable: boolean;
   total_sales: number;
-  tags: [{ id: number; name: string; slug: string }];
-  categories: [{ id: number; name: string; slug: string }];
+  tags: ProductTagType[] | [];
+  categories: ProductCategoryType[] | [];
 }
 export interface ProductDetailType extends ProductItemType {
   description: string;
   rating_count: number;
   average_rating: string;
-  catalog_visibility: string;
+  catalog_visibility: 'visible' | 'catalog' | 'search' | 'hidden';
   virtual: boolean;
   downloadable: boolean;
   downloads: [];
@@ -46,15 +70,12 @@ export interface ProductDetailType extends ProductItemType {
 
   stock_quantity: number | null;
   backorders_allowed: boolean;
-  backorders: string;
+  backorders: 'no' | 'notify' | 'yes';
   backordered: boolean;
   low_stock_amount: number | null;
   sold_individually: boolean;
-  dimensions: {
-    length: string;
-    width: string;
-    height: string;
-  };
+  menu_order: number;
+  dimensions: DimensionsType;
   has_options: boolean;
 }
 

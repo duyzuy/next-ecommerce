@@ -20,11 +20,13 @@ export const getCategories = async (params) => {
       };
     })
     .catch((error) => {
-      return {
-        status: error.response.status,
-        statusText: error.response.statusText,
-        data: error.response.data
-      };
+      console.log(error);
+      return {};
+      // return {
+      //   status: error.response.status,
+      //   statusText: error.response.statusText,
+      //   data: error.response.data
+      // };
     });
 };
 

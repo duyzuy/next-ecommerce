@@ -1,6 +1,8 @@
+import { POST_STATUS } from './common';
 export interface PostItemType {
   id?: number;
   slug?: string;
+  status: 'publish' | 'draft' | 'private';
   title?: string;
   thumbnail?: string;
   excerpt?: string;

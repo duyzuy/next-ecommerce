@@ -23,7 +23,7 @@ export const combineReducers =
   };
 
 export const useSelector = <T>(
-  selector: (state: InitialRootStateType) => T
+  selector: (initialState: InitialRootStateType) => T
 ) => {
   const [state, _] = useContext(StoreContext);
 
@@ -79,3 +79,47 @@ export const useDispatch = () => {
 //   }
 // });
 // userSlice.name;
+
+// interface ItemType {
+//   id?: number;
+//   name?: string;
+//   parentId?: number;
+//   child?: ItemType[];
+// }
+// const arr: ItemType[] = [
+//   { id: 1, name: 'a', parentId: 0, child: [] },
+//   { id: 2, name: 'ab', parentId: 0, child: [] },
+//   { id: 3, name: 'ac', parentId: 0, child: [] },
+//   { id: 4, name: 'aa', parentId: 1, child: [] },
+//   { id: 5, name: 'aaa', parentId: 4, child: [] },
+//   { id: 6, name: 'adf', parentId: 2, child: [] },
+//   { id: 7, name: 'agsd', parentId: 5, child: [] },
+//   { id: 8, name: 'aasdfcv', parentId: 5, child: [] },
+//   { id: 9, name: 'a123', parentId: 8, child: [] },
+//   { id: 10, name: 'aasdfv', parentId: 2, child: [] },
+//   { id: 11, name: 'avbcza', parentId: 2, child: [] },
+//   { id: 12, name: 'affdsafd', parentId: 6, child: [] },
+//   { id: 13, name: 'affdsafd', parentId: 9, child: [] },
+//    { id: 14, name: 'affdsafd', parentId: 0, child: [] }
+// ];
+
+// let parrentEl = arr.filter((item) => item.parentId === 0);
+
+// function loop(id: number, arr: ItemType[]) {
+//   let childEl: Partial<ItemType>[] = [];
+//   arr.forEach((item) => {
+//     if (item.parentId === id) {
+
+//       const childOfChild = loop(item.id, arr);
+
+//        childEl = [...childEl, { ...item, child: childOfChild }];
+//     }
+//   });
+//   return childEl;
+// }
+// parrentEl.forEach((item, index) => {
+//   const childEl = loop(item.id, arr);
+//   parrentEl[index].child = [...childEl];
+// });
+
+// console.log(parrentEl);
