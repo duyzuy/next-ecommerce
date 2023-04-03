@@ -5,8 +5,8 @@ import { SessionProvider } from 'next-auth/react';
 import BookingRoute from '../components/BookingRoute';
 import Auth from '../components/Auth';
 import Layout from '../components/Layout';
-import { getVerticalMenuItem } from '../api/menu';
-import { DeviceType } from '../model';
+import { getMenuList } from '../api/menu';
+import { DeviceType, MenuItemType } from '../model';
 import { AppContext, AppProps } from 'next/app';
 import type { NextPage } from 'next';
 import type { Session } from 'next-auth';
@@ -30,6 +30,7 @@ type AppPropsType<P = {}> = AppProps<P> & {
     categories?: CategoryItemType[];
     device?: DeviceType;
     ua?: string;
+    menus: MenuItemType[];
   };
   pageProps: {
     session?: Session;
@@ -41,8 +42,8 @@ const MyApp = ({
   pageProps,
   appData
 }: AppPropsType<{ session: Session }>) => {
-  const { device, ua, categories, ...rest } = appData;
-  console.log({ categories });
+  const { device, ua, categories, menus, ...rest } = appData;
+
   const getLayout = Component.getLayout || ((page) => <Layout>{page}</Layout>);
 
   const CustomComponent = (props) => {
@@ -66,7 +67,7 @@ const MyApp = ({
   return (
     <StoreProvider>
       <SessionProvider session={pageProps?.session}>
-        <AppProvider categories={categories} device={device}>
+        <AppProvider categories={categories} device={device} menus={menus}>
           {getLayout(<CustomComponent {...pageProps} />)}
         </AppProvider>
       </SessionProvider>
@@ -76,14 +77,17 @@ const MyApp = ({
 
 MyApp.getInitialProps = async (context: AppContext) => {
   let categories = [];
-  let menus = [];
+  let menus: MenuItemType[] = [];
   let device = {
     isMobile: false,
     isDesktop: true,
     isAndroid: false,
     isIos: false
   };
-
+  const menuResponse = await getMenuList(75);
+  if (menuResponse.status === 200) {
+    menus = menuResponse.data;
+  }
   const { ctx } = context;
 
   const response = await getCategories({
@@ -121,7 +125,8 @@ MyApp.getInitialProps = async (context: AppContext) => {
   return {
     appData: {
       categories,
-      device
+      device,
+      menus
     }
   };
 };

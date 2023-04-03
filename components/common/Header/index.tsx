@@ -24,49 +24,65 @@ const Header: React.FC = () => {
   const categories = useSelector<CategoryItemType[]>(
     (state) => state.menu.categories
   );
-
+  const menuItems = useSelector((state) => state.menu.menuItems);
   if (device.isDesktop) {
     return (
-      <header id="ec__header" className={styles.ec_header}>
-        <div id="ec_header_top" className="header-top">
-          <Container>
-            <div className="header-row">
-              <Logo className="header-logo" />
-              <SearchProduct className="header-search" />
-              <div className={styles.ec_header_actions}>
-                <Cart
-                  className="header-cart"
-                  count={bookingInfor.products.count}
-                  icon={() => <Icon.ShoppingCart size={20} />}
-                  showCount={true}
-                />
-                <Shipping className="header-shipping" />
-                <Notify
-                  className="header-notify"
-                  icon={() => <Icon.Bell size={20} />}
-                />
-                <ProfileAccount
-                  icon={() => <Icon.User size={20} />}
-                  className="header-account"
-                  isAuthenticated={status === 'authenticated'}
-                />
+      <>
+        <header id="ec__header" className={styles.ec_header}>
+          <div id="ec_header_top" className="header-top">
+            <Container>
+              <div className="header-row">
+                <Logo className="header-logo" />
+                <SearchProduct className="header-search" />
+                <div className={styles.ec_header_actions}>
+                  <Cart
+                    className="header-cart"
+                    count={bookingInfor.products.count}
+                    icon={() => <Icon.ShoppingCart size={20} />}
+                    showCount={true}
+                  />
+                  <Shipping className="header-shipping" />
+                  <Notify
+                    className="header-notify"
+                    icon={() => <Icon.Bell size={20} />}
+                  />
+                  <ProfileAccount
+                    icon={() => <Icon.User size={20} />}
+                    className="header-account"
+                    isAuthenticated={status === 'authenticated'}
+                  />
+                </div>
               </div>
-            </div>
-          </Container>
+            </Container>
+          </div>
+          <div id="ec_header_bottom" className={styles.ec_header_bottom}>
+            <Container>
+              <div className="row-navigation">
+                <CategoryButton
+                  label="Danh mục"
+                  icon={() => <Icon.Menu size={20} />}
+                  className="header-category"
+                />
+                <CategoryItemList items={categories} type="slider" />
+              </div>
+            </Container>
+          </div>
+        </header>
+        <div className={styles.navigation}>
+          <div className="navigation-wrapper">
+            <Container>
+              <div className="navigation-items">
+                <div className="menu-col-left">
+                  {menuItems?.map((item) => (
+                    <div className="menu-item">{item.title}</div>
+                  ))}
+                </div>
+                <div className="menu-col-right"></div>
+              </div>
+            </Container>
+          </div>
         </div>
-        <div id="ec_header_bottom" className={styles.ec_header_bottom}>
-          <Container>
-            <div className="row-navigation">
-              <CategoryButton
-                label="Danh mục"
-                icon={() => <Icon.Menu size={20} />}
-                className="header-category"
-              />
-              <CategoryItemList items={categories} type="slider" />
-            </div>
-          </Container>
-        </div>
-      </header>
+      </>
     );
   } else {
     return (

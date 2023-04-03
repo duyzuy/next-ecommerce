@@ -5,16 +5,22 @@ import {
   FETCH_GENERAL_SETTING,
   FETCH_USER_DATA,
   FETCH_CATEGORY,
-  FETCH_DEVICE_TYPE
+  FETCH_DEVICE_TYPE,
+  FETCH_MENU_LIST
 } from '../constants/actions';
 import { getSetting } from '../actions/setting';
 import { useSession } from 'next-auth/react';
 import { client } from '../api/client';
 import { settingType } from '../constants/constants';
-const AppProvider = ({ categories, children, device }) => {
+import { CategoryItemType, DeviceType, MenuItemType } from '../model';
+const AppProvider: React.FC<{
+  categories: CategoryItemType[];
+  children: JSX.Element;
+  device: DeviceType;
+  menus: MenuItemType[];
+}> = ({ categories, children, device, menus }) => {
   const dispatch = useDispatch();
   const { data: session, status } = useSession();
-  // console.log({ categories, children, device });
   const onDispatchSetting = useCallback(async () => {
     const generalSetting = await getSetting(settingType.GENERAL);
 
@@ -35,6 +41,12 @@ const AppProvider = ({ categories, children, device }) => {
       type: FETCH_DEVICE_TYPE,
       payload: {
         device
+      }
+    });
+    dispatch({
+      type: FETCH_MENU_LIST,
+      payload: {
+        menus
       }
     });
   }, []);

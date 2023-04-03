@@ -28,5 +28,6 @@ export const UPDATE_SHIPPING_ADDRESS = 'UPDATE_SHIPPING_ADDRESS';
 export const FETCH_ORDER_DETAIL = 'FETCH_ORDER_DETAIL';
 export const FETCH_CATEGORY = 'FETCH_CATEGORY';
 export const FETCH_DEVICE_TYPE = 'FETCH_DEVICE_TYPE';
+export const FETCH_MENU_LIST = 'FETCH_MENU_LIST';
 
 export const bookingActions = {};

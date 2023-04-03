@@ -1,11 +1,18 @@
 import React, { memo, useMemo } from 'react';
+import { MenuItemType } from '../../../model';
 
 type PropsType = {
   className?: string;
   label?: string;
   icon?: () => React.ReactNode;
+  menuList?: MenuItemType[];
 };
-const CategoryButton: React.FC<PropsType> = ({ className, label, icon }) => {
+const CategoryButton: React.FC<PropsType> = ({
+  className,
+  label,
+  icon,
+  menuList
+}) => {
   const clss = useMemo(() => {
     let cls = 'category';
     if (className) {

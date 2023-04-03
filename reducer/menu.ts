@@ -1,14 +1,14 @@
-import { FETCH_CATEGORY } from '../constants/actions';
+import { FETCH_CATEGORY, FETCH_MENU_LIST } from '../constants/actions';
 import { AppActionType } from '../contexts';
-import { CategoryItemType } from '../model';
+import { CategoryItemType, MenuItemType } from '../model';
 
 export interface MenuDataType {
   categories: CategoryItemType[];
-  menuItem: [];
+  menuItems: MenuItemType[];
 }
 export const menuState: MenuDataType = {
   categories: [],
-  menuItem: []
+  menuItems: []
 };
 
 const menuReducer = (state = menuState, action: AppActionType) => {
@@ -17,6 +17,12 @@ const menuReducer = (state = menuState, action: AppActionType) => {
       return {
         ...state,
         categories: [...action.payload.categories]
+      };
+    }
+    case FETCH_MENU_LIST: {
+      return {
+        ...state,
+        menuItems: action.payload.menus
       };
     }
     default:

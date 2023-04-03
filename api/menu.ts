@@ -1,10 +1,9 @@
 import { wpClient } from './client';
 
-export const getVerticalMenuItem = async () => {
+export const getMenuList = async (menuId: number) => {
   return await wpClient
-    .get(`dv/v1/menu?type=vertical`)
+    .get(`dv/v1/menu?menu_id=${menuId}`)
     .then((response) => {
-      console.log({ response });
       return {
         status: response.status,
         statusText: response.statusText,
@@ -12,7 +11,6 @@ export const getVerticalMenuItem = async () => {
       };
     })
     .catch((error) => {
-      console.log({ error });
       return {
         status: error.response.status,
         statusText: error.response.statusText,
