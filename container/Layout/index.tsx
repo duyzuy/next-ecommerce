@@ -14,7 +14,7 @@ import { client } from '../../api/client';
 import styles from '../../styles/product.module.scss';
 import { ProductItemType } from '../../model/product';
 import { CategoryItemType } from '../../model/category';
-import { ProductAttributeType } from '../../model';
+import { AttributeType } from '../../model';
 import { NextRouter } from 'next/router';
 type PropsType = {
   products?: {
@@ -26,7 +26,7 @@ type PropsType = {
   type?: string;
   isCategory?: boolean;
   category?: CategoryItemType;
-  attribures?: ProductAttributeType[];
+  attribures?: AttributeType[];
   router?: NextRouter;
 };
 const Layout: React.FC<PropsType> = (props) => {

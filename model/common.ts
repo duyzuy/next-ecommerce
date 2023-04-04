@@ -57,8 +57,16 @@ export interface AttributeType {
   id: number;
   name: string;
   type: string;
+  slug: string;
   orderBy: string;
   hasArchives: boolean;
+  options: {
+    id: number;
+    name: string;
+    slug: string;
+    taxonomy: string;
+    count: number;
+  }[];
 }
 
 export interface BrandItemType {

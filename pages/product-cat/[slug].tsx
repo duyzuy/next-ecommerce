@@ -7,25 +7,18 @@ import {
   getCategoryBySlug,
   getProductIdsByCatId
 } from '../../api/product';
-import {
-  getProductAttributes,
-  getProductAttrTerms
-} from '../../api/ProductAttributes';
+import { getProductAttributes } from '../../api/ProductAttributes';
 import { useRouter } from 'next/router';
 import Layout from '../../container/Layout';
 
-import {
-  ProductAttributeType,
-  CategoryItemType,
-  ProductsType
-} from '../../model';
+import { AttributeType, CategoryItemType, ProductsType } from '../../model';
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
 interface NextPagePropsType {
   category: CategoryItemType;
   products: ProductsType;
-  attribures: ProductAttributeType[];
+  attribures: AttributeType[];
 }
 const ProductCategory: NextPage<NextPagePropsType> = ({
   category,
@@ -36,7 +29,7 @@ const ProductCategory: NextPage<NextPagePropsType> = ({
   if (router.isFallback) {
     return <Loader active inline="centered" />;
   }
-
+  console.log({ attribures });
   return (
     <Layout
       products={products}
@@ -119,18 +112,20 @@ export const getStaticProps: GetStaticProps<NextPagePropsType, Params> = async (
   //   prdIdList = prdIdList.concat(prdIds.data.map((prd) => prd.id));
   // }
 
-  const prdAttributes = await getProductAttributes();
+  const prdAttributes = await getProductAttributes(category.data[0].id);
+  console.log({ prdAttributes });
   if (prdAttributes.status === 200) {
-    attribures = await Promise.all(
-      prdAttributes.data.map(async (attr) => {
-        return await getProductAttrTerms(attr.id).then((response) => {
-          return {
-            ...attr,
-            attrTerms: response
-          };
-        });
-      })
-    );
+    attribures = prdAttributes.data;
+    // attribures = await Promise.all(
+    //   prdAttributes.data.map(async (attr) => {
+    //     return await getProductAttrTerms(attr.id).then((response) => {
+    //       return {
+    //         ...attr,
+    //         attrTerms: response
+    //       };
+    //     });
+    //   })
+    // );
   }
 
   return {

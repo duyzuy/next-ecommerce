@@ -5,10 +5,57 @@
       background-color: #fff;
       display: flex;
       padding: 10px;
+      margin-right: 10px;
+      border-radius: 5px;
       .icon {
         line-height: 1;
         display: inline-block;
         margin-right: 10px;
+      }
+      .name {
+        font-weight: bold;
+      }
+    }
+    .tool-body {
+      display: flex;
+      align-items: center;
+      flex: 1;
+    }
+
+    .tool-attr {
+      padding: 10px 15px;
+      background-color: #fff;
+      border-radius: 5px;
+      margin-right: 20px;
+
+      &:last-child {
+        margin-right: 0;
+      }
+      .attr-name {
+        font-weight: bold;
+        font-size: 14px;
+      }
+      .attr-terms {
+        display: none;
+      }
+      .attr-item {
+        display: flex;
+        padding: 10px;
+      }
+      .check {
+        display: inline-block;
+        width: 20px;
+        height: 20px;
+        border: 2px solid #f1f1f1;
+        border-radius: 3px;
+      }
+      .term-text {
+        flex: 1;
+        padding-left: 10px;
+      }
+      .ec__term {
+        padding: 5px;
+        cursor: pointer;
       }
     }
   }

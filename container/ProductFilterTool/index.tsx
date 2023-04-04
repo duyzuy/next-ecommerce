@@ -4,17 +4,9 @@ import SliderRange from '../../components/SliderRange';
 import { AttributeType, ProductAttributeType } from '../../model';
 import * as Icon from 'react-feather';
 import styles from './filtertool.module.scss';
-type AttributeProductFilterType = AttributeType & {
-  attrTerms: {
-    id: number;
-    count: number;
-    menuOrder: number;
-    name: string;
-    slug: string;
-  }[];
-};
+
 const ProductFilterTool: React.FC<{
-  attribures: AttributeProductFilterType[];
+  attribures: AttributeType[];
   type: string;
 }> = ({ attribures, type }) => {
   const minPriceRef = useRef();
@@ -44,37 +36,39 @@ const ProductFilterTool: React.FC<{
           </span>
           <span className="name">Bộ lọc</span>
         </div>
-        {attribures.map((attr, index) => {
-          return (
-            <div key={index} className="tool-attr">
-              <div className="attr-name">
-                {attr.name} <Icon.ArrowDown size={12} />
-              </div>
-              <div className="attr-terms">
-                {attr.attrTerms.map((term, index) => {
-                  return (
-                    <div key={index} className="ec__term">
-                      {term.name}
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          );
-        })}
-        <div className="tool-attr">
-          <div className="attr-name">Khoảng giá</div>
-          <div className="attr-terms">
-            {priceFilters.map((priceFilter) => (
-              <div className="attr-item">
-                <span className="check"></span>
-                <div className="term-text">
-                  {`Từ ${priceFilter.priceFrom}`}
-                  {' - '}
-                  {`Đến ${priceFilter.priceTo}`}
+        <div className="tool-body">
+          {attribures.map((attr, index) => {
+            return (
+              <div key={index} className="tool-attr">
+                <div className="attr-name">
+                  {attr.name} <Icon.ArrowDown size={12} />
+                </div>
+                <div className="attr-terms">
+                  {attr.options.map((term, index) => {
+                    return (
+                      <div key={index} className="ec__term">
+                        {term.name}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
-            ))}
+            );
+          })}
+          <div className="tool-attr">
+            <div className="attr-name">Khoảng giá</div>
+            <div className="attr-terms">
+              {priceFilters.map((priceFilter) => (
+                <div className="attr-item">
+                  <span className="check"></span>
+                  <div className="term-text">
+                    {`Từ ${priceFilter.priceFrom}`}
+                    {' - '}
+                    {`Đến ${priceFilter.priceTo}`}
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

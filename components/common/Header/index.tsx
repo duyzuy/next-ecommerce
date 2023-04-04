@@ -34,7 +34,7 @@ const Header: React.FC = () => {
     subitems: {}
   });
   const headerRef = useRef<HTMLDivElement>(null);
-  console.log(subMenu);
+
   const subMenuList = useMemo(() => {
     let subItem: Partial<MenuItemType> = {};
 
@@ -194,13 +194,11 @@ const Header: React.FC = () => {
                     <div className="menu-col-body">
                       <div className="menu-sub-list">
                         {subMenuList.child_items?.map((item) => (
-                          <div className="sub-menu-item">
+                          <div className="sub-menu-item" key={item.ID}>
                             <div className="inner-sub-item">
                               <Link href={item.url} className="nav-link">
                                 <a>
-                                  <p className="menu-name" key={item.ID}>
-                                    {item.title}
-                                  </p>
+                                  <p className="menu-name">{item.title}</p>
                                   <span className="menu-btn-view">
                                     Xem{' '}
                                     <Icon.ArrowRight
