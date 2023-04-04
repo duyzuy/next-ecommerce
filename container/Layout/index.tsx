@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Container, Header, Grid } from 'semantic-ui-react';
 import Card from '../../components/Card';
-import SideBar from '../SideBar';
+import ProductFilterTool from '../ProductFilterTool';
 import Pagination from '../../container/Pagination';
 import ProductToolBar from '../ProductToolBar';
 import { contentType } from '../../constants/constants';
@@ -149,9 +149,9 @@ const Layout: React.FC<PropsType> = (props) => {
               <Header as="h1">
                 {(isCategory && category?.name) || 'Sản phẩm'}
               </Header>
+              <ProductFilterTool type="category" attribures={attribures} />
             </div>
             <div className="ec__product--container">
-              <SideBar type="category" attribures={attribures} />
               <div className="ec__product--list">
                 <ProductToolBar
                   isLoading={false}
@@ -162,7 +162,7 @@ const Layout: React.FC<PropsType> = (props) => {
                   onSetSelected={handleSelection}
                 />
                 <div className="ec__product--items">
-                  <Grid columns={3}>
+                  <Grid columns={5}>
                     <Grid.Row>
                       {productData.map((prd) => (
                         <Grid.Column key={prd.id}>

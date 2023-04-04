@@ -25,7 +25,6 @@ const Logo: React.FC<PropsType> = ({ className, asIcon, label }) => {
             alt="icon"
             width={100}
             height={100}
-            layout="fill"
             placeholder="blur"
             blurDataURL="/assets/images/favicon-sgh-red.svg"
           />

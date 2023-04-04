@@ -37,4 +37,5 @@ export interface MenuItemType {
   classes: string[];
   xfn: string;
   child_items: MenuItemType[];
+  menu_thumbnail: string;
 }

@@ -1,0 +1,15 @@
+.ec__product {
+  :global {
+    display: flex;
+    .tool-header {
+      background-color: #fff;
+      display: flex;
+      padding: 10px;
+      .icon {
+        line-height: 1;
+        display: inline-block;
+        margin-right: 10px;
+      }
+    }
+  }
+}

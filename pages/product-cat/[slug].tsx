@@ -22,13 +22,16 @@ import {
 import { GetStaticPaths, GetStaticProps, NextPage } from 'next';
 import { ParsedUrlQuery } from 'querystring';
 
-type NextPagePropsType = {
+interface NextPagePropsType {
   category: CategoryItemType;
   products: ProductsType;
   attribures: ProductAttributeType[];
-};
-const ProductCategory: NextPage<NextPagePropsType> = (props) => {
-  const { category, products, attribures } = props;
+}
+const ProductCategory: NextPage<NextPagePropsType> = ({
+  category,
+  products,
+  attribures
+}) => {
   const router = useRouter();
   if (router.isFallback) {
     return <Loader active inline="centered" />;
@@ -50,7 +53,7 @@ export default ProductCategory;
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const response = await getCategories({
-    per_page: 24,
+    per_page: 25,
     hide_empty: true
   });
   let paths = [];

@@ -6,12 +6,13 @@ type PropsType = {
   label?: string;
   icon?: () => React.ReactNode;
   menuList?: MenuItemType[];
+  onClick?: () => void;
 };
 const CategoryButton: React.FC<PropsType> = ({
   className,
   label,
   icon,
-  menuList
+  onClick
 }) => {
   const clss = useMemo(() => {
     let cls = 'category';
@@ -30,7 +31,7 @@ const CategoryButton: React.FC<PropsType> = ({
 
   return (
     <div className={clss}>
-      <div className="item">
+      <div className="item" onClick={onClick}>
         <IconComp />
         {label && <p className="label">{label}</p>}
       </div>

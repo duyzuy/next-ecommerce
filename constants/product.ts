@@ -17,7 +17,7 @@ export enum ProductFilterKeys {
 
 export const productFilterValue = {
   [ProductFilterKeys.PAGE]: 1,
-  [ProductFilterKeys.PER_PAGE]: 24,
+  [ProductFilterKeys.PER_PAGE]: 25,
   [ProductFilterKeys.ORDER]: 'desc',
   [ProductFilterKeys.STATUS]: 'publish',
   [ProductFilterKeys.ORDER_BY]: 'date',
