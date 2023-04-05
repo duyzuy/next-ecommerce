@@ -48,6 +48,7 @@ export const getProductListByCatId = async (
     order?: 'asc' | 'desc';
     orderby?: 'price' | 'popularity' | 'rating' | 'title' | 'include';
     offset?: number;
+    per_page?: number;
   }
 ): Promise<{
   status: number;

@@ -236,13 +236,13 @@ const Footer = () => {
                         }}
                       >
                         <Image
-                          src={'/assets/images/bct.png'}
+                          src={'/assets/images/bocongthuong.png'}
                           width={120}
                           height={45}
                           alt="bct"
                           layout="responsive"
                           placeholder="blur"
-                          blurDataURL={'/assets/images/bct.png'}
+                          blurDataURL={'/assets/images/bocongthuong.png'}
                         />
                       </a>
                     </Link>

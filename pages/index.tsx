@@ -62,7 +62,7 @@ const Home: NextPage<{
         </div>
 
         {catListData.map((catData) => (
-          <ProductCatList slider key={catData.key} catData={catData} />
+          <ProductCatList slider key={catData.key} catData={catData} small />
         ))}
       </div>
     </>
@@ -82,8 +82,8 @@ export async function getServerSideProps(ctx: NextPageContext) {
       const category = await getProductCategoryDetail(catItem.id);
 
       if (category.status === 200) {
-        const productList = await getProductListByCatId(catItem.id, {
-          per_page: 10
+        const productList = await getProductListByCatId(category.data.id, {
+          per_page: 5
         });
         categoryListData = [
           ...categoryListData,

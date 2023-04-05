@@ -21,7 +21,11 @@ const ProductCatList: React.FC<{
     lists: ProductItemType[];
   };
   slider?: boolean;
-}> = ({ catData }) => {
+  small?: boolean;
+  computer?: number;
+  mobile?: number;
+  tablet?: number;
+}> = ({ catData, computer = 5, mobile = 2, tablet = 3, small, slider }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [categoryData, setCategoryData] = useState(catData);
   const dispatch = useDispatch();
@@ -109,7 +113,11 @@ const ProductCatList: React.FC<{
           </span>
         </div>
         <div className="section-products">
-          <div className="flx-row mobile-2 tablet-3 computer-5">
+          <div
+            className={`${
+              (small && 'flx-row small') || 'flx-row'
+            } mobile-${mobile} tablet-${tablet} computer-${computer}`}
+          >
             {categoryData.lists.map((prd) => {
               return (
                 <div className="flx-col" key={prd.id}>

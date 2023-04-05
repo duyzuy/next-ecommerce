@@ -50,7 +50,7 @@ const ProductDetail: NextPage<NextPagePropsType> = ({
   const dispatch = useDispatch();
   const cart = useCart();
   const bookingInfor = useSelector((state) => state.booking);
-
+  console.log({ data });
   const onAddToCart = (
     prd: ProductItemType,
     quantity: number,

@@ -2,7 +2,7 @@ import { CategoryItemType } from './category';
 import { ProductAttributeType } from './common';
 import { ImageType } from './image';
 
-type ProductDownLoadType = {
+type DownloadType = {
   id: string;
   name: string;
   file: string;
@@ -42,9 +42,6 @@ export interface ProductItemType {
   date_on_sale_to: string | null;
   date_on_sale_to_gmt: string | null;
   on_sale: boolean;
-  purchasable: boolean;
-  total_sales: number;
-  tags: ProductTagType[] | [];
   categories: ProductCategoryType[] | [];
 }
 export interface ProductDetailType extends ProductItemType {
@@ -54,7 +51,7 @@ export interface ProductDetailType extends ProductItemType {
   catalog_visibility: 'visible' | 'catalog' | 'search' | 'hidden';
   virtual: boolean;
   downloadable: boolean;
-  downloads: [];
+  downloads: DownloadType[];
   download_limit: boolean;
   download_expiry: boolean;
   external_url: string;
@@ -67,7 +64,7 @@ export interface ProductDetailType extends ProductItemType {
   upsell_ids: number[];
   cross_sell_ids: number[];
   reviews_allowed: boolean;
-
+  tags: ProductTagType[] | [];
   stock_quantity: number | null;
   backorders_allowed: boolean;
   backorders: 'no' | 'notify' | 'yes';
@@ -77,6 +74,8 @@ export interface ProductDetailType extends ProductItemType {
   menu_order: number;
   dimensions: DimensionsType;
   has_options: boolean;
+  purchasable: boolean;
+  total_sales: number;
 }
 
 export interface ReviewType {
