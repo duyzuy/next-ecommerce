@@ -34,7 +34,8 @@ export interface ProductItemType {
   stock_status: 'instock' | 'outofstock' | 'onbackorder';
   type: 'simple' | 'grouped' | 'external' | 'variable';
   attributes: ProductAttributeType[];
-  images: ImageType[];
+  images: ImageType[] | boolean;
+  thumbnail: string;
   featured: boolean;
   sku: string;
   date_on_sale_from: string | null;
@@ -42,12 +43,11 @@ export interface ProductItemType {
   date_on_sale_to: string | null;
   date_on_sale_to_gmt: string | null;
   on_sale: boolean;
-  purchasable: boolean;
   total_sales: number;
-  tags: ProductTagType[] | [];
   categories: ProductCategoryType[] | [];
 }
 export interface ProductDetailType extends ProductItemType {
+  tags: ProductTagType[] | [];
   description: string;
   rating_count: number;
   average_rating: string;
@@ -67,7 +67,7 @@ export interface ProductDetailType extends ProductItemType {
   upsell_ids: number[];
   cross_sell_ids: number[];
   reviews_allowed: boolean;
-
+  purchasable: boolean;
   stock_quantity: number | null;
   backorders_allowed: boolean;
   backorders: 'no' | 'notify' | 'yes';

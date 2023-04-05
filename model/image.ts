@@ -3,6 +3,6 @@ export interface ImageType {
   name: string;
   src: string;
   alt: string;
-  date_created: string;
-  date_created_gmt: string;
+  date_created?: string;
+  date_created_gmt?: string;
 }
