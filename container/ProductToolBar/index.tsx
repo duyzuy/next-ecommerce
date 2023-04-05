@@ -50,7 +50,7 @@ const ProductToolBar = ({
           </div>
         </div>
         <div className="ec__product--sort">
-          <div className="tool-filter">Sắp xếp sản phẩm theo</div>
+          <div className="tool-filter">Sắp xếp</div>
 
           <Select
             name="orderby"

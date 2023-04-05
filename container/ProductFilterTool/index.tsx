@@ -21,11 +21,66 @@ const ProductFilterTool: React.FC<{
   };
 
   const priceFilters = [
-    { priceFrom: 0, priceTo: 1000000 },
-    { priceFrom: 1000000, priceTo: 2000000 },
-    { priceFrom: 2000000, priceTo: 4000000 },
-    { priceFrom: 4000000, priceTo: 8000000 },
-    { priceFrom: 8000000, priceTo: 800000000 }
+    {
+      from: {
+        text: 'Từ 0 VND',
+        value: 0,
+        key: '0'
+      },
+      to: {
+        text: 'Đến 1tr VND',
+        value: 3000000,
+        key: 'to-1000000'
+      }
+    },
+    {
+      from: {
+        text: 'Từ 2tr VND',
+        value: 3000000,
+        key: 'from-2000000'
+      },
+      to: {
+        text: 'Đến 3tr VND',
+        value: 5000000,
+        key: '1000000'
+      }
+    },
+    {
+      from: {
+        text: 'Từ 3tr VND',
+        value: 5000000,
+        key: 'from-3000000'
+      },
+      to: {
+        text: 'Đến 5tr VND',
+        value: 8000000,
+        key: 'to-5000000'
+      }
+    },
+    {
+      from: {
+        text: 'Từ 8tr VND',
+        value: 8000000,
+        key: '0'
+      },
+      to: {
+        text: 'Đến 15tr VND',
+        value: 15000000,
+        key: 'to-15000000'
+      }
+    },
+    {
+      from: {
+        text: 'Từ 15tr VND',
+        value: 15000000,
+        key: '0'
+      },
+      to: {
+        text: 'trở lên',
+        value: 9999999999,
+        key: 'to-999999999'
+      }
+    }
   ];
   return (
     <>
@@ -39,14 +94,17 @@ const ProductFilterTool: React.FC<{
         <div className="tool-body">
           {attribures.map((attr, index) => {
             return (
-              <div key={index} className="tool-attr">
-                <div className="attr-name">
-                  {attr.name} <Icon.ArrowDown size={12} />
+              <div key={`attr-${attr.id}`} className="attr-item">
+                <div className="attr-top">
+                  <span className="name">{attr.name}</span>
+                  <span className="icon">
+                    <Icon.ArrowDown size={12} />
+                  </span>
                 </div>
-                <div className="attr-terms">
+                <div className="attr-options">
                   {attr.options.map((term, index) => {
                     return (
-                      <div key={index} className="ec__term">
+                      <div key={`term-${term.id}`} className="term-item">
                         {term.name}
                       </div>
                     );
@@ -55,16 +113,20 @@ const ProductFilterTool: React.FC<{
               </div>
             );
           })}
-          <div className="tool-attr">
-            <div className="attr-name">Khoảng giá</div>
-            <div className="attr-terms">
+          <div className="attr-item">
+            <div className="attr-top">
+              <span className="name">Khoảng giá</span>
+              <span className="icon">
+                <Icon.ArrowDown size={12} />
+              </span>
+            </div>
+            <div className="attr-options">
               {priceFilters.map((priceFilter) => (
-                <div className="attr-item">
-                  <span className="check"></span>
-                  <div className="term-text">
-                    {`Từ ${priceFilter.priceFrom}`}
+                <div className="term-item">
+                  <div className="text">
+                    {priceFilter.from.text}
                     {' - '}
-                    {`Đến ${priceFilter.priceTo}`}
+                    {priceFilter.to.text}
                   </div>
                 </div>
               ))}

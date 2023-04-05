@@ -83,3 +83,19 @@ export interface SliderItem {
   bannerLink: string;
   thumbnail: string;
 }
+
+export enum ProductFilterKeys {
+  PAGE = 'page',
+  PER_PAGE = 'per_page',
+  ORDER = 'order',
+  STATUS = 'status',
+  ORDER_BY = 'orderby',
+  TYPE = 'type',
+  ATTRIBUTE = 'attribute',
+  ATTRIBUTE_TERM = 'attribute_term',
+  MIN_PRICE = 'min_price',
+  MAX_PRICE = 'max_price',
+  STOCK_STATUS = 'stock_status',
+  FEATURED = 'featured',
+  CATEGORY = 'category'
+}

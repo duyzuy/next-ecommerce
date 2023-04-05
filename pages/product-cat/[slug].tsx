@@ -87,9 +87,9 @@ export const getStaticProps: GetStaticProps<NextPagePropsType, Params> = async (
   }
 
   const response = await getProductListByCatId(category.data[0].id, {
-    ...productFilterValue
+    page: 1
   });
-
+  console.log({ response });
   if (response.status === 200) {
     products = {
       totalPage: response.data.totalPage,

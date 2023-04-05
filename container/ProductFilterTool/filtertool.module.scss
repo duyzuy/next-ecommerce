@@ -22,12 +22,9 @@
       flex: 1;
     }
 
-    .tool-attr {
-      padding: 10px 15px;
-      background-color: #fff;
-      border-radius: 5px;
+    .attr-item {
+      position: relative;
       margin-right: 20px;
-
       &:last-child {
         margin-right: 0;
       }
@@ -35,19 +32,39 @@
         font-weight: bold;
         font-size: 14px;
       }
-      .attr-terms {
+      .attr-top {
+        padding: 10px 15px;
+        background-color: #fff;
+        border-radius: 5px;
+        .name {
+          margin-right: 20px;
+        }
+        .icon {
+          line-height: 0;
+          display: inline-block;
+        }
+      }
+      .attr-options {
+        position: absolute;
+        background-color: #fff;
+        width: 220px;
+        padding: 15px;
+        left: 0;
         display: none;
-      }
-      .attr-item {
-        display: flex;
-        padding: 10px;
-      }
-      .check {
-        display: inline-block;
-        width: 20px;
-        height: 20px;
-        border: 2px solid #f1f1f1;
-        border-radius: 3px;
+        .term-item {
+          display: inline-block;
+          padding: 5px 10px;
+          border: 1px solid #f1f1f1;
+          border-radius: 2px;
+          margin-bottom: 10px;
+          white-space: nowrap;
+          position: relative;
+          font-size: 13px;
+          margin-right: 10px;
+          &:last-child {
+            margin-right: 0;
+          }
+        }
       }
       .term-text {
         flex: 1;

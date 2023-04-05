@@ -14,10 +14,16 @@ export interface CacheItemType {
 export interface DataCacheType {
   lists: CacheItemType[];
   isLoading: boolean;
+  query: {
+    categoryId: number;
+  };
 }
 export const productListState: DataCacheType = {
   lists: [],
-  isLoading: false
+  isLoading: false,
+  query: {
+    categoryId: 0
+  }
 };
 
 const productListReducer = (

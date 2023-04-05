@@ -40,8 +40,15 @@ export const getCategory = async (url, params) => {
 };
 
 export const getProductListByCatId = async (
-  catId: number,
-  params
+  categoryId: number,
+  params?: {
+    status?: string;
+    type?: 'simple' | 'grouped' | 'external' | 'variable';
+    page?: number;
+    order?: 'asc' | 'desc';
+    orderby?: 'price' | 'popularity' | 'rating' | 'title' | 'include';
+    offset?: number;
+  }
 ): Promise<{
   status: number;
   statusText: string;
@@ -57,7 +64,7 @@ export const getProductListByCatId = async (
       ...params,
       status: 'publish',
       page: (params.page && params.page) || 1,
-      category: catId
+      category: categoryId
     })
     .then((response) => {
       const prds = response.data.map((prd) => ({
@@ -86,6 +93,7 @@ export const getProductListByCatId = async (
       };
     })
     .catch((error) => {
+      console.log({ error });
       return {
         status: error.response.status,
         statusText: error.response.statusText,
