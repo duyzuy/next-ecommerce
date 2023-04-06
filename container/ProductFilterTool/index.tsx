@@ -4,11 +4,12 @@ import SliderRange from '../../components/SliderRange';
 import { AttributeType, ProductAttributeType } from '../../model';
 import * as Icon from 'react-feather';
 import styles from './filtertool.module.scss';
-
+import FilterItem from './FilterItem';
 const ProductFilterTool: React.FC<{
   attribures: AttributeType[];
   type: string;
 }> = ({ attribures, type }) => {
+  const [isShow, setShowFilter] = useState(false);
   const minPriceRef = useRef();
   const maxPriceRef = useRef();
   console.log({ attribures });
@@ -82,6 +83,11 @@ const ProductFilterTool: React.FC<{
       }
     }
   ];
+
+  const onFilterProducts = () => {};
+  const onShowFilterOptions = () => {
+    setShowFilter((isShow) => !isShow);
+  };
   return (
     <>
       <div className={styles.ec__product}>
@@ -92,45 +98,29 @@ const ProductFilterTool: React.FC<{
           <span className="name">Bộ lọc</span>
         </div>
         <div className="tool-body">
-          {attribures.map((attr, index) => {
-            return (
-              <div key={`attr-${attr.id}`} className="attr-item">
-                <div className="attr-top">
-                  <span className="name">{attr.name}</span>
-                  <span className="icon">
-                    <Icon.ArrowDown size={12} />
-                  </span>
-                </div>
-                <div className="attr-options">
-                  {attr.options.map((term, index) => {
-                    return (
-                      <div key={`term-${term.id}`} className="term-item">
-                        {term.name}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          })}
+          {attribures.map((attr, index) => (
+            <FilterItem options={attr.options} attribute={attr} />
+          ))}
           <div className="attr-item">
-            <div className="attr-top">
+            <div className="attr-top" onClick={onShowFilterOptions}>
               <span className="name">Khoảng giá</span>
               <span className="icon">
                 <Icon.ArrowDown size={12} />
               </span>
             </div>
-            <div className="attr-options">
-              {priceFilters.map((priceFilter) => (
-                <div className="term-item">
-                  <div className="text">
-                    {priceFilter.from.text}
-                    {' - '}
-                    {priceFilter.to.text}
+            {(isShow && (
+              <div className="attr-options">
+                {priceFilters.map((priceFilter) => (
+                  <div className="term-item">
+                    <div className="text">
+                      {priceFilter.from.text}
+                      {' - '}
+                      {priceFilter.to.text}
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
+            )) || <></>}
           </div>
         </div>
       </div>
