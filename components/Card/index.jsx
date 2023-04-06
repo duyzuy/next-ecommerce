@@ -38,7 +38,7 @@ const Card = (props) => {
               <Skeleton count={3} height={20} style={{ marginBottom: `5px` }} />
               <Skeleton
                 count={1}
-                height={20}
+                height={40}
                 style={{ marginBottom: `5px`, width: '60%' }}
               />
             </SkeletonTheme>

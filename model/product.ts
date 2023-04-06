@@ -39,9 +39,9 @@ export interface ProductItemType {
   featured: boolean;
   sku: string;
   date_on_sale_from: string | null;
-  date_on_sale_from_gmt: string | null;
+  date_on_sale_from_gmt?: string | null;
   date_on_sale_to: string | null;
-  date_on_sale_to_gmt: string | null;
+  date_on_sale_to_gmt?: string | null;
   on_sale: boolean;
   categories: ProductCategoryType[] | [];
 }
@@ -91,3 +91,4 @@ export interface ReviewType {
   rating: number;
   verified: boolean;
 }
+// vo9X*9j05
