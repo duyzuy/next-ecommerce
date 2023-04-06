@@ -29,7 +29,7 @@ const ProductCategory: NextPage<NextPagePropsType> = ({
   if (router.isFallback) {
     return <Loader active inline="centered" />;
   }
-  console.log({ attribures });
+  //console.log({ attribures });
   return (
     <Layout
       products={products}
