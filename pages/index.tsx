@@ -8,6 +8,7 @@ import {
   getProductCategoryDetail,
   getProductListByCatId
 } from '../api/product';
+import { getProductsByCategoryId } from '../api/products';
 import { getSlider } from '../api/post';
 import ProductCatList from '../container/ProductCatList';
 import SingleBanner from '../container/SingleBanner';
@@ -42,7 +43,7 @@ const Home: NextPage<{
   const { catListData, brand, sliders } = props;
   const device = useSelector((state) => state.device);
   const categories = useSelector((state) => state.menu.categories);
-
+  console.log({ catListData });
   return (
     <>
       <SEO title="Bep tu nhap khau" description="bep tu nhap khau chinh hang" />
@@ -82,9 +83,29 @@ export async function getServerSideProps(ctx: NextPageContext) {
       const category = await getProductCategoryDetail(catItem.id);
 
       if (category.status === 200) {
-        const productList = await getProductListByCatId(category.data.id, {
-          per_page: 5
+        // const productList = await getProductListByCatId(category.data.id, {
+        //   per_page: 5
+        // });
+        // categoryListData = [
+        //   ...categoryListData,
+        //   {
+        //     ...category.data,
+        //     key: catItem.key,
+        //     id: category.data.id,
+        //     lists: productList.data.products,
+        //     totalItems: productList.data.totalItems,
+        //     totalPage: productList.data.totalPage,
+        //     page: productList.data.page
+        //   }
+        // ];
+
+        const productList = await getProductsByCategoryId(category.data.id, {
+          status: 'publish',
+          per_page: 5,
+          orderby: 'date',
+          order: 'desc'
         });
+
         categoryListData = [
           ...categoryListData,
           {

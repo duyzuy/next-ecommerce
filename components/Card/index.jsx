@@ -49,12 +49,12 @@ const Card = (props) => {
           <div className="ec__card--inner">
             <div className="ec__card--image">
               <CustomImage
-                src={thumbnailUrl}
+                src={data.thumbnail ? data.thumbnail : thumbnailUrl}
                 alt={data.name}
                 width={500}
                 height={500}
                 placeholder="blur"
-                blurDataURL={thumbnailUrl}
+                blurDataURL={data.thumbnail ? data.thumbnail : thumbnailUrl}
               />
             </div>
             <div className="ec__card--bottom">

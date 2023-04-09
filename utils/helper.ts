@@ -26,12 +26,15 @@ export const makeArrayFromNumber = (start, end) => {
   });
 };
 
-export const isEmpty = (obj) => {
-  if (typeof obj === 'object') {
-    if (Object.keys(obj).length !== 0) {
+export const isEmpty = (data: any[] | {}) => {
+  if (typeof data === 'object') {
+    if (Object.keys(data).length !== 0) {
       return false;
     }
     return true;
+  }
+  if (Array.isArray(data)) {
+    return data.length < 0;
   }
 };
 

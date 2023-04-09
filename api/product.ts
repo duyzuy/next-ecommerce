@@ -317,19 +317,21 @@ export const getProductCategoryDetail = async (
   return await wcApi
     .get(`products/categories/${catId}`)
     .then((res) => {
+      const { data } = res;
+
       return {
         status: res.status,
         statusText: res.statusText,
         data: {
-          id: res.data.id,
+          id: data.id,
           image: {
-            src: res.data.image.src,
-            name: res.data.image.name,
-            alt: res.data.image.alt
+            src: data.image.src,
+            name: data.image.name,
+            alt: data.image.alt
           },
-          name: res.data.name,
-          slug: res.data.slug,
-          count: res.data.count
+          name: data.name,
+          slug: data.slug,
+          count: data.count
         }
       };
     })
